@@ -10,12 +10,14 @@ public class PlayerController : MonoBehaviour {
 
     private Vector3 movement;
     private Rigidbody rigidbody;
+    private Animator animator;
     private int floorMask;
 
     private void Awake()
     {
         movement = new Vector3();
         rigidbody = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
         floorMask = LayerMask.GetMask("Floor");
     }
 
@@ -26,6 +28,7 @@ public class PlayerController : MonoBehaviour {
 
         Move(h, v);
         Turn();
+        UpdateAnimation(h, v);
     }
 
     private void Move(float h, float v)
@@ -46,6 +49,12 @@ public class PlayerController : MonoBehaviour {
             Quaternion rotation = Quaternion.LookRotation(viewVector);
             rigidbody.MoveRotation(rotation);
         }
+    }
+
+    private void UpdateAnimation(float h, float v)
+    {
+        bool isRunning = (h != 0.0f) || (v != 0.0f);
+        animator.SetBool("IsRunning", isRunning);
     }
 
 }
