@@ -53,8 +53,8 @@ public class PlayerController : MonoBehaviour {
 
     private void UpdateAnimation(float h, float v)
     {
-        bool isRunning = (h != 0.0f) || (v != 0.0f);
-        animator.SetBool("IsRunning", isRunning);
+        animator.SetFloat("FrontMovement", v);
+        animator.SetFloat("SideMovement", h);
     }
 
 }
