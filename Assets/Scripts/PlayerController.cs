@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class PlayerController : MonoBehaviour {
+public class PlayerController : MonoBehaviour
+{
 
     [SerializeField]
     private float speed = 6.0f;
@@ -53,8 +54,15 @@ public class PlayerController : MonoBehaviour {
 
     private void UpdateAnimation(float h, float v)
     {
-        animator.SetFloat("FrontMovement", v);
-        animator.SetFloat("SideMovement", h);
+        float angle_rad = transform.eulerAngles.y * Mathf.Deg2Rad;
+        float cos = Mathf.Cos(angle_rad);
+        float sin = Mathf.Sin(angle_rad);
+
+        float projectedV = h * sin + v * cos;
+        float projectedH = h * cos - v * sin;
+        
+        animator.SetFloat("FrontMovement", projectedV);
+        animator.SetFloat("SideMovement", projectedH);
     }
 
 }
