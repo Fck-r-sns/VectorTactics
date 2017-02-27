@@ -2,41 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
 {
 
     [SerializeField]
-    private float speed = 6.0f;
+    private SoldierController controllable;
 
-    private Vector3 movement;
-    private Rigidbody rigidbody;
-    private Animator animator;
     private int floorMask;
 
     private void Awake()
     {
-        movement = new Vector3();
-        rigidbody = GetComponent<Rigidbody>();
-        animator = GetComponent<Animator>();
         floorMask = LayerMask.GetMask("Floor");
     }
 
     private void FixedUpdate()
     {
-        float h = Input.GetAxisRaw("Horizontal");
-        float v = Input.GetAxisRaw("Vertical");
-
-        Move(h, v);
+        Move();
         Turn();
-        UpdateAnimation(h, v);
     }
 
-    private void Move(float h, float v)
+    private void Move()
     {
-        movement.Set(h, 0f, v);
-        movement = movement.normalized * speed * Time.fixedDeltaTime;
-        rigidbody.MovePosition(transform.position + movement);
+        float h = Input.GetAxisRaw("Horizontal");
+        float v = Input.GetAxisRaw("Vertical");
+        controllable.Move(new Vector3(h, 0.0f, v));
     }
 
     private void Turn()
@@ -45,24 +34,8 @@ public class PlayerController : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, floorMask))
         {
-            Vector3 viewVector = hit.point - transform.position;
-            viewVector.y = 0f;
-            Quaternion rotation = Quaternion.LookRotation(viewVector);
-            rigidbody.MoveRotation(rotation);
+            controllable.Turn(hit.point - transform.position);
         }
-    }
-
-    private void UpdateAnimation(float h, float v)
-    {
-        float angle_rad = transform.eulerAngles.y * Mathf.Deg2Rad;
-        float cos = Mathf.Cos(angle_rad);
-        float sin = Mathf.Sin(angle_rad);
-
-        float projectedV = h * sin + v * cos;
-        float projectedH = h * cos - v * sin;
-        
-        animator.SetFloat("FrontMovement", projectedV);
-        animator.SetFloat("SideMovement", projectedH);
     }
 
 }
