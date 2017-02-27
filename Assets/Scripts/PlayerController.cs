@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, floorMask))
         {
-            controllable.Turn(hit.point - transform.position);
+            controllable.TurnToPoint(hit.point);
         }
     }
 

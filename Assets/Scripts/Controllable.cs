@@ -2,6 +2,6 @@
 
 public interface Controllable  {
     void Move(Vector3 direction);
-    void Turn(Vector3 direction);
+    void TurnToPoint(Vector3 point);
     void Shoot();
 }

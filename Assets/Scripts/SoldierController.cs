@@ -27,8 +27,9 @@ public class SoldierController : MonoBehaviour, Controllable
         animator.AnimateMoving(direction);
     }
 
-    public void Turn(Vector3 direction)
+    public void TurnToPoint(Vector3 point)
     {
+        Vector3 direction = point - transform.position;
         direction.y = 0.0f;
         rigidbody.MoveRotation(Quaternion.LookRotation(direction));
     }
