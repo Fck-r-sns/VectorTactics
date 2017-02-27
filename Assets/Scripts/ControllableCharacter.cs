@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class ControllableRigidbody : MonoBehaviour, Controllable
+public class ControllableCharacter : MonoBehaviour, Controllable
 {
 
     [SerializeField]
