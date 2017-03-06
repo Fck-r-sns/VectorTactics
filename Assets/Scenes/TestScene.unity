@@ -615,46 +615,6 @@ Prefab:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 54360876891220830, guid: 1bea3cd97b9d39b459b383081f6e289f,
-        type: 2}
-      propertyPath: m_CollisionDetection
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 136297718164490714, guid: 1bea3cd97b9d39b459b383081f6e289f,
-        type: 2}
-      propertyPath: m_Radius
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 65906280771273930, guid: 1bea3cd97b9d39b459b383081f6e289f,
-        type: 2}
-      propertyPath: m_Size.y
-      value: 0.41959658
-      objectReference: {fileID: 0}
-    - target: {fileID: 65906280771273930, guid: 1bea3cd97b9d39b459b383081f6e289f,
-        type: 2}
-      propertyPath: m_Size.z
-      value: 0.17882463
-      objectReference: {fileID: 0}
-    - target: {fileID: 65906280771273930, guid: 1bea3cd97b9d39b459b383081f6e289f,
-        type: 2}
-      propertyPath: m_Center.x
-      value: 0.35221997
-      objectReference: {fileID: 0}
-    - target: {fileID: 65906280771273930, guid: 1bea3cd97b9d39b459b383081f6e289f,
-        type: 2}
-      propertyPath: m_Center.y
-      value: -0.16385715
-      objectReference: {fileID: 0}
-    - target: {fileID: 65906280771273930, guid: 1bea3cd97b9d39b459b383081f6e289f,
-        type: 2}
-      propertyPath: m_Center.z
-      value: -0.0000256151
-      objectReference: {fileID: 0}
-    - target: {fileID: 54360876891220830, guid: 1bea3cd97b9d39b459b383081f6e289f,
-        type: 2}
-      propertyPath: m_Constraints
-      value: 116
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1bea3cd97b9d39b459b383081f6e289f, type: 2}
   m_IsPrefabParent: 0
