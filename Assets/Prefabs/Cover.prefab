@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4265108358961892}
   - component: {fileID: 65563193017659898}
   - component: {fileID: 114877286838662772}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: BulletCoverLogic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -36,7 +36,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4324887920659152}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Cover
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -53,7 +53,7 @@ GameObject:
   - component: {fileID: 4874920650350280}
   - component: {fileID: 65721244682429994}
   - component: {fileID: 114038022114212900}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: SoldierInCoverLogic
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour {
+public class Bullet : MonoBehaviour
+{
 
     public float speed { get; set; }
     public float damage { get; set; }
@@ -10,34 +11,49 @@ public class Bullet : MonoBehaviour {
 
     private int soldiersLayer;
     private int wallsLayer;
-    private LayerMask layerMask;
+    private int coversLayer;
+    private LayerMask coverLogicLayerMask;
+    private LayerMask physicalObstaclesLayerMask;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start()
+    {
         soldiersLayer = LayerMask.NameToLayer("Soldiers");
         wallsLayer = LayerMask.NameToLayer("Walls");
-        layerMask = LayerMask.GetMask("Soldiers", "Walls");
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        transform.position += transform.forward * speed * Time.deltaTime;
-	}
+        coversLayer = LayerMask.NameToLayer("CoverTriggers");
+        coverLogicLayerMask = LayerMask.GetMask("CoverTriggers");
+        physicalObstaclesLayerMask = LayerMask.GetMask("Soldiers", "Walls");
 
-    private void OnTriggerEnter(Collider other)
+    }
+
+    // Update is called once per frame
+    void Update()
     {
-        if ((layerMask.value & (1 << other.gameObject.layer)) == 0)
+        float distancePerFrame = speed * Time.deltaTime;
+        RaycastHit hit;
+        Ray ray = new Ray(transform.position, transform.forward);
+
+        if (Physics.Raycast(ray, out hit, distancePerFrame, coverLogicLayerMask))
         {
+            BulletThroughCoverTrigger cover = hit.transform.gameObject.GetComponent<BulletThroughCoverTrigger>();
+            cover.OnBulletCollide(this);
+        }
+
+        if (Physics.Raycast(ray, out hit, distancePerFrame, physicalObstaclesLayerMask))
+        {
+            GameObject obstacle = hit.transform.gameObject;
+            if (obstacle.layer == soldiersLayer)
+            {
+                OnCollisionWithSoldier(obstacle);
+            }
+            if (obstacle.layer == wallsLayer)
+            {
+                OnCollisionWithWall(obstacle);
+            }
             return;
         }
-        if (other.gameObject.layer == soldiersLayer)
-        {
-            OnCollisionWithSoldier(other.gameObject);
-        }
-        if (other.gameObject.layer == wallsLayer)
-        {
-            OnCollisionWithWall(other.gameObject);
-        }
+
+        transform.position += transform.forward * distancePerFrame;
     }
 
     private void OnCollisionWithWall(GameObject wall)

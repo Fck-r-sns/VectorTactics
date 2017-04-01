@@ -14,14 +14,11 @@ public class BulletThroughCoverTrigger : MonoBehaviour
 		
 	}
 
-
-    private void OnTriggerEnter(Collider other)
+    public void OnBulletCollide(Bullet bullet)
     {
-        Debug.Log(Time.time + ": Trigger, " + other.tag);
-        if (other.tag == "Bullet")
+        if (Random.Range(0, 99) < 50)
         {
-            Bullet b = other.gameObject.GetComponent<Bullet>();
-            b.speed = 0.0f;
+            Destroy(bullet.gameObject);
         }
     }
 }
