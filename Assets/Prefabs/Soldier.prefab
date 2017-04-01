@@ -1005,6 +1005,7 @@ MonoBehaviour:
   aim: {fileID: 4557323608726872}
   bulletPrefab: {fileID: 1077758569484252, guid: c90a0e086c862014f8afdc05b1f155aa,
     type: 2}
+  owner: {fileID: 114368089803710022}
 --- !u!114 &114581560287357812
 MonoBehaviour:
   m_ObjectHideFlags: 1

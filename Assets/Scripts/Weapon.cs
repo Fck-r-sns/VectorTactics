@@ -26,6 +26,9 @@ public class Weapon : MonoBehaviour
     [SerializeField]
     private GameObject bulletPrefab;
 
+    [SerializeField]
+    private SoldierController owner;
+
     private float SHOOTING_MODE_THRESHOLD = 2.0f;
 
     private float timePerShot;
@@ -55,6 +58,7 @@ public class Weapon : MonoBehaviour
         Bullet bullet = bulletObject.GetComponent<Bullet>();
         bullet.speed = bulletSpeed;
         bullet.damage = damage;
+        bullet.owner = owner;
 
         Destroy(bulletObject, 10.0f);
         nextShotAvailableTime = Time.time + timePerShot;

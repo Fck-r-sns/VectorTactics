@@ -6,6 +6,7 @@ public class Bullet : MonoBehaviour {
 
     public float speed { get; set; }
     public float damage { get; set; }
+    public SoldierController owner { get; set; }
 
     private int soldiersLayer;
     private int wallsLayer;
