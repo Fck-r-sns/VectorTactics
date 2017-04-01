@@ -23,7 +23,6 @@ public class Bullet : MonoBehaviour
         coversLayer = LayerMask.NameToLayer("CoverTriggers");
         coverLogicLayerMask = LayerMask.GetMask("CoverTriggers");
         physicalObstaclesLayerMask = LayerMask.GetMask("Soldiers", "Walls");
-
     }
 
     // Update is called once per frame
