@@ -31,7 +31,7 @@ public class Bullet : MonoBehaviour
     {
         float distancePerFrame = speed * Time.deltaTime;
         RaycastHit hit;
-        Ray ray = new Ray(transform.position, transform.forward);
+        Ray ray = new Ray(transform.position - transform.forward * 0.5f, transform.forward); // shift origin to fix bug, when ray orign can be inside enemy collider and ignore it
 
         if (Physics.Raycast(ray, out hit, distancePerFrame, coverLogicLayerMask))
         {
@@ -42,18 +42,23 @@ public class Bullet : MonoBehaviour
         if (Physics.Raycast(ray, out hit, distancePerFrame, physicalObstaclesLayerMask))
         {
             GameObject obstacle = hit.transform.gameObject;
-            if (obstacle.layer == soldiersLayer)
-            {
-                OnCollisionWithSoldier(obstacle);
-            }
-            if (obstacle.layer == wallsLayer)
-            {
-                OnCollisionWithWall(obstacle);
-            }
+            CheckObstacleCollision(obstacle);
             return;
         }
 
         transform.position += transform.forward * distancePerFrame;
+    }
+
+    private void CheckObstacleCollision(GameObject obstacle)
+    {
+        if (obstacle.layer == soldiersLayer)
+        {
+            OnCollisionWithSoldier(obstacle);
+        }
+        if (obstacle.layer == wallsLayer)
+        {
+            OnCollisionWithWall(obstacle);
+        }
     }
 
     private void OnCollisionWithWall(GameObject wall)
