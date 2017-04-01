@@ -34,7 +34,7 @@ public class Bullet : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, distancePerFrame, coverLogicLayerMask))
         {
-            BulletThroughCoverTrigger cover = hit.transform.gameObject.GetComponent<BulletThroughCoverTrigger>();
+            BulletThroughCoverLogic cover = hit.transform.gameObject.GetComponent<BulletThroughCoverLogic>();
             if (cover.CheckBullet(this))
             {
                 OnCollisionWithCover(cover.gameObject);
