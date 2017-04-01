@@ -23,6 +23,11 @@ public class SoldierController : MonoBehaviour, Controllable
         weapon = GetComponentInChildren<Weapon>();
     }
 
+    public float GetHealth()
+    {
+        return health;
+    }
+
     public bool IsDead()
     {
         return isDead;
