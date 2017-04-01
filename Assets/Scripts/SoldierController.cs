@@ -11,10 +11,12 @@ public class SoldierController : MonoBehaviour, Controllable
     private float speed = 6.0f;
 
     private SoldierAnimation animator;
+    private Weapon weapon;
 
     private void Awake()
     {
         animator = GetComponent<SoldierAnimation>();
+        weapon = GetComponentInChildren<Weapon>();
     }
 
     public void Move(Vector3 direction)
@@ -31,10 +33,13 @@ public class SoldierController : MonoBehaviour, Controllable
         transform.rotation = Quaternion.LookRotation(direction);
     }
 
-    public void Shoot()
+    public void Shoot(Vector3 target)
     {
-        // TODO
-        animator.AnimateShooting();
+        if (weapon != null)
+        {
+            weapon.fire(target);
+            animator.AnimateShooting();
+        }
     }
 
 }

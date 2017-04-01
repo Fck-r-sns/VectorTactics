@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         Move();
-        Turn();
+        TurnAndShoot();
     }
 
     private void Move()
@@ -28,13 +28,17 @@ public class PlayerController : MonoBehaviour
         controllable.Move(new Vector3(h, 0.0f, v));
     }
 
-    private void Turn()
+    private void TurnAndShoot()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, floorMask))
         {
             controllable.TurnToPoint(hit.point);
+            if (Input.GetButton("Fire1"))
+            {
+                controllable.Shoot(hit.point);
+            }
         }
     }
 
