@@ -36,29 +36,32 @@ public class Bullet : MonoBehaviour
         if (Physics.Raycast(ray, out hit, distancePerFrame, coverLogicLayerMask))
         {
             BulletThroughCoverTrigger cover = hit.transform.gameObject.GetComponent<BulletThroughCoverTrigger>();
-            cover.OnBulletCollide(this);
+            if (cover.CheckBullet(this))
+            {
+                OnCollisionWithCover(cover.gameObject);
+            }
         }
 
         if (Physics.Raycast(ray, out hit, distancePerFrame, physicalObstaclesLayerMask))
         {
             GameObject obstacle = hit.transform.gameObject;
-            CheckObstacleCollision(obstacle);
+            if (obstacle.layer == soldiersLayer)
+            {
+                OnCollisionWithSoldier(obstacle);
+            }
+            if (obstacle.layer == wallsLayer)
+            {
+                OnCollisionWithWall(obstacle);
+            }
             return;
         }
 
         transform.position += transform.forward * distancePerFrame;
     }
 
-    private void CheckObstacleCollision(GameObject obstacle)
+    private void OnCollisionWithCover(GameObject cover)
     {
-        if (obstacle.layer == soldiersLayer)
-        {
-            OnCollisionWithSoldier(obstacle);
-        }
-        if (obstacle.layer == wallsLayer)
-        {
-            OnCollisionWithWall(obstacle);
-        }
+        Destroy(gameObject);
     }
 
     private void OnCollisionWithWall(GameObject wall)

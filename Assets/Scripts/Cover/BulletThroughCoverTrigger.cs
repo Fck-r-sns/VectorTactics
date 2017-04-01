@@ -14,11 +14,8 @@ public class BulletThroughCoverTrigger : MonoBehaviour
 		
 	}
 
-    public void OnBulletCollide(Bullet bullet)
+    public bool CheckBullet(Bullet bullet)
     {
-        if (Random.Range(0, 99) < 50)
-        {
-            Destroy(bullet.gameObject);
-        }
+        return (Random.Range(0, 99) < 50);
     }
 }
