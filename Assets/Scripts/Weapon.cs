@@ -9,6 +9,12 @@ public class Weapon : MonoBehaviour
     private float shotsPerSecond = 1.0f;
 
     [SerializeField]
+    private float bulletSpeed = 20.0f;
+
+    [SerializeField]
+    private float deviation = 0.2f;
+
+    [SerializeField]
     private Transform shootingPoint;
 
     [SerializeField]
@@ -19,15 +25,17 @@ public class Weapon : MonoBehaviour
 
     public void fire(Vector3 target)
     {
-        Debug.Log("Time: " + Time.time + "; next shot: " + nextShotAvailableTime);
         if (Time.time < nextShotAvailableTime)
         {
             return;
         }
+        Vector3 shift = GetRandomShift();
+        Debug.Log("Shift: " + shift);
+        target += shift;
         target.y = shootingPoint.position.y;
         shootingPoint.LookAt(target, Vector3.up);
         GameObject bullet = Instantiate(bulletPrefab, shootingPoint.position, shootingPoint.rotation);
-        bullet.GetComponent<Rigidbody>().velocity = bullet.transform.forward * 20;
+        bullet.GetComponent<Rigidbody>().velocity = bullet.transform.forward * bulletSpeed;
         Destroy(bullet, 10.0f);
         nextShotAvailableTime = Time.time + timePerShot;
     }
@@ -39,5 +47,12 @@ public class Weapon : MonoBehaviour
 	
 	// Update is called once per frame
 	void Update () {
+    }
+
+    private Vector3 GetRandomShift()
+    {
+        float x = RandomGaussian.Next(0.0f, deviation);
+        float z = RandomGaussian.Next(0.0f, deviation);
+        return new Vector3(x, 0, z);
     }
 }
