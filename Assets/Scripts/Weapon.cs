@@ -26,12 +26,13 @@ public class Weapon : MonoBehaviour
     private float timePerShot;
     private float nextShotAvailableTime = 0.0f;
 
-    public void fire(Vector3 target)
+    public void fire(Vector3 direction)
     {
         if (Time.time < nextShotAvailableTime)
         {
             return;
         }
+        Vector3 target = shootingPoint.position + direction.normalized;
         Vector3 shift = GetRandomShift();
         target += shift;
         target.y = shootingPoint.position.y;
