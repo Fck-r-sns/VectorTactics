@@ -11,6 +11,6 @@ public class BulletThroughCoverLogic : MonoBehaviour
     public bool CheckBullet(Bullet bullet)
     {
         return !soldiersInCoverLogic.GetSoldiersInCover().Contains(bullet.owner) 
-            && (Random.Range(0, 99) < 50);
+            && ((Random.Range(0, 99) & 1) == 0);
     }
 }
