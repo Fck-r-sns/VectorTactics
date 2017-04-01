@@ -33,11 +33,11 @@ public class SoldierController : MonoBehaviour, Controllable
         transform.rotation = Quaternion.LookRotation(direction);
     }
 
-    public void Shoot(Vector3 direction)
+    public void Shoot(Vector3 target)
     {
         if (weapon != null)
         {
-            weapon.fire(direction);
+            weapon.fire(target);
             animator.AnimateShooting();
         }
     }

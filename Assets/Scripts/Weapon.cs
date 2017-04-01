@@ -21,23 +21,37 @@ public class Weapon : MonoBehaviour
     private Transform shootingPoint;
 
     [SerializeField]
+    private Transform aim;
+
+    [SerializeField]
     private GameObject bulletPrefab;
+
+    private float SHOOTING_MODE_THRESHOLD = 2.0f;
 
     private float timePerShot;
     private float nextShotAvailableTime = 0.0f;
 
-    public void fire(Vector3 direction)
+    public void fire(Vector3 target)
     {
         if (Time.time < nextShotAvailableTime)
         {
             return;
         }
-        Vector3 target = shootingPoint.position + direction.normalized;
+        Vector3 direction = (target - shootingPoint.position).normalized;
+        if (Vector3.Distance(target, shootingPoint.position) < SHOOTING_MODE_THRESHOLD)
+        {
+            target = shootingPoint.position + shootingPoint.forward;
+        } 
+        else
+        {
+            target = shootingPoint.position + direction;
+        }
         Vector3 shift = GetRandomShift();
         target += shift;
         target.y = shootingPoint.position.y;
-        shootingPoint.LookAt(target, Vector3.up);
-        GameObject bulletObject = Instantiate(bulletPrefab, shootingPoint.position, shootingPoint.rotation);
+        aim.LookAt(target, Vector3.up);
+        GameObject bulletObject = Instantiate(bulletPrefab, shootingPoint.position, aim.rotation); // TODO: object pool
+
         Bullet bullet = bulletObject.GetComponent<Bullet>();
         bullet.speed = bulletSpeed;
         bullet.damage = damage;

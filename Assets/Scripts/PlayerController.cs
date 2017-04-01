@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour
             controllable.TurnToPoint(hit.point);
             if (Input.GetButton("Fire1"))
             {
-                controllable.Shoot(hit.point - controllable.transform.position);
+                controllable.Shoot(hit.point);
             }
         }
     }
