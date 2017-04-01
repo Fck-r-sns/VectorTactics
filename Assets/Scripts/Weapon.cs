@@ -12,6 +12,9 @@ public class Weapon : MonoBehaviour
     private float bulletSpeed = 20.0f;
 
     [SerializeField]
+    private float damage = 10.0f;
+
+    [SerializeField]
     private float deviation = 0.2f;
 
     [SerializeField]
@@ -33,18 +36,20 @@ public class Weapon : MonoBehaviour
         target += shift;
         target.y = shootingPoint.position.y;
         shootingPoint.LookAt(target, Vector3.up);
-        GameObject bullet = Instantiate(bulletPrefab, shootingPoint.position, shootingPoint.rotation);
-        bullet.GetComponent<Bullet>().speed = bulletSpeed;
-        Destroy(bullet, 10.0f);
+        GameObject bulletObject = Instantiate(bulletPrefab, shootingPoint.position, shootingPoint.rotation);
+        Bullet bullet = bulletObject.GetComponent<Bullet>();
+        bullet.speed = bulletSpeed;
+        bullet.damage = damage;
+
+        Destroy(bulletObject, 10.0f);
         nextShotAvailableTime = Time.time + timePerShot;
     }
-
-	// Use this for initialization
+        
 	void Start () {
         timePerShot = 1.0f / shotsPerSecond;
 	}
 	
-	// Update is called once per frame
+	
 	void Update () {
     }
 
