@@ -221,10 +221,6 @@ Prefab:
       propertyPath: m_Name
       value: Soldier (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 4425102104025092, guid: 1bea3cd97b9d39b459b383081f6e289f, type: 2}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: -118.856
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1bea3cd97b9d39b459b383081f6e289f, type: 2}
   m_IsPrefabParent: 0

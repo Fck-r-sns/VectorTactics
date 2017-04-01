@@ -30,12 +30,11 @@ public class Weapon : MonoBehaviour
             return;
         }
         Vector3 shift = GetRandomShift();
-        Debug.Log("Shift: " + shift);
         target += shift;
         target.y = shootingPoint.position.y;
         shootingPoint.LookAt(target, Vector3.up);
         GameObject bullet = Instantiate(bulletPrefab, shootingPoint.position, shootingPoint.rotation);
-        bullet.GetComponent<Rigidbody>().velocity = bullet.transform.forward * bulletSpeed;
+        bullet.GetComponent<Bullet>().speed = bulletSpeed;
         Destroy(bullet, 10.0f);
         nextShotAvailableTime = Time.time + timePerShot;
     }
