@@ -30,4 +30,10 @@ public class SoldierAnimation : MonoBehaviour
     {
         // TODO
     }
+
+    public void AnimateDeath()
+    {
+        animator.SetInteger("DeathAnimationType", Random.Range(0, 4));
+        animator.SetTrigger("Dead");
+    }
 }

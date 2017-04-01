@@ -46,7 +46,8 @@ public class Bullet : MonoBehaviour {
 
     private void OnCollisionWithSoldier(GameObject soldier)
     {
-        // TODO: implement HP loss
+        SoldierController sc = soldier.GetComponent<SoldierController>();
+        sc.OnHit(damage);
         Destroy(gameObject);
     }
 

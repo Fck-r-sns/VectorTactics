@@ -10,13 +10,22 @@ public class SoldierController : MonoBehaviour, Controllable
     [SerializeField]
     private float speed = 6.0f;
 
+    [SerializeField]
+    private float health = 100.0f;
+
     private SoldierAnimation animator;
     private Weapon weapon;
+    private bool isDead = false;
 
     private void Awake()
     {
         animator = GetComponent<SoldierAnimation>();
         weapon = GetComponentInChildren<Weapon>();
+    }
+
+    public bool IsDead()
+    {
+        return isDead;
     }
 
     public void Move(Vector3 direction)
@@ -39,6 +48,16 @@ public class SoldierController : MonoBehaviour, Controllable
         {
             weapon.fire(target);
             animator.AnimateShooting();
+        }
+    }
+
+    public void OnHit(float damage)
+    {
+        health -= damage;
+        if (health <= 0.0f && !isDead)
+        {
+            animator.AnimateDeath();
+            isDead = true;
         }
     }
 
