@@ -8,9 +8,17 @@ public class BulletThroughCoverLogic : MonoBehaviour
     [SerializeField]
     private SoldierInCoverLogic soldiersInCoverLogic;
 
+    private Dictionary<int, int> bulletsHistory = new Dictionary<int, int>(); // key is soldier's gameobject id
+
     public bool CheckBullet(Bullet bullet)
     {
-        return !CheckIfSoldierInCover(bullet.owner) && ((Random.Range(0, 99) & 1) == 0);
+        int id = bullet.owner.GetInstanceID();
+        if (!bulletsHistory.ContainsKey(id))
+        {
+            bulletsHistory.Add(id, Random.Range(0, 1));
+        }
+        ++bulletsHistory[id];
+        return !CheckIfSoldierInCover(bullet.owner) && ((bulletsHistory[id] & 1) == 0);
     }
 
     public bool CheckIfSoldierInCover(SoldierController soldier)
