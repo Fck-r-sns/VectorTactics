@@ -14,6 +14,9 @@ namespace Ai
         }
 
         [SerializeField]
+        private WorldState worldState;
+
+        [SerializeField]
         private WaypointGenerationMode mode = WaypointGenerationMode.Naive;
 
         [SerializeField]
@@ -25,18 +28,65 @@ namespace Ai
         [SerializeField]
         private float gridStep = 0.5f;
 
+        private SoldierController owner;
+        private SoldierController enemy;
+
+        private LayerMask layerMask;
+        private int coverLayer;
+        private int wallsLayer;
+
         private List<Waypoint> waypoints = new List<Waypoint>();
 
         void Awake()
         {
+            owner = GetComponent<SoldierController>();
+            enemy = (worldState.blueSoldier == owner) ? worldState.redSoldier : worldState.blueSoldier;
+
+            layerMask = LayerMask.GetMask("Cover", "Walls");
+            coverLayer = LayerMask.NameToLayer("Cover");
+            wallsLayer = LayerMask.NameToLayer("Walls");
+
             waypoints = GenerateWaypoints();
         }
 
         void Update()
         {
-            foreach(Waypoint wp in waypoints)
+            foreach (Waypoint wp in waypoints)
             {
-                wp.weight = Random.Range(0.0f, 1.0f);
+                Vector3 origin = enemy.transform.position;
+                origin.y = 0.0f;
+                float distanceToEnemy = Vector3.Distance(wp.position, origin);
+                origin.y = 1.7f; // height of soldiers' head
+                Vector3 direction = wp.position - origin;
+                direction.y = 0.0f;
+                Ray ray = new Ray(origin, direction);
+                RaycastHit hit;
+                do
+                {
+                    if (Physics.Raycast(ray, out hit, distanceToEnemy, layerMask))
+                    {
+                        int layer = hit.transform.gameObject.layer;
+                        if (layer == coverLayer)
+                        {
+                            wp.weight = 1.0f;
+                            BulletThroughCoverLogic coverLogic = hit.transform.gameObject.GetComponent<BulletThroughCoverLogic>();
+                            if (coverLogic.CheckIfSoldierInCover(enemy))
+                            {
+                                ray.origin = hit.point + ray.direction.normalized * 0.1f;
+                                continue;
+                            }
+                        }
+                        else if (layer == wallsLayer)
+                        {
+                            wp.weight = 0.5f;
+                        }
+                    }
+                    else
+                    {
+                        wp.weight = 0.0f;
+                    }
+                    break;
+                } while (true);
             }
         }
 
