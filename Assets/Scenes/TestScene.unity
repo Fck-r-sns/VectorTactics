@@ -652,21 +652,6 @@ Prefab:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 136297718164490714, guid: 1bea3cd97b9d39b459b383081f6e289f,
-        type: 2}
-      propertyPath: m_IsTrigger
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 65906280771273930, guid: 1bea3cd97b9d39b459b383081f6e289f,
-        type: 2}
-      propertyPath: m_IsTrigger
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114377498610156460, guid: 1bea3cd97b9d39b459b383081f6e289f,
-        type: 2}
-      propertyPath: deviation
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1bea3cd97b9d39b459b383081f6e289f, type: 2}
   m_IsPrefabParent: 0
