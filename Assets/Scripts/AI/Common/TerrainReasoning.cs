@@ -59,22 +59,26 @@ namespace Ai
                 origin.y = 1.7f; // height of soldiers' head
                 Vector3 direction = wp.position - origin;
                 direction.y = 0.0f;
+
                 Ray ray = new Ray(origin, direction);
+                float raycastDistance = distanceToEnemy;
                 RaycastHit hit;
                 do
                 {
-                    if (Physics.Raycast(ray, out hit, distanceToEnemy, layerMask))
+                    if (Physics.Raycast(ray, out hit, raycastDistance, layerMask))
                     {
                         int layer = hit.transform.gameObject.layer;
                         if (layer == coverLayer)
                         {
-                            wp.weight = 1.0f;
                             BulletThroughCoverLogic coverLogic = hit.transform.gameObject.GetComponent<BulletThroughCoverLogic>();
                             if (coverLogic.CheckIfSoldierInCover(enemy))
                             {
+                                Vector3 oldOrigin = ray.origin;
                                 ray.origin = hit.point + ray.direction.normalized * 0.1f;
+                                raycastDistance -= Vector3.Distance(ray.origin, oldOrigin);
                                 continue;
                             }
+                            wp.weight = 1.0f;
                         }
                         else if (layer == wallsLayer)
                         {
