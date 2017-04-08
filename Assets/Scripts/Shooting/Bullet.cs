@@ -26,11 +26,13 @@ public class Bullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Vector3 shift = transform.forward * 0.5f;
         float distancePerFrame = speed * Time.deltaTime;
+        float raycastDistance = distancePerFrame + shift.magnitude;
         RaycastHit hit;
-        Ray ray = new Ray(transform.position - transform.forward * 0.5f, transform.forward); // shift origin to fix bug, when ray orign can be inside enemy collider and ignore it
+        Ray ray = new Ray(transform.position - shift, transform.forward); // shift origin to fix bug, when ray orign can be inside enemy collider and ignore it
 
-        if (Physics.Raycast(ray, out hit, distancePerFrame, coverLogicLayerMask))
+        if (Physics.Raycast(ray, out hit, raycastDistance, coverLogicLayerMask))
         {
             BulletThroughCoverLogic cover = hit.transform.gameObject.GetComponent<BulletThroughCoverLogic>();
             if (cover.CheckBullet(this))
@@ -39,7 +41,7 @@ public class Bullet : MonoBehaviour
             }
         }
 
-        if (Physics.Raycast(ray, out hit, distancePerFrame, physicalObstaclesLayerMask))
+        if (Physics.Raycast(ray, out hit, raycastDistance, physicalObstaclesLayerMask))
         {
             GameObject obstacle = hit.transform.gameObject;
             if (obstacle.layer == soldiersLayer)
