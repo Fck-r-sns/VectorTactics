@@ -9,6 +9,7 @@ public class WaypointRepresentation : MonoBehaviour
 
     public void SetHeight(float height)
     {
+        height = Mathf.Clamp(height, 0.01f, 1.0f);
         transform.localScale = new Vector3(1, height, 1);
     }
 
