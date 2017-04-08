@@ -6,9 +6,20 @@ public class SoldierInCoverLogic : MonoBehaviour
 {
 
     private HashSet<SoldierController> soldiersInCover = new HashSet<SoldierController>();
+    private Collider trigger;
+
+    void Start()
+    {
+        trigger = GetComponent<Collider>();
+    }
 
     public HashSet<SoldierController> GetSoldiersInCover() {
         return soldiersInCover;
+    }
+
+    public bool CheckIfPointInCover(Vector3 point)
+    {
+        return trigger.bounds.Contains(point);
     }
     
     private void OnTriggerEnter(Collider other)

@@ -74,11 +74,17 @@ namespace Ai
                         if (layer == coverLayer)
                         {
                             BulletThroughCoverLogic coverLogic = hit.transform.gameObject.GetComponent<BulletThroughCoverLogic>();
+
                             if (!coverLogic.CheckIfSoldierInCover(enemy))
                             {
                                 wp.behindCover = true;
                             }
-                            
+
+                            if (coverLogic.CheckIfPointInCover(wp.position))
+                            {
+                                wp.inCover = true;
+                            }
+
                             // continue ray over cover
                             Vector3 oldOrigin = ray.origin;
                             ray.origin = hit.point + ray.direction.normalized * 0.1f;
@@ -97,11 +103,18 @@ namespace Ai
 
                 if (wp.behindWall)
                 {
-                    wp.weight = 0.5f;
+                    wp.weight = 0.45f;
                 }
                 else if (wp.behindCover)
                 {
-                    wp.weight = 1.0f;
+                    if (wp.inCover)
+                    {
+                        wp.weight = 1.0f;
+                    }
+                    else
+                    {
+                        wp.weight = 0.66f;
+                    }
                 }
             }
         }

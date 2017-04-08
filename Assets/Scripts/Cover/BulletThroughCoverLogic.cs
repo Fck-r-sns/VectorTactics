@@ -17,4 +17,9 @@ public class BulletThroughCoverLogic : MonoBehaviour
     {
         return soldiersInCoverLogic.GetSoldiersInCover().Contains(soldier);
     }
+
+    public bool CheckIfPointInCover(Vector3 point)
+    {
+        return soldiersInCoverLogic.CheckIfPointInCover(point);
+    }
 }
