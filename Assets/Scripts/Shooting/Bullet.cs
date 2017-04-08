@@ -11,7 +11,6 @@ public class Bullet : MonoBehaviour
 
     private int soldiersLayer;
     private int wallsLayer;
-    private int coversLayer;
     private LayerMask coverLogicLayerMask;
     private LayerMask physicalObstaclesLayerMask;
 
@@ -20,7 +19,6 @@ public class Bullet : MonoBehaviour
     {
         soldiersLayer = LayerMask.NameToLayer("Soldiers");
         wallsLayer = LayerMask.NameToLayer("Walls");
-        coversLayer = LayerMask.NameToLayer("CoverTriggers");
         coverLogicLayerMask = LayerMask.GetMask("CoverTriggers");
         physicalObstaclesLayerMask = LayerMask.GetMask("Soldiers", "Walls");
     }
