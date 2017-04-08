@@ -33,7 +33,8 @@ namespace Ai
             List<Waypoint> waypoints = terrain.GetWaypoints();
             foreach(Waypoint wp in waypoints)
             {
-                GameObject obj = Instantiate(waypointPrefab, wp.position, Quaternion.identity, transform);
+                GameObject obj = Instantiate(waypointPrefab, wp.position, Quaternion.identity);
+                obj.transform.Translate(0.0f, 0.01f, 0.0f);
                 objects.Add(wp, obj.GetComponent<WaypointRepresentation>());
             }
         }
