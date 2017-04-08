@@ -6,12 +6,12 @@ using UnityEngine.AI;
 namespace Ai
 {
 
-    [RequireComponent(typeof(Controllable))]
+    [RequireComponent(typeof(SoldierController))]
     [RequireComponent(typeof(NavMeshAgent))]
     public class Navigation : MonoBehaviour
     {
 
-        private Controllable controllable;
+        private SoldierController controller;
         private NavMeshAgent navMeshAgent;
         private int floorMask;
         private NavMeshPath path;
@@ -20,7 +20,7 @@ namespace Ai
         // Use this for initialization
         void Start()
         {
-            controllable = GetComponent<Controllable>();
+            controller = GetComponent<SoldierController>();
             navMeshAgent = GetComponent<NavMeshAgent>();
             floorMask = LayerMask.GetMask("Floor");
             path = new NavMeshPath();
@@ -29,6 +29,11 @@ namespace Ai
         // Update is called once per frame
         void FixedUpdate()
         {
+            if (controller.IsDead())
+            {
+                return;
+            }
+
             if (Input.GetMouseButton(0))
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -49,16 +54,16 @@ namespace Ai
                 Vector3? nextPoint = GetNextPoint();
                 if (nextPoint.HasValue)
                 {
-                    controllable.Move(nextPoint.Value - transform.position);
+                    controller.Move(nextPoint.Value - transform.position);
                 }
                 else
                 {
-                    controllable.Move(Vector3.zero);
+                    controller.Move(Vector3.zero);
                 }
             }
             else
             {
-                controllable.Move(Vector3.zero);
+                controller.Move(Vector3.zero);
             }
         }
 
