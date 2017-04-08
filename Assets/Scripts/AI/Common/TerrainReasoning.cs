@@ -65,6 +65,7 @@ namespace Ai
                 RaycastHit hit;
                 do
                 {
+
                     if (Physics.Raycast(ray, out hit, raycastDistance, layerMask))
                     {
                         int layer = hit.transform.gameObject.layer;
@@ -90,6 +91,7 @@ namespace Ai
                         wp.weight = 0.0f;
                     }
                     break;
+
                 } while (true);
             }
         }

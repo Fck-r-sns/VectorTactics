@@ -100,7 +100,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4324887920659152, guid: d2f986953cd01e84bad35494efd4a411, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 3.23
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4324887920659152, guid: d2f986953cd01e84bad35494efd4a411, type: 2}
       propertyPath: m_LocalPosition.y
@@ -246,7 +246,7 @@ MonoBehaviour:
   mode: 0
   mapWidth: 20
   mapHeight: 20
-  gridStep: 0.5
+  gridStep: 1
 --- !u!1001 &1211764717
 Prefab:
   m_ObjectHideFlags: 0
