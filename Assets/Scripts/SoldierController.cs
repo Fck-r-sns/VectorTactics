@@ -64,6 +64,7 @@ public class SoldierController : MonoBehaviour, Controllable
             animator.AnimateDeath();
             isDead = true;
             GetComponent<Collider>().enabled = false;
+            weapon.gameObject.GetComponent<Collider>().enabled = false;
         }
     }
 
