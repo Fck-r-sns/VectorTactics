@@ -19,7 +19,7 @@ public class Bullet : MonoBehaviour
     {
         soldiersLayer = LayerMask.NameToLayer("Soldiers");
         wallsLayer = LayerMask.NameToLayer("Walls");
-        coverLogicLayerMask = LayerMask.GetMask("CoverTriggers");
+        coverLogicLayerMask = LayerMask.GetMask("Cover");
         physicalObstaclesLayerMask = LayerMask.GetMask("Soldiers", "Walls");
     }
 
