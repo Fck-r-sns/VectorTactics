@@ -53,10 +53,12 @@ namespace Ai
         {
             foreach (Waypoint wp in waypoints)
             {
+                wp.Reset();
+
                 Vector3 origin = enemy.transform.position;
                 origin.y = 0.0f;
                 float distanceToEnemy = Vector3.Distance(wp.position, origin);
-                origin.y = 1.7f; // height of soldiers' head
+                origin.y = 1.7f; // height of soldiers' heads
                 Vector3 direction = wp.position - origin;
                 direction.y = 0.0f;
 
@@ -72,27 +74,35 @@ namespace Ai
                         if (layer == coverLayer)
                         {
                             BulletThroughCoverLogic coverLogic = hit.transform.gameObject.GetComponent<BulletThroughCoverLogic>();
-                            if (coverLogic.CheckIfSoldierInCover(enemy))
+                            if (!coverLogic.CheckIfSoldierInCover(enemy))
                             {
-                                Vector3 oldOrigin = ray.origin;
-                                ray.origin = hit.point + ray.direction.normalized * 0.1f;
-                                raycastDistance -= Vector3.Distance(ray.origin, oldOrigin);
-                                continue;
+                                wp.behindCover = true;
                             }
-                            wp.weight = 1.0f;
+                            
+                            // continue ray over cover
+                            Vector3 oldOrigin = ray.origin;
+                            ray.origin = hit.point + ray.direction.normalized * 0.1f;
+                            raycastDistance -= Vector3.Distance(ray.origin, oldOrigin);
+                            continue;
                         }
                         else if (layer == wallsLayer)
                         {
-                            wp.weight = 0.5f;
+                            wp.behindWall = true;
                         }
                     }
-                    else
-                    {
-                        wp.weight = 0.0f;
-                    }
+
                     break;
 
                 } while (true);
+
+                if (wp.behindWall)
+                {
+                    wp.weight = 0.5f;
+                }
+                else if (wp.behindCover)
+                {
+                    wp.weight = 1.0f;
+                }
             }
         }
 

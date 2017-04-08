@@ -246,7 +246,7 @@ MonoBehaviour:
   mode: 0
   mapWidth: 20
   mapHeight: 20
-  gridStep: 1
+  gridStep: 0.5
 --- !u!1001 &1211764717
 Prefab:
   m_ObjectHideFlags: 0
