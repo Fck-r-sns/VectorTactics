@@ -87,8 +87,8 @@ NavMeshSettings:
     ledgeDropHeight: 0
     maxJumpAcrossDistance: 0
     minRegionArea: 1
-    manualCellSize: 0
-    cellSize: 0.25
+    manualCellSize: 1
+    cellSize: 0.1
     accuratePlacement: 0
   m_NavMeshData: {fileID: 23800000, guid: 4583578d94b006040b34955d713953b9, type: 2}
 --- !u!1001 &570853132
