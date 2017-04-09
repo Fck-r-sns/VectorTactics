@@ -17,6 +17,11 @@ namespace Ai
         private NavMeshPath path;
         private Vector3? destination = null;
 
+        public void SetDestination(Vector3? destination)
+        {
+            this.destination = destination;
+        }
+
         // Use this for initialization
         void Start()
         {
