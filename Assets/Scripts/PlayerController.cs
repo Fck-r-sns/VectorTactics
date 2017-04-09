@@ -17,6 +17,10 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (controllable.IsDead())
+        {
+            return;
+        }
         Move();
         TurnAndShoot();
     }
