@@ -8,8 +8,8 @@ namespace Ai
     {
         public class Defence : SoldierState
         {
-            public Defence(WorldState world, TerrainReasoning terrain, Navigation navigation, SoldierController controller) : 
-                base(world, terrain, navigation, controller)
+            public Defence(WorldState world, TerrainReasoning terrain, Navigation navigation, Shooting shooting, SoldierController controller) : 
+                base(world, terrain, navigation, shooting, controller)
             {
             }
 

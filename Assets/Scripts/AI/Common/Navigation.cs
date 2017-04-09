@@ -60,7 +60,7 @@ namespace Ai
 
             UpdatePath();
 
-            if (path.status != NavMeshPathStatus.PathInvalid && path.corners.Length > 0)
+            if (destination.HasValue && (path.status != NavMeshPathStatus.PathInvalid) && (path.corners.Length > 0))
             {
                 Vector3? nextPoint = GetNextPoint();
                 if (nextPoint.HasValue)

@@ -9,6 +9,7 @@ namespace Ai
 
         [RequireComponent(typeof(TerrainReasoning))]
         [RequireComponent(typeof(Navigation))]
+        [RequireComponent(typeof(Shooting))]
         [RequireComponent(typeof(SoldierController))]
         public class FsmController : MonoBehaviour
         {
@@ -18,6 +19,7 @@ namespace Ai
 
             private TerrainReasoning terrain;
             private Navigation navigation;
+            private Shooting shooting;
             private SoldierController controller;
             private SoldierController enemy;
 
@@ -28,6 +30,7 @@ namespace Ai
             {
                 terrain = GetComponent<TerrainReasoning>();
                 navigation = GetComponent<Navigation>();
+                shooting = GetComponent<Shooting>();
                 controller = GetComponent<SoldierController>();
                 enemy = (world.GetBlueSoldier() == controller) ? world.GetRedSoldier() : world.GetBlueSoldier();
                     
@@ -44,10 +47,10 @@ namespace Ai
             // returns initial state
             private State InitStates()
             {
-                SearchEnemy searchEnemyState = new SearchEnemy(world, terrain, navigation, controller);
-                SearchHealthPack searchHealthPackState = new SearchHealthPack(world, terrain, navigation, controller);
-                Attack attackState = new Attack(world, terrain, navigation, controller);
-                Defence defenceState = new Defence(world, terrain, navigation, controller);
+                SearchEnemy searchEnemyState = new SearchEnemy(world, terrain, navigation, shooting, controller);
+                SearchHealthPack searchHealthPackState = new SearchHealthPack(world, terrain, navigation, shooting, controller);
+                Attack attackState = new Attack(world, terrain, navigation, shooting, controller);
+                Defence defenceState = new Defence(world, terrain, navigation, shooting, controller);
 
                 searchEnemyState.AddTransition(
                     new Transition(

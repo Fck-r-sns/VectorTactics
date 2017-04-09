@@ -9,8 +9,8 @@ namespace Ai
 
         public class SearchHealthPack : SoldierState
         {
-            public SearchHealthPack(WorldState world, TerrainReasoning terrain, Navigation navigation, SoldierController controller) : 
-                base(world, terrain, navigation, controller)
+            public SearchHealthPack(WorldState world, TerrainReasoning terrain, Navigation navigation, Shooting shooting, SoldierController controller) : 
+                base(world, terrain, navigation, shooting, controller)
             {
             }
 

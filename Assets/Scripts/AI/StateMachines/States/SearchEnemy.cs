@@ -13,8 +13,8 @@ namespace Ai
             private Vector3? destination;
             private GameObject target;
 
-            public SearchEnemy(WorldState world, TerrainReasoning terrain, Navigation navigation, SoldierController controller) :
-                base(world, terrain, navigation, controller)
+            public SearchEnemy(WorldState world, TerrainReasoning terrain, Navigation navigation, Shooting shooting, SoldierController controller) :
+                base(world, terrain, navigation, shooting, controller)
             {
                 target = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
                 target.GetComponent<Collider>().enabled = false;
@@ -23,6 +23,8 @@ namespace Ai
             public override void OnEnter()
             {
                 Debug.Log(Time.time + ": Enter SearchEnemy state");
+                shooting.SetAimingEnabled(false);
+                shooting.SetShootingEnabled(false);
             }
 
             public override void OnUpdate()
@@ -32,6 +34,7 @@ namespace Ai
                     destination = GetNextDestination();
                     navigation.SetDestination(destination);
                 }
+
                 if (
                     !navigation.IsDestinationReachable() 
                     || (destination.HasValue && Vector3.Distance(controller.transform.position, destination.Value) < 2.0f)
@@ -39,6 +42,7 @@ namespace Ai
                 {
                     destination = null;
                 }
+
                 if (destination.HasValue)
                 {
                     target.SetActive(true);
