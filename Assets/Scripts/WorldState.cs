@@ -11,6 +11,11 @@ public class WorldState : MonoBehaviour
     [SerializeField]
     private SoldierController redSoldierController;
 
+    [SerializeField]
+    private VisibilityChecker visibilityChecker;
+
+    private bool enemySpotted = false;
+
     public SoldierController blueSoldier {
         get {
             return blueSoldierController;
@@ -30,6 +35,6 @@ public class WorldState : MonoBehaviour
 
     void Update()
     {
-
+        enemySpotted = visibilityChecker.IsVisible();
     }
 }

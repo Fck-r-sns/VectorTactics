@@ -1232,6 +1232,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blueSoldierController: {fileID: 473997464}
   redSoldierController: {fileID: 14864099}
+  visibilityChecker: {fileID: 921243479}
 --- !u!114 &921243483
 MonoBehaviour:
   m_ObjectHideFlags: 0
