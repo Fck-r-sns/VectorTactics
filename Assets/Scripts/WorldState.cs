@@ -14,7 +14,8 @@ public class WorldState : MonoBehaviour
     [SerializeField]
     private VisibilityChecker visibilityChecker;
 
-    private bool enemySpotted = false;
+    private bool blueSeesRed = false;
+    private bool redSeesBlue = false;
 
     public SoldierController GetBlueSoldier()
     {
@@ -25,9 +26,9 @@ public class WorldState : MonoBehaviour
         return redSoldier;
     }
 
-    public bool IsEnemySpotted()
+    public bool IsEnemySpotted(Defines.Side targetEnemy)
     {
-        return enemySpotted;
+        return (targetEnemy == Defines.Side.Blue) ? redSeesBlue : blueSeesRed;
     }
 
     void Awake()
@@ -37,6 +38,7 @@ public class WorldState : MonoBehaviour
 
     void Update()
     {
-        enemySpotted = visibilityChecker.Check();
+        blueSeesRed = visibilityChecker.CheckVisibility(blueSoldier, redSoldier);
+        redSeesBlue = visibilityChecker.CheckVisibility(redSoldier, blueSoldier);
     }
 }

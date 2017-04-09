@@ -51,7 +51,7 @@ namespace Ai
 
                 searchEnemyState.AddTransition(
                     new Transition(
-                        () => world.IsEnemySpotted(),
+                        () => world.IsEnemySpotted(enemy.GetSide()),
                         attackState
                         )
                     );
@@ -72,14 +72,14 @@ namespace Ai
 
                 attackState.AddTransition(
                     new Transition(
-                        () => (controller.GetHealth() > Defines.MEDIUM_HP) && !world.IsEnemySpotted(),
+                        () => (controller.GetHealth() > Defines.MEDIUM_HP) && !world.IsEnemySpotted(enemy.GetSide()),
                         searchEnemyState
                         )
                     );
 
                 defenceState.AddTransition(
                     new Transition(
-                        () => (controller.GetHealth() <= Defines.LOW_HP) || !world.IsEnemySpotted(),
+                        () => (controller.GetHealth() <= Defines.LOW_HP) || !world.IsEnemySpotted(enemy.GetSide()),
                         searchHealthPackState
                         )
                     );

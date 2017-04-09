@@ -25,6 +25,11 @@ public class SoldierController : MonoBehaviour, Controllable
         weapon = GetComponentInChildren<Weapon>();
     }
 
+    public Defines.Side GetSide()
+    {
+        return side;
+    }
+
     public float GetHealth()
     {
         return health;
