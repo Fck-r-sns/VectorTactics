@@ -11,10 +11,13 @@ namespace Ai
         {
 
             private Vector3? destination;
+            private GameObject target;
 
             public SearchEnemy(WorldState world, TerrainReasoning terrain, Navigation navigation, SoldierController controller) :
                 base(world, terrain, navigation, controller)
             {
+                target = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                target.GetComponent<Collider>().enabled = false;
             }
 
             public override void OnEnter()
@@ -24,12 +27,32 @@ namespace Ai
 
             public override void OnUpdate()
             {
-                destination = GetNextDestination();
-                navigation.SetDestination(destination);
-                if (!navigation.IsDestinationReachable())
+                if (!destination.HasValue)
+                {
+                    destination = GetNextDestination();
+                    navigation.SetDestination(destination);
+                }
+                if (
+                    !navigation.IsDestinationReachable() 
+                    || (destination.HasValue && Vector3.Distance(controller.transform.position, destination.Value) < 2.0f)
+                    )
                 {
                     destination = null;
                 }
+                if (destination.HasValue)
+                {
+                    target.SetActive(true);
+                    target.transform.position = destination.Value;
+                }
+                else
+                {
+                    target.SetActive(false);
+                }
+            }
+
+            public override void OnExit()
+            {
+                target.SetActive(false);
             }
 
             private Vector3 GetNextDestination()

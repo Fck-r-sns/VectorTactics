@@ -7,12 +7,6 @@ namespace Ai
         public class FiniteStateMachine
         {
             private State currentState;
-            private WorldState world;
-
-            public FiniteStateMachine(WorldState world)
-            {
-                this.world = world;
-            }
 
             public void SetInitialState(State state)
             {
@@ -21,7 +15,7 @@ namespace Ai
 
             public void Update()
             {
-                State nextState = currentState.CheckTransitions(world);
+                State nextState = currentState.CheckTransitions();
                 if (nextState != null)
                 {
                     currentState.OnExit();

@@ -244,8 +244,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   worldState: {fileID: 921243482}
   mode: 0
-  mapWidth: 30
-  mapHeight: 30
   gridStep: 1
 --- !u!114 &14864096
 MonoBehaviour:
@@ -273,6 +271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6e07f1a252cb40499c974c0ddc633fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableMouseControl: 0
 --- !u!195 &14864098
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -299,6 +298,18 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 14864093}
   m_Script: {fileID: 11500000, guid: f92adf6de49d9954c8c701d2d0b6eb80, type: 3}
+--- !u!114 &14864100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 14864094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03e3b1538de6cab45ba9f63409653056, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  world: {fileID: 921243482}
 --- !u!4 &25498016 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4550438647433996, guid: f1ba12164c68f2241b0b83a28418be8d,
@@ -1230,8 +1241,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 763f46a6aa97a3c4586576aad1f1cb7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blueSoldierController: {fileID: 473997464}
-  redSoldierController: {fileID: 14864099}
+  blueSoldier: {fileID: 473997464}
+  redSoldier: {fileID: 14864099}
   visibilityChecker: {fileID: 921243479}
 --- !u!114 &921243483
 MonoBehaviour:

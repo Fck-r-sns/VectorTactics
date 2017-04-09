@@ -15,11 +15,11 @@ namespace Ai
                 transitions.Add(transition);
             }
 
-            public virtual State CheckTransitions(WorldState world)
+            public virtual State CheckTransitions()
             {
                 foreach (Transition t in transitions)
                 {
-                    if (t.condition(world))
+                    if (t.condition())
                     {
                         return t.destination;
                     }

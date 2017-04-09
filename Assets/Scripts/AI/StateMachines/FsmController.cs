@@ -30,7 +30,8 @@ namespace Ai
                 navigation = GetComponent<Navigation>();
                 controller = GetComponent<SoldierController>();
                 enemy = (world.GetBlueSoldier() == controller) ? world.GetRedSoldier() : world.GetBlueSoldier();
-                fsm = new FiniteStateMachine(world);
+                    
+                fsm = new FiniteStateMachine();
                 State initialState = InitStates();
                 fsm.SetInitialState(initialState);
             }
