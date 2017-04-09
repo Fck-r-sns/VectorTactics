@@ -7,7 +7,7 @@ namespace Ai
         public class Transition
         {
 
-            public delegate bool ConditionChecker(WorldState world);
+            public delegate bool ConditionChecker();
             public readonly ConditionChecker condition;
             public readonly State destination;
 
