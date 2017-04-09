@@ -18,6 +18,7 @@ public class SoldierController : MonoBehaviour, Controllable
     private SoldierAnimation animator;
     private Weapon weapon;
     private bool isDead = false;
+    private Vector3 movementDirection;
 
     private void Awake()
     {
@@ -28,6 +29,16 @@ public class SoldierController : MonoBehaviour, Controllable
     public Defines.Side GetSide()
     {
         return side;
+    }
+
+    public float GetSpeed()
+    {
+        return speed;
+    }
+
+    public Vector3 GetMovementDirection()
+    {
+        return movementDirection;
     }
 
     public float GetHealth()
@@ -43,7 +54,8 @@ public class SoldierController : MonoBehaviour, Controllable
     public void Move(Vector3 direction)
     {
         direction.y = 0.0f;
-        transform.Translate(direction.normalized * speed * Time.fixedDeltaTime, Space.World);
+        movementDirection = direction.normalized;
+        transform.Translate(movementDirection * speed * Time.fixedDeltaTime, Space.World);
         animator.AnimateMoving(direction);
     }
 

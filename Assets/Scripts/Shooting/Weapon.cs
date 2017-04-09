@@ -34,6 +34,11 @@ public class Weapon : MonoBehaviour
     private float timePerShot;
     private float nextShotAvailableTime = 0.0f;
 
+    public float GetBulletSpeed()
+    {
+        return bulletSpeed;
+    }
+
     public void fire(Vector3 target)
     {
         if (Time.time < nextShotAvailableTime)

@@ -12,6 +12,9 @@ namespace Ai
         [SerializeField]
         private SoldierController target;
 
+        [SerializeField]
+        private Weapon weapon;
+
         private SoldierController controller;
         private bool enableAiming = false;
         private bool enableShooting = false;
@@ -40,14 +43,33 @@ namespace Ai
                 return;
             }
 
+            //float bulletTime = Vector3.Distance(transform.position, target.transform.position) / (weapon.GetBulletSpeed() - 2-);
+            //Vector3 shootingTarget = target.transform.position + target.GetMovementDirection() * bulletTime;
+            //Debug.DrawLine(transform.position, shootingTarget);
+
+            float vb = weapon.GetBulletSpeed();
+            float vt = target.GetSpeed();
+            float angle = Vector3.Angle(target.GetMovementDirection(), transform.position - target.transform.position);
+            float dst = Vector3.Distance(target.transform.position, transform.position);
+            float a = vt * vt - vb * vb;
+            float b = 2 * dst * vt * Mathf.Cos(Mathf.Deg2Rad * angle);
+            float c = dst * dst;
+            float D = b * b - 4 * a * c;
+            float sqrtD = Mathf.Sqrt(D);
+            float x1 = (-b + sqrtD) / (2 * a);
+            float x2 = (-b - sqrtD) / (2 * a);
+            float bulletTime = Mathf.Max(x1, x2);
+            Vector3 shootingTarget = target.transform.position + target.GetMovementDirection() * bulletTime;
+            Debug.DrawLine(transform.position, shootingTarget, (controller.GetSide() == Defines.Side.Blue) ? Color.blue : Color.red);
+
             if (enableAiming)
             {
-                controller.TurnToPoint(target.transform.position);
+                controller.TurnToPoint(shootingTarget);
             }
 
             if (enableShooting)
             {
-                controller.Shoot(target.transform.position);
+                controller.Shoot(shootingTarget);
             }
         }
     }
