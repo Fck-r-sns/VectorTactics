@@ -127,7 +127,6 @@ namespace Ai
                 } while (true);
 
                 wp.weight = waypointProcessor(wp);
-
             }
         }
 
