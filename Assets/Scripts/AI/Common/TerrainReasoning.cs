@@ -22,12 +22,6 @@ namespace Ai
         private WaypointGenerationMode mode = WaypointGenerationMode.Naive;
 
         [SerializeField]
-        private float mapWidth = 100.0f;
-
-        [SerializeField]
-        private float mapHeight = 100.0f;
-
-        [SerializeField]
         private float gridStep = 0.5f;
 
         private SoldierController owner;
@@ -43,7 +37,7 @@ namespace Ai
         void Awake()
         {
             owner = GetComponent<SoldierController>();
-            enemy = (worldState.blueSoldier == owner) ? worldState.redSoldier : worldState.blueSoldier;
+            enemy = (worldState.GetBlueSoldier() == owner) ? worldState.GetRedSoldier() : worldState.GetBlueSoldier();
 
             layerMask = LayerMask.GetMask("Cover", "Walls");
             coverLayer = LayerMask.NameToLayer("Cover");
@@ -154,9 +148,9 @@ namespace Ai
         private List<Waypoint> NaiveWaypointGenerator()
         {
             List<Waypoint> waypoints = new List<Waypoint>();
-            for (float x = -mapWidth / 2.0f; x <= mapWidth / 2.0f; x += gridStep)
+            for (float x = -Defines.MAP_WIDTH / 2.0f; x <= Defines.MAP_WIDTH / 2.0f; x += gridStep)
             {
-                for (float z = -mapHeight / 2.0f; z <= mapHeight / 2.0f; z += gridStep)
+                for (float z = -Defines.MAP_HEIGHT / 2.0f; z <= Defines.MAP_HEIGHT / 2.0f; z += gridStep)
                 {
                     waypoints.Add(new Waypoint(new Vector3(x, 0, z)));
                 }

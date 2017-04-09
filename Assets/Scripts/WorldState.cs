@@ -6,26 +6,28 @@ public class WorldState : MonoBehaviour
 {
 
     [SerializeField]
-    private SoldierController blueSoldierController;
+    private SoldierController blueSoldier;
 
     [SerializeField]
-    private SoldierController redSoldierController;
+    private SoldierController redSoldier;
 
     [SerializeField]
     private VisibilityChecker visibilityChecker;
 
     private bool enemySpotted = false;
 
-    public SoldierController blueSoldier {
-        get {
-            return blueSoldierController;
-        }
+    public SoldierController GetBlueSoldier()
+    {
+        return blueSoldier;
     }
 
-    public SoldierController redSoldier {
-        get {
-            return redSoldierController;
-        }
+    public SoldierController GetRedSoldier() {
+        return redSoldier;
+    }
+
+    public bool IsEnemySpotted()
+    {
+        return enemySpotted;
     }
 
     void Awake()

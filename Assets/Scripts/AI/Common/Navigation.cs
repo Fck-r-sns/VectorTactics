@@ -11,6 +11,9 @@ namespace Ai
     public class Navigation : MonoBehaviour
     {
 
+        [SerializeField]
+        private bool enableMouseControl = false;
+
         private SoldierController controller;
         private NavMeshAgent navMeshAgent;
         private int floorMask;
@@ -20,6 +23,12 @@ namespace Ai
         public void SetDestination(Vector3? destination)
         {
             this.destination = destination;
+            UpdatePath();
+        }
+
+        public bool IsDestinationReachable()
+        {
+            return (path.status == NavMeshPathStatus.PathComplete);
         }
 
         // Use this for initialization
@@ -39,7 +48,7 @@ namespace Ai
                 return;
             }
 
-            if (Input.GetMouseButton(1))
+            if (enableMouseControl && Input.GetMouseButton(1))
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
@@ -49,10 +58,7 @@ namespace Ai
                 }
             }
 
-            if (destination.HasValue)
-            {
-                navMeshAgent.CalculatePath(destination.Value, path);
-            }
+            UpdatePath();
 
             if (path.status != NavMeshPathStatus.PathInvalid && path.corners.Length > 0)
             {
@@ -86,6 +92,14 @@ namespace Ai
                 }
             };
             return null;
+        }
+
+        private void UpdatePath()
+        {
+            if (destination.HasValue)
+            {
+                navMeshAgent.CalculatePath(destination.Value, path);
+            }
         }
     }
 
