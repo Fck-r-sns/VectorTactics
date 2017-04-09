@@ -13,6 +13,8 @@ namespace Ai
             Naive
         }
 
+        public delegate float WaypointProcessor(Waypoint wp);
+
         [SerializeField]
         private WorldState worldState;
 
@@ -35,6 +37,7 @@ namespace Ai
         private int coverLayer;
         private int wallsLayer;
 
+        private WaypointProcessor waypointProcessor;
         private List<Waypoint> waypoints = new List<Waypoint>();
 
         void Awake()
@@ -45,6 +48,28 @@ namespace Ai
             layerMask = LayerMask.GetMask("Cover", "Walls");
             coverLayer = LayerMask.NameToLayer("Cover");
             wallsLayer = LayerMask.NameToLayer("Walls");
+
+            // default waypoint processor
+            waypointProcessor = wp =>
+            {
+                float weight = 0.0f;
+                if (wp.behindWall)
+                {
+                    weight = 0.45f;
+                }
+                else if (wp.behindCover)
+                {
+                    if (wp.inCover)
+                    {
+                        weight = 1.0f;
+                    }
+                    else
+                    {
+                        weight = 0.66f;
+                    }
+                }
+                return weight;
+            };
 
             waypoints = GenerateWaypoints();
         }
@@ -101,27 +126,19 @@ namespace Ai
 
                 } while (true);
 
-                if (wp.behindWall)
-                {
-                    wp.weight = 0.45f;
-                }
-                else if (wp.behindCover)
-                {
-                    if (wp.inCover)
-                    {
-                        wp.weight = 1.0f;
-                    }
-                    else
-                    {
-                        wp.weight = 0.66f;
-                    }
-                }
+                wp.weight = waypointProcessor(wp);
+
             }
         }
 
         public List<Waypoint> GetWaypoints()
         {
             return waypoints;
+        }
+
+        public void setWaypointProcessor(WaypointProcessor waypointProcessor)
+        {
+            this.waypointProcessor = waypointProcessor;
         }
 
         private List<Waypoint> GenerateWaypoints()
