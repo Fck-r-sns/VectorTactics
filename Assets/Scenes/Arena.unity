@@ -246,7 +246,7 @@ MonoBehaviour:
   mode: 0
   mapWidth: 30
   mapHeight: 30
-  gridStep: 0.5
+  gridStep: 1
 --- !u!114 &14864096
 MonoBehaviour:
   m_ObjectHideFlags: 0
