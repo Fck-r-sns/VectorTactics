@@ -37,6 +37,6 @@ public class WorldState : MonoBehaviour
 
     void Update()
     {
-        enemySpotted = visibilityChecker.IsVisible();
+        enemySpotted = visibilityChecker.Check();
     }
 }

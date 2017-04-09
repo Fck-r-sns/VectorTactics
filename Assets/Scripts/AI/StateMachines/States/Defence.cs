@@ -15,7 +15,7 @@ namespace Ai
 
             public override void OnEnter()
             {
-                Debug.Log("Enter Defence state");
+                Debug.Log(Time.time + ": Enter Defence state");
             }
         }
     }

@@ -22,7 +22,7 @@ namespace Ai
 
             public override void OnEnter()
             {
-                Debug.Log("Enter SearchEnemy state");
+                Debug.Log(Time.time + ": Enter SearchEnemy state");
             }
 
             public override void OnUpdate()
@@ -52,6 +52,8 @@ namespace Ai
 
             public override void OnExit()
             {
+                destination = null;
+                navigation.SetDestination(null);
                 target.SetActive(false);
             }
 

@@ -16,7 +16,7 @@ namespace Ai
 
             public override void OnEnter()
             {
-                Debug.Log("Enter SearchHealthPack state");
+                Debug.Log(Time.time + ": Enter SearchHealthPack state");
             }
         }
 

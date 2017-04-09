@@ -44,7 +44,7 @@ public class Weapon : MonoBehaviour
         if (Vector3.Distance(target, shootingPoint.position) < SHOOTING_MODE_THRESHOLD)
         {
             target = shootingPoint.position + shootingPoint.forward;
-        } 
+        }
         else
         {
             target = shootingPoint.position + direction;
@@ -63,13 +63,14 @@ public class Weapon : MonoBehaviour
         Destroy(bulletObject, 10.0f);
         nextShotAvailableTime = Time.time + timePerShot;
     }
-        
-	void Start () {
+
+    void Start()
+    {
         timePerShot = 1.0f / shotsPerSecond;
-	}
-	
-	
-	void Update () {
+    }
+    
+    void Update()
+    {
     }
 
     private Vector3 GetRandomShift()

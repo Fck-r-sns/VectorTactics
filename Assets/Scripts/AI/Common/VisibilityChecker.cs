@@ -13,18 +13,7 @@ public class VisibilityChecker : MonoBehaviour
     private int soldiersLayer;
     private bool isVisible = false;
 
-    public bool IsVisible()
-    {
-        return isVisible;
-    }
-    
-    void Start()
-    {
-        layerMask = LayerMask.GetMask("Soldiers", "Walls");
-        soldiersLayer = LayerMask.NameToLayer("Soldiers");
-    }
-
-    void Update()
+    public bool Check()
     {
         Vector3 origin = blueSoldier.transform.position;
         origin.y = 1.7f; // height of head
@@ -33,11 +22,17 @@ public class VisibilityChecker : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, float.MaxValue, layerMask))
         {
-            isVisible = (hit.transform.gameObject.layer == soldiersLayer);
+            return (hit.transform.gameObject.layer == soldiersLayer);
         }
         else
         {
-            isVisible = false;
+            return false;
         }
+    }
+    
+    void Start()
+    {
+        layerMask = LayerMask.GetMask("Soldiers", "Walls");
+        soldiersLayer = LayerMask.NameToLayer("Soldiers");
     }
 }
