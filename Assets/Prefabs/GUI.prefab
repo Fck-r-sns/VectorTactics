@@ -117,7 +117,7 @@ GameObject:
   - component: {fileID: 4020913620545672}
   - component: {fileID: 114154963243558180}
   - component: {fileID: 114124252945715198}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: EventSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -232,7 +232,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4860306485687216}
-  m_Layer: 0
+  - component: {fileID: 114255869705424690}
+  m_Layer: 5
   m_Name: GUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -276,7 +277,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1940328375326104}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.196527, y: -5.5554895, z: -9.698082}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 224069203908871784}
@@ -359,6 +360,17 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114255869705424690
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1940328375326104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f72b6058c910111468df8856d4067987, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114338047782709174
 MonoBehaviour:
   m_ObjectHideFlags: 1

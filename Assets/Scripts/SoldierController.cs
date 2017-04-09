@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+
+using EventBus;
 
 [RequireComponent(typeof(SoldierAnimation))]
 public class SoldierController : MonoBehaviour, Controllable
 {
+
+    [SerializeField]
+    private global::Defines.Side side = Defines.Side.Blue;
 
     [SerializeField]
     private float speed = 6.0f;
@@ -66,6 +68,8 @@ public class SoldierController : MonoBehaviour, Controllable
             GetComponent<Collider>().enabled = false;
             weapon.gameObject.GetComponent<Collider>().enabled = false;
         }
+
+        Dispatcher.SendEvent(new HealthChanged(health, side));
     }
 
 }
