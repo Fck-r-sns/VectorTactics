@@ -28,7 +28,7 @@ namespace Ai
 
         public bool IsDestinationReachable()
         {
-            return (path.status == NavMeshPathStatus.PathComplete);
+            return destination.HasValue && (path.status == NavMeshPathStatus.PathComplete);
         }
 
         // Use this for initialization
