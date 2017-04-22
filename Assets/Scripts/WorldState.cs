@@ -31,6 +31,10 @@ public class WorldState : MonoBehaviour
     {
         blueSoldierState.enemyState = redSoldierState;
         redSoldierState.enemyState = blueSoldierState;
+
+        // set last known positions to initial spawning points
+        blueSoldierState.lastEnemyPosition = redSoldierState.position;
+        redSoldierState.lastEnemyPosition = blueSoldierState.position;
     }
 
     void Update()
