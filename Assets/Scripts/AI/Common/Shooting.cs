@@ -62,19 +62,22 @@ namespace Ai
 
         private Vector3 CalculateShootingTarget()
         {
+            if (targetState.movementDirection.Equals(Vector3.zero)) {
+                return targetState.position;
+            }
             float vb = weapon.GetBulletSpeed();
             float vt = targetState.speed;
             float angle = Vector3.Angle(targetState.movementDirection, agentState.position - targetState.position);
             float dst = agentState.distanceToEnemy;
             float a = vt * vt - vb * vb;
-            float b = 2 * dst * vt * Mathf.Cos(Mathf.Deg2Rad * angle);
+            float b = -2 * dst * vt * Mathf.Cos(Mathf.Deg2Rad * angle);
             float c = dst * dst;
             float D = b * b - 4 * a * c;
             float sqrtD = Mathf.Sqrt(D);
             float x1 = (-b + sqrtD) / (2 * a);
             float x2 = (-b - sqrtD) / (2 * a);
             float bulletTime = Mathf.Max(x1, x2);
-            return targetState.position + targetState.movementDirection * bulletTime;
+            return targetState.position + targetState.movementDirection * bulletTime * vt;
         }
     }
 
