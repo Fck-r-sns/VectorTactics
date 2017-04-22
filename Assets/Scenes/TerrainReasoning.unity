@@ -174,6 +174,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1042137011 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114474754160287216, guid: 1bea3cd97b9d39b459b383081f6e289f,
+    type: 2}
+  m_PrefabInternal: {fileID: 1584832204}
+  m_Script: {fileID: 11500000, guid: abcfc695e9e5c1d45870502eb37f0664, type: 3}
 --- !u!1 &1109491014 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1666388141178850, guid: 1bea3cd97b9d39b459b383081f6e289f,
@@ -190,6 +196,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6e07f1a252cb40499c974c0ddc633fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableMouseControl: 0
 --- !u!195 &1109491016
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -210,12 +217,12 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &1109491017 stripped
+--- !u!114 &1109491018 stripped
 MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114368089803710022, guid: 1bea3cd97b9d39b459b383081f6e289f,
+  m_PrefabParentObject: {fileID: 114474754160287216, guid: 1bea3cd97b9d39b459b383081f6e289f,
     type: 2}
   m_PrefabInternal: {fileID: 1211764717}
-  m_Script: {fileID: 11500000, guid: f92adf6de49d9954c8c701d2d0b6eb80, type: 3}
+  m_Script: {fileID: 11500000, guid: abcfc695e9e5c1d45870502eb37f0664, type: 3}
 --- !u!114 &1109491023
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -244,8 +251,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   worldState: {fileID: 1703895846}
   mode: 0
-  mapWidth: 20
-  mapHeight: 20
   gridStep: 0.5
 --- !u!1001 &1211764717
 Prefab:
@@ -316,6 +321,11 @@ Prefab:
       propertyPath: side
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114474754160287216, guid: 1bea3cd97b9d39b459b383081f6e289f,
+        type: 2}
+      propertyPath: enemyState
+      value: 
+      objectReference: {fileID: 1042137011}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1bea3cd97b9d39b459b383081f6e289f, type: 2}
   m_IsPrefabParent: 0
@@ -673,6 +683,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1703895847}
   - component: {fileID: 1703895846}
+  - component: {fileID: 1703895848}
   m_Layer: 0
   m_Name: WorldState
   m_TagString: Untagged
@@ -691,8 +702,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 763f46a6aa97a3c4586576aad1f1cb7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blueSoldierController: {fileID: 1492204088}
-  redSoldierController: {fileID: 1109491017}
+  blueSoldierState: {fileID: 1042137011}
+  redSoldierState: {fileID: 1109491018}
+  visibilityChecker: {fileID: 1703895848}
 --- !u!4 &1703895847
 Transform:
   m_ObjectHideFlags: 0
@@ -706,6 +718,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1703895848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1703895845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3af189fb945829b45b4b4d7d60620e0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1897801365
 Prefab:
   m_ObjectHideFlags: 0

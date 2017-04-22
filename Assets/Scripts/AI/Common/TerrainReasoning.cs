@@ -16,9 +16,6 @@ namespace Ai
         public delegate float WaypointProcessor(Waypoint wp);
 
         [SerializeField]
-        private WorldState worldState;
-
-        [SerializeField]
         private WaypointGenerationMode mode = WaypointGenerationMode.Naive;
 
         [SerializeField]
@@ -34,7 +31,7 @@ namespace Ai
         private WaypointProcessor waypointProcessor;
         private List<Waypoint> waypoints = new List<Waypoint>();
 
-        void Start()
+        void Awake()
         {
             agentState = GetComponent<CharacterState>();
             enemyState = agentState.enemyState;
@@ -129,7 +126,7 @@ namespace Ai
             return waypoints;
         }
 
-        public void setWaypointProcessor(WaypointProcessor waypointProcessor)
+        public void SetWaypointProcessor(WaypointProcessor waypointProcessor)
         {
             this.waypointProcessor = waypointProcessor;
         }
