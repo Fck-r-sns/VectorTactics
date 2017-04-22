@@ -12,6 +12,7 @@ public class CharacterState : MonoBehaviour
     public bool isNearCover = false;
     public bool isEnemyVisible = false;
     public float distanceToEnemy = 0.0f;
+    public Vector3 lastEnemyPosition;
     public CharacterState enemyState = null;
 
     public bool isDead {

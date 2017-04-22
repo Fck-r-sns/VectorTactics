@@ -42,6 +42,10 @@ public class WorldState : MonoBehaviour
     private void UpdateCharacterState(CharacterState state)
     {
         state.isEnemyVisible = visibilityChecker.CheckVisibility(state.transform, state.enemyState.transform);
-        state.distanceToEnemy = Vector3.Distance(state.transform.position, state.enemyState.transform.position);
+        if (state.isEnemyVisible)
+        {
+            state.lastEnemyPosition = state.enemyState.position;
+            state.distanceToEnemy = Vector3.Distance(state.position, state.lastEnemyPosition);
+        }
     }
 }
