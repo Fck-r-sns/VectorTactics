@@ -5,6 +5,7 @@ using UnityEngine;
 public class WaypointRepresentation : MonoBehaviour
 {
 
+    private GameObject model;
     private Material material;
 
     public void SetHeight(float height)
@@ -13,13 +14,19 @@ public class WaypointRepresentation : MonoBehaviour
         transform.localScale = new Vector3(1, height, 1);
     }
 
+    public void SetCellSize(float size)
+    {
+        model.transform.localScale = new Vector3(size, 1, size);
+    }
+
     public void SetColor(Color color)
     {
         material.color = color;
     }
 
-	void Start () {
-        material = transform.GetChild(0).GetComponent<Renderer>().material;
+	void Awake () {
+        model = transform.GetChild(0).gameObject;
+        material = model.GetComponent<Renderer>().material;
 	}
 
 }

@@ -35,7 +35,9 @@ namespace Ai
             {
                 GameObject obj = Instantiate(waypointPrefab, wp.position, Quaternion.identity);
                 obj.transform.Translate(0.0f, 0.01f, 0.0f);
-                objects.Add(wp, obj.GetComponent<WaypointRepresentation>());
+                WaypointRepresentation wpr = obj.GetComponent<WaypointRepresentation>();
+                wpr.SetCellSize(terrain.GetGridStep());
+                objects.Add(wp, wpr);
             }
         }
 

@@ -31,6 +31,11 @@ namespace Ai
         private WaypointProcessor waypointProcessor;
         private List<Waypoint> waypoints = new List<Waypoint>();
 
+        public float GetGridStep()
+        {
+            return gridStep;
+        }
+
         void Awake()
         {
             agentState = GetComponent<CharacterState>();
