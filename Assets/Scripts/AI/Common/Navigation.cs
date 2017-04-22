@@ -48,6 +48,7 @@ namespace Ai
         {
             if (state.isDead)
             {
+                navMeshAgent.enabled = false;
                 return;
             }
 
