@@ -6,17 +6,14 @@ namespace Ai
 {
 
     [RequireComponent(typeof(SoldierController))]
+    [RequireComponent(typeof(Weapon))]
     public class Shooting : MonoBehaviour
     {
 
-        [SerializeField]
-        private SoldierController target;
-
-        [SerializeField]
-        private Weapon weapon;
-
         private SoldierController controller;
-        private CharacterState state;
+        private Weapon weapon;
+        private CharacterState agentState;
+        private CharacterState targetState;
         private bool enableAiming = false;
         private bool enableShooting = false;
 
@@ -34,13 +31,15 @@ namespace Ai
         void Start()
         {
             controller = GetComponent<SoldierController>();
-            state = controller.GetState();
+            weapon = GetComponentInChildren<Weapon>();
+            agentState = controller.GetState();
+            targetState = agentState.enemyState;
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (state.isDead)
+            if (agentState.isDead)
             {
                 return;
             }
@@ -48,7 +47,7 @@ namespace Ai
             if (enableAiming)
             {
                 Vector3 shootingTarget = CalculateShootingTarget();
-                Debug.DrawLine(transform.position, shootingTarget, (state.side == Defines.Side.Blue) ? Color.blue : Color.red);
+                Debug.DrawLine(transform.position, shootingTarget, (agentState.side == Defines.Side.Blue) ? Color.blue : Color.red);
 
                 controller.TurnToPoint(shootingTarget);
 
@@ -58,15 +57,15 @@ namespace Ai
                 }
             }
 
-            controller.TurnToPoint(state.transform.position + state.movementDirection);
+            controller.TurnToPoint(agentState.transform.position + agentState.movementDirection);
         }
 
         private Vector3 CalculateShootingTarget()
         {
             float vb = weapon.GetBulletSpeed();
-            float vt = state.speed;
-            float angle = Vector3.Angle(state.movementDirection, transform.position - target.transform.position);
-            float dst = Vector3.Distance(target.transform.position, transform.position);
+            float vt = targetState.speed;
+            float angle = Vector3.Angle(targetState.movementDirection, agentState.position - targetState.position);
+            float dst = agentState.distanceToEnemy;
             float a = vt * vt - vb * vb;
             float b = 2 * dst * vt * Mathf.Cos(Mathf.Deg2Rad * angle);
             float c = dst * dst;
@@ -75,7 +74,7 @@ namespace Ai
             float x1 = (-b + sqrtD) / (2 * a);
             float x2 = (-b - sqrtD) / (2 * a);
             float bulletTime = Mathf.Max(x1, x2);
-            return target.transform.position + state.movementDirection * bulletTime;
+            return targetState.position + targetState.movementDirection * bulletTime;
         }
     }
 

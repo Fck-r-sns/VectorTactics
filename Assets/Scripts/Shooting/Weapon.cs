@@ -45,18 +45,18 @@ public class Weapon : MonoBehaviour
         {
             return;
         }
-        Vector3 direction = (target - shootingPoint.position).normalized;
-        if (Vector3.Distance(target, shootingPoint.position) < SHOOTING_MODE_THRESHOLD)
+        Vector3 direction = (target - aim.position).normalized;
+        if (Vector3.Distance(target, aim.position) < SHOOTING_MODE_THRESHOLD)
         {
             target = shootingPoint.position + shootingPoint.forward;
         }
         else
         {
-            target = shootingPoint.position + direction;
+            target = aim.position + direction;
         }
         Vector3 shift = GetRandomShift();
         target += shift;
-        target.y = shootingPoint.position.y;
+        target.y = aim.position.y;
         aim.LookAt(target, Vector3.up);
         GameObject bulletObject = Instantiate(bulletPrefab, shootingPoint.position, aim.rotation); // TODO: object pool
 
