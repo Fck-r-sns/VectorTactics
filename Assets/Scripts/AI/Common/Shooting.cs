@@ -45,6 +45,24 @@ namespace Ai
                 return;
             }
 
+            if (enableAiming)
+            {
+                Vector3 shootingTarget = CalculateShootingTarget();
+                Debug.DrawLine(transform.position, shootingTarget, (state.side == Defines.Side.Blue) ? Color.blue : Color.red);
+
+                controller.TurnToPoint(shootingTarget);
+
+                if (enableShooting)
+                {
+                    controller.Shoot(shootingTarget);
+                }
+            }
+
+            controller.TurnToPoint(state.transform.position + state.movementDirection);
+        }
+
+        private Vector3 CalculateShootingTarget()
+        {
             float vb = weapon.GetBulletSpeed();
             float vt = state.speed;
             float angle = Vector3.Angle(state.movementDirection, transform.position - target.transform.position);
@@ -57,18 +75,7 @@ namespace Ai
             float x1 = (-b + sqrtD) / (2 * a);
             float x2 = (-b - sqrtD) / (2 * a);
             float bulletTime = Mathf.Max(x1, x2);
-            Vector3 shootingTarget = target.transform.position + state.movementDirection * bulletTime;
-            Debug.DrawLine(transform.position, shootingTarget, (state.side == Defines.Side.Blue) ? Color.blue : Color.red);
-
-            if (enableAiming)
-            {
-                controller.TurnToPoint(shootingTarget);
-            }
-
-            if (enableShooting)
-            {
-                controller.Shoot(shootingTarget);
-            }
+            return target.transform.position + state.movementDirection * bulletTime;
         }
     }
 
