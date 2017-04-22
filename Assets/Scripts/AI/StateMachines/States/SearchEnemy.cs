@@ -13,8 +13,8 @@ namespace Ai
             private Vector3? destination;
             private GameObject target;
 
-            public SearchEnemy(WorldState world, TerrainReasoning terrain, Navigation navigation, Shooting shooting, SoldierController controller) :
-                base(world, terrain, navigation, shooting, controller)
+            public SearchEnemy(AiTools aiTools) :
+                base(aiTools)
             {
                 target = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
                 target.GetComponent<Collider>().enabled = false;
@@ -23,8 +23,8 @@ namespace Ai
             public override void OnEnter()
             {
                 Debug.Log(Time.time + ": Enter SearchEnemy state");
-                shooting.SetAimingEnabled(false);
-                shooting.SetShootingEnabled(false);
+                aiTools.shooting.SetAimingEnabled(false);
+                aiTools.shooting.SetShootingEnabled(false);
             }
 
             public override void OnUpdate()
@@ -32,12 +32,12 @@ namespace Ai
                 if (!destination.HasValue)
                 {
                     destination = GetNextDestination();
-                    navigation.SetDestination(destination);
+                    aiTools.navigation.SetDestination(destination);
                 }
 
                 if (
-                    !navigation.IsDestinationReachable() 
-                    || (destination.HasValue && Vector3.Distance(controller.transform.position, destination.Value) < 2.0f)
+                    !aiTools.navigation.IsDestinationReachable() 
+                    || (destination.HasValue && Vector3.Distance(aiTools.controller.transform.position, destination.Value) < 2.0f)
                     )
                 {
                     destination = null;
@@ -57,7 +57,7 @@ namespace Ai
             public override void OnExit()
             {
                 destination = null;
-                navigation.SetDestination(null);
+                aiTools.navigation.SetDestination(null);
                 target.SetActive(false);
             }
 

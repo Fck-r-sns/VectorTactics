@@ -189,21 +189,16 @@ Prefab:
       propertyPath: m_RootOrder
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 114457219366347080, guid: f54411585130954489e09b0a6add07f3,
+        type: 2}
+      propertyPath: enemyState
+      value: 
+      objectReference: {fileID: 1407986530}
     - target: {fileID: 114224504592895952, guid: f54411585130954489e09b0a6add07f3,
         type: 2}
       propertyPath: target
       value: 
       objectReference: {fileID: 675868793}
-    - target: {fileID: 114293218115827344, guid: f54411585130954489e09b0a6add07f3,
-        type: 2}
-      propertyPath: worldState
-      value: 
-      objectReference: {fileID: 921243482}
-    - target: {fileID: 114225304682151490, guid: f54411585130954489e09b0a6add07f3,
-        type: 2}
-      propertyPath: world
-      value: 
-      objectReference: {fileID: 921243482}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f54411585130954489e09b0a6add07f3, type: 2}
   m_IsPrefabParent: 0
@@ -779,6 +774,16 @@ Prefab:
       propertyPath: worldState
       value: 
       objectReference: {fileID: 921243482}
+    - target: {fileID: 114457219366347080, guid: f54411585130954489e09b0a6add07f3,
+        type: 2}
+      propertyPath: side
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114457219366347080, guid: f54411585130954489e09b0a6add07f3,
+        type: 2}
+      propertyPath: enemyState
+      value: 
+      objectReference: {fileID: 896022184}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f54411585130954489e09b0a6add07f3, type: 2}
   m_IsPrefabParent: 0
@@ -1102,6 +1107,12 @@ Transform:
   m_PrefabParentObject: {fileID: 4550438647433996, guid: f1ba12164c68f2241b0b83a28418be8d,
     type: 2}
   m_PrefabInternal: {fileID: 859942695}
+--- !u!114 &896022184 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114457219366347080, guid: f54411585130954489e09b0a6add07f3,
+    type: 2}
+  m_PrefabInternal: {fileID: 14864093}
+  m_Script: {fileID: 11500000, guid: abcfc695e9e5c1d45870502eb37f0664, type: 3}
 --- !u!1 &921243478
 GameObject:
   m_ObjectHideFlags: 0
@@ -1133,8 +1144,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3af189fb945829b45b4b4d7d60620e0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blueSoldier: {fileID: 675868793}
-  redSoldier: {fileID: 14864099}
 --- !u!114 &921243480
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1169,8 +1178,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 763f46a6aa97a3c4586576aad1f1cb7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blueSoldier: {fileID: 675868793}
-  redSoldier: {fileID: 14864099}
+  blueSoldierState: {fileID: 1407986530}
+  redSoldierState: {fileID: 896022184}
   visibilityChecker: {fileID: 921243479}
 --- !u!114 &921243483
 MonoBehaviour:
@@ -2021,6 +2030,12 @@ Transform:
   m_PrefabParentObject: {fileID: 4550438647433996, guid: f1ba12164c68f2241b0b83a28418be8d,
     type: 2}
   m_PrefabInternal: {fileID: 682357430}
+--- !u!114 &1407986530 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114457219366347080, guid: f54411585130954489e09b0a6add07f3,
+    type: 2}
+  m_PrefabInternal: {fileID: 491329896}
+  m_Script: {fileID: 11500000, guid: abcfc695e9e5c1d45870502eb37f0664, type: 3}
 --- !u!4 &1417942412 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4550438647433996, guid: f1ba12164c68f2241b0b83a28418be8d,

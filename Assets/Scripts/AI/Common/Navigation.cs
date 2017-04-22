@@ -15,10 +15,12 @@ namespace Ai
         private bool enableMouseControl = false;
 
         private SoldierController controller;
+        private CharacterState state;
         private NavMeshAgent navMeshAgent;
         private int floorMask;
         private NavMeshPath path;
         private Vector3? destination = null;
+        private int currentPathIndex = 0;
 
         public void SetDestination(Vector3? destination)
         {
@@ -35,6 +37,7 @@ namespace Ai
         void Start()
         {
             controller = GetComponent<SoldierController>();
+            state = controller.GetState();
             navMeshAgent = GetComponent<NavMeshAgent>();
             floorMask = LayerMask.GetMask("Floor");
             path = new NavMeshPath();
@@ -43,7 +46,7 @@ namespace Ai
         // Update is called once per frame
         void FixedUpdate()
         {
-            if (controller.IsDead())
+            if (state.isDead)
             {
                 return;
             }
@@ -54,11 +57,9 @@ namespace Ai
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit, Mathf.Infinity, floorMask))
                 {
-                    destination = hit.point;
+                    SetDestination(hit.point);
                 }
             }
-
-            UpdatePath();
 
             if (destination.HasValue && (path.status != NavMeshPathStatus.PathInvalid) && (path.corners.Length > 0))
             {
@@ -80,7 +81,7 @@ namespace Ai
 
         private Vector3? GetNextPoint()
         {
-            for (int i = 0; (i < path.corners.Length); ++i)
+            for (int i = currentPathIndex; (i < path.corners.Length); ++i)
             {
                 Vector3 nextPoint = path.corners[i];
                 nextPoint.y = 0;
@@ -88,6 +89,7 @@ namespace Ai
                 currentPosition.y = 0;
                 if (Vector3.Distance(nextPoint, currentPosition) > 0.1f)
                 {
+                    currentPathIndex = i;
                     return nextPoint;
                 }
             };
@@ -99,6 +101,7 @@ namespace Ai
             if (destination.HasValue)
             {
                 navMeshAgent.CalculatePath(destination.Value, path);
+                currentPathIndex = 0;
             }
         }
     }

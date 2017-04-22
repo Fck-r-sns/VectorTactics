@@ -18,10 +18,10 @@ public class BulletThroughCoverLogic : MonoBehaviour
             bulletsHistory.Add(id, Random.Range(0, 1));
         }
         ++bulletsHistory[id];
-        return !CheckIfSoldierInCover(bullet.owner) && ((bulletsHistory[id] & 1) == 0);
+        return !CheckIfSoldierInCover(bullet.owner.GetState()) && ((bulletsHistory[id] & 1) == 0);
     }
 
-    public bool CheckIfSoldierInCover(SoldierController soldier)
+    public bool CheckIfSoldierInCover(CharacterState soldier)
     {
         return soldiersInCoverLogic.GetSoldiersInCover().Contains(soldier);
     }

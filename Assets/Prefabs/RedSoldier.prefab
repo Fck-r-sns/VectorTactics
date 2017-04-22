@@ -455,6 +455,7 @@ GameObject:
   - component: {fileID: 114876479293622718}
   - component: {fileID: 114225304682151490}
   - component: {fileID: 114224504592895952}
+  - component: {fileID: 114457219366347080}
   m_Layer: 11
   m_Name: RedSoldier
   m_TagString: Soldier
@@ -990,9 +991,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f92adf6de49d9954c8c701d2d0b6eb80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  side: 1
-  speed: 5
-  health: 100
 --- !u!114 &114224504592895952
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1032,6 +1030,26 @@ MonoBehaviour:
   worldState: {fileID: 0}
   mode: 0
   gridStep: 1
+--- !u!114 &114457219366347080
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1939298438919050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abcfc695e9e5c1d45870502eb37f0664, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  side: 1
+  health: 100
+  speed: 5
+  movementDirection: {x: 0, y: 0, z: 0}
+  isInCover: 0
+  isNearCover: 0
+  isEnemyVisible: 0
+  distanceToEnemy: 0
+  enemyState: {fileID: 0}
 --- !u!114 &114622877574759558
 MonoBehaviour:
   m_ObjectHideFlags: 1

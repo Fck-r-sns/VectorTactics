@@ -8,16 +8,16 @@ namespace Ai
     {
         public class Attack : SoldierState
         {
-            public Attack(WorldState world, TerrainReasoning terrain, Navigation navigation, Shooting shooting, SoldierController controller) : 
-                base(world, terrain, navigation, shooting, controller)
+            public Attack(AiTools aiTools) : 
+                base(aiTools)
             {
             }
 
             public override void OnEnter()
             {
                 Debug.Log(Time.time + ": Enter Attack state");
-                shooting.SetAimingEnabled(true);
-                shooting.SetShootingEnabled(true);
+                aiTools.shooting.SetAimingEnabled(true);
+                aiTools.shooting.SetShootingEnabled(true);
             }
 
             public override void OnUpdate()

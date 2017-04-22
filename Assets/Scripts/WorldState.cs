@@ -6,39 +6,42 @@ public class WorldState : MonoBehaviour
 {
 
     [SerializeField]
-    private SoldierController blueSoldier;
+    private CharacterState blueSoldierState;
 
     [SerializeField]
-    private SoldierController redSoldier;
+    private CharacterState redSoldierState;
 
     [SerializeField]
     private VisibilityChecker visibilityChecker;
 
-    private bool blueSeesRed = false;
-    private bool redSeesBlue = false;
-
-    public SoldierController GetBlueSoldier()
+    public CharacterState GetCharacterState(Defines.Side side)
     {
-        return blueSoldier;
-    }
-
-    public SoldierController GetRedSoldier() {
-        return redSoldier;
-    }
-
-    public bool IsEnemySpotted(Defines.Side targetEnemy)
-    {
-        return (targetEnemy == Defines.Side.Blue) ? redSeesBlue : blueSeesRed;
+        switch (side)
+        {
+            case Defines.Side.Blue:
+                return blueSoldierState;
+            case Defines.Side.Red:
+                return redSoldierState;
+            default:
+                return null;
+        }
     }
 
     void Awake()
     {
-
+        blueSoldierState.enemyState = redSoldierState;
+        redSoldierState.enemyState = blueSoldierState;
     }
 
     void Update()
     {
-        blueSeesRed = visibilityChecker.CheckVisibility(blueSoldier, redSoldier);
-        redSeesBlue = visibilityChecker.CheckVisibility(redSoldier, blueSoldier);
+        UpdateCharacterState(blueSoldierState);
+        UpdateCharacterState(redSoldierState);
+    }
+
+    private void UpdateCharacterState(CharacterState state)
+    {
+        state.isEnemyVisible = visibilityChecker.CheckVisibility(state.transform, state.enemyState.transform);
+        state.distanceToEnemy = Vector3.Distance(state.transform.position, state.enemyState.transform.position);
     }
 }

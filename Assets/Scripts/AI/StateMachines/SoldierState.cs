@@ -7,19 +7,11 @@ namespace Ai
 
         public abstract class SoldierState : State
         {
-            protected readonly WorldState world;
-            protected readonly TerrainReasoning terrain;
-            protected readonly Navigation navigation;
-            protected readonly Shooting shooting;
-            protected readonly SoldierController controller;
+            protected readonly AiTools aiTools;
 
-            public SoldierState(WorldState world, TerrainReasoning terrain, Navigation navigation, Shooting shooting, SoldierController controller)
+            public SoldierState(AiTools aiTools)
             {
-                this.world = world;
-                this.terrain = terrain;
-                this.navigation = navigation;
-                this.shooting = shooting;
-                this.controller = controller;
+                this.aiTools = aiTools;
             }
         }
 

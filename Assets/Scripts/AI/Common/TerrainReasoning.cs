@@ -24,8 +24,8 @@ namespace Ai
         [SerializeField]
         private float gridStep = 0.5f;
 
-        private SoldierController owner;
-        private SoldierController enemy;
+        private CharacterState agentState;
+        private CharacterState enemyState;
 
         private LayerMask layerMask;
         private int coverLayer;
@@ -34,10 +34,10 @@ namespace Ai
         private WaypointProcessor waypointProcessor;
         private List<Waypoint> waypoints = new List<Waypoint>();
 
-        void Awake()
+        void Start()
         {
-            owner = GetComponent<SoldierController>();
-            enemy = (worldState.GetBlueSoldier() == owner) ? worldState.GetRedSoldier() : worldState.GetBlueSoldier();
+            agentState = GetComponent<CharacterState>();
+            enemyState = agentState.enemyState;
 
             layerMask = LayerMask.GetMask("Cover", "Walls");
             coverLayer = LayerMask.NameToLayer("Cover");
@@ -74,7 +74,7 @@ namespace Ai
             {
                 wp.Reset();
 
-                Vector3 origin = enemy.transform.position;
+                Vector3 origin = enemyState.transform.position;
                 origin.y = 0.0f;
                 float distanceToEnemy = Vector3.Distance(wp.position, origin);
                 origin.y = 1.7f; // height of soldiers' heads
@@ -94,7 +94,7 @@ namespace Ai
                         {
                             BulletThroughCoverLogic coverLogic = hit.transform.gameObject.GetComponent<BulletThroughCoverLogic>();
 
-                            if (!coverLogic.CheckIfSoldierInCover(enemy))
+                            if (!coverLogic.CheckIfSoldierInCover(enemyState))
                             {
                                 wp.behindCover = true;
                             }

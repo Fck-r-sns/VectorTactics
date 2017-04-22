@@ -1,11 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class SoldierInCoverLogic : MonoBehaviour
 {
 
-    private HashSet<SoldierController> soldiersInCover = new HashSet<SoldierController>();
+    private HashSet<CharacterState> soldiersInCover = new HashSet<CharacterState>();
     private Collider trigger;
 
     void Start()
@@ -13,7 +12,7 @@ public class SoldierInCoverLogic : MonoBehaviour
         trigger = GetComponent<Collider>();
     }
 
-    public HashSet<SoldierController> GetSoldiersInCover() {
+    public HashSet<CharacterState> GetSoldiersInCover() {
         return soldiersInCover;
     }
 
@@ -24,19 +23,21 @@ public class SoldierInCoverLogic : MonoBehaviour
     
     private void OnTriggerEnter(Collider other)
     {
-        SoldierController sc = other.gameObject.GetComponent<SoldierController>();
-        if (sc != null)
+        CharacterState character = other.gameObject.GetComponent<CharacterState>();
+        if (character != null)
         {
-            soldiersInCover.Add(sc);
+            soldiersInCover.Add(character);
+            character.isInCover = true;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        SoldierController sc = other.gameObject.GetComponent<SoldierController>();
-        if (sc != null)
+        CharacterState character = other.gameObject.GetComponent<CharacterState>();
+        if (character != null)
         {
-            soldiersInCover.Remove(sc);
+            soldiersInCover.Remove(character);
+            character.isInCover = false;
         }
     }
 

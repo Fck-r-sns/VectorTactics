@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Ai
 {
@@ -14,25 +12,25 @@ namespace Ai
         public class FsmController : MonoBehaviour
         {
 
-            [SerializeField]
-            private WorldState world;
-
-            private TerrainReasoning terrain;
             private Navigation navigation;
             private Shooting shooting;
+            private TerrainReasoning terrain;
             private SoldierController controller;
-            private SoldierController enemy;
+            private CharacterState agentState;
+            private CharacterState enemyState;
 
             private FiniteStateMachine fsm;
 
             // Use this for initialization
-            void Awake()
+            void Start()
             {
-                terrain = GetComponent<TerrainReasoning>();
                 navigation = GetComponent<Navigation>();
                 shooting = GetComponent<Shooting>();
+                terrain = GetComponent<TerrainReasoning>();
+
                 controller = GetComponent<SoldierController>();
-                enemy = (world.GetBlueSoldier() == controller) ? world.GetRedSoldier() : world.GetBlueSoldier();
+                agentState = controller.GetState();
+                enemyState = agentState.enemyState;
                     
                 fsm = new FiniteStateMachine();
                 State initialState = InitStates();
@@ -47,49 +45,50 @@ namespace Ai
             // returns initial state
             private State InitStates()
             {
-                SearchEnemy searchEnemyState = new SearchEnemy(world, terrain, navigation, shooting, controller);
-                SearchHealthPack searchHealthPackState = new SearchHealthPack(world, terrain, navigation, shooting, controller);
-                Attack attackState = new Attack(world, terrain, navigation, shooting, controller);
-                Defence defenceState = new Defence(world, terrain, navigation, shooting, controller);
+                AiTools aiTools = new AiTools(navigation, shooting, terrain, controller, agentState, enemyState);
+                SearchEnemy searchEnemyState = new SearchEnemy(aiTools);
+                SearchHealthPack searchHealthPackState = new SearchHealthPack(aiTools);
+                Attack attackState = new Attack(aiTools);
+                Defence defenceState = new Defence(aiTools);
 
                 searchEnemyState.AddTransition(
                     new Transition(
-                        () => world.IsEnemySpotted(enemy.GetSide()),
+                        () => agentState.isEnemyVisible,
                         attackState
                         )
                     );
 
                 searchEnemyState.AddTransition(
                     new Transition(
-                        () => controller.GetHealth() <= Defines.LOW_HP,
+                        () => agentState.health <= Defines.LOW_HP,
                         searchHealthPackState
                         )
                     );
 
                 attackState.AddTransition(
                     new Transition(
-                        () => (controller.GetHealth() <= Defines.MEDIUM_HP),
+                        () => (agentState.health <= Defines.MEDIUM_HP),
                         defenceState
                         )
                     );
 
                 attackState.AddTransition(
                     new Transition(
-                        () => (controller.GetHealth() > Defines.MEDIUM_HP) && !world.IsEnemySpotted(enemy.GetSide()),
+                        () => (agentState.health > Defines.MEDIUM_HP) && !agentState.isEnemyVisible,
                         searchEnemyState
                         )
                     );
 
                 defenceState.AddTransition(
                     new Transition(
-                        () => (controller.GetHealth() <= Defines.LOW_HP) || !world.IsEnemySpotted(enemy.GetSide()),
+                        () => (agentState.health <= Defines.LOW_HP) || !agentState.isEnemyVisible,
                         searchHealthPackState
                         )
                     );
 
                 searchHealthPackState.AddTransition(
                     new Transition(
-                        () => controller.GetHealth() > Defines.LOW_HP,
+                        () => agentState.health > Defines.LOW_HP,
                         searchEnemyState
                         )
                     );

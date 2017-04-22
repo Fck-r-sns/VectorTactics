@@ -2,60 +2,32 @@
 
 using EventBus;
 
+[RequireComponent(typeof(CharacterState))]
 [RequireComponent(typeof(SoldierAnimation))]
 public class SoldierController : MonoBehaviour, Controllable
 {
 
-    [SerializeField]
-    private global::Defines.Side side = Defines.Side.Blue;
-
-    [SerializeField]
-    private float speed = 6.0f;
-
-    [SerializeField]
-    private float health = 100.0f;
-
+    private CharacterState state;
     private SoldierAnimation animator;
     private Weapon weapon;
-    private bool isDead = false;
-    private Vector3 movementDirection;
 
     private void Awake()
     {
+        state = GetComponent<CharacterState>();
         animator = GetComponent<SoldierAnimation>();
         weapon = GetComponentInChildren<Weapon>();
     }
 
-    public Defines.Side GetSide()
+    public CharacterState GetState()
     {
-        return side;
-    }
-
-    public float GetSpeed()
-    {
-        return speed;
-    }
-
-    public Vector3 GetMovementDirection()
-    {
-        return movementDirection;
-    }
-
-    public float GetHealth()
-    {
-        return health;
-    }
-
-    public bool IsDead()
-    {
-        return isDead;
+        return state;
     }
 
     public void Move(Vector3 direction)
     {
         direction.y = 0.0f;
-        movementDirection = direction.normalized;
-        transform.Translate(movementDirection * speed * Time.fixedDeltaTime, Space.World);
+        state.movementDirection = direction.normalized;
+        transform.Translate(state.movementDirection * state.speed * Time.fixedDeltaTime, Space.World);
         animator.AnimateMoving(direction);
     }
 
@@ -77,16 +49,20 @@ public class SoldierController : MonoBehaviour, Controllable
 
     public void OnHit(float damage)
     {
-        health -= damage;
-        if (health <= 0.0f && !isDead)
+        if (state.isDead)
+        {
+            return;
+        }
+        state.health -= damage;
+        state.health = Mathf.Clamp(state.health, 0.0f, 100.0f);
+        if (state.isDead)
         {
             animator.AnimateDeath();
-            isDead = true;
             GetComponent<Collider>().enabled = false;
             weapon.gameObject.GetComponent<Collider>().enabled = false;
         }
 
-        Dispatcher.SendEvent(new HealthChanged(health, side));
+        Dispatcher.SendEvent(new HealthChanged(state.health, state.side));
     }
 
 }

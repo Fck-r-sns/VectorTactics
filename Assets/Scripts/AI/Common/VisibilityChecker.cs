@@ -2,13 +2,6 @@
 
 public class VisibilityChecker : MonoBehaviour
 {
-
-    [SerializeField]
-    private SoldierController blueSoldier;
-
-    [SerializeField]
-    private SoldierController redSoldier;
-
     private LayerMask layerMask;
     private int soldiersLayer;
     
@@ -23,11 +16,11 @@ public class VisibilityChecker : MonoBehaviour
 
     }
 
-    public bool CheckVisibility(SoldierController from, SoldierController to)
+    public bool CheckVisibility(Transform from, Transform to)
     {
-        Vector3 origin = from.transform.position;
+        Vector3 origin = from.position;
         origin.y = 1.7f; // height of head
-        Vector3 direction = to.transform.position - from.transform.position;
+        Vector3 direction = to.position - from.position;
         Ray ray = new Ray(origin, direction);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, float.MaxValue, layerMask))

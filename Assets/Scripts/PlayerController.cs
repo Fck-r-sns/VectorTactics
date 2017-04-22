@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (controllable.IsDead())
+        if (controllable.GetState().isDead)
         {
             return;
         }
