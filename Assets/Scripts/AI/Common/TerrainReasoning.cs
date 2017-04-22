@@ -103,7 +103,7 @@ namespace Ai
                         {
                             BulletThroughCoverLogic coverLogic = hit.transform.gameObject.GetComponent<BulletThroughCoverLogic>();
 
-                            if (!coverLogic.CheckIfSoldierInCover(enemyState))
+                            if (!coverLogic.CheckIfPointInCover(agentState.lastEnemyPosition))
                             {
                                 wp.behindCover = true;
                             }
