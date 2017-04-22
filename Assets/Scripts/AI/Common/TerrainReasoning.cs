@@ -24,6 +24,9 @@ namespace Ai
         private CharacterState agentState;
         private CharacterState enemyState;
 
+        private Navigation agentNavigationHelper;
+        private Navigation enemyNavigationHelper;
+
         private LayerMask layerMask;
         private int coverLayer;
         private int wallsLayer;
@@ -40,6 +43,9 @@ namespace Ai
         {
             agentState = GetComponent<CharacterState>();
             enemyState = agentState.enemyState;
+
+            agentNavigationHelper = agentState.gameObject.GetComponent<Navigation>();
+            enemyNavigationHelper = enemyState.gameObject.GetComponent<Navigation>();
 
             layerMask = LayerMask.GetMask("Cover", "Walls");
             coverLayer = LayerMask.NameToLayer("Cover");
@@ -76,7 +82,8 @@ namespace Ai
             {
                 wp.Reset();
 
-                Vector3 origin = enemyState.transform.position;
+                // check cover information ====================================================
+                Vector3 origin = agentState.lastEnemyPosition;
                 origin.y = 0.0f;
                 float distanceToEnemy = Vector3.Distance(wp.position, origin);
                 origin.y = 1.7f; // height of soldiers' heads
@@ -121,6 +128,21 @@ namespace Ai
                     break;
 
                 } while (true);
+                // ============================================================================
+
+                //// distance to agent ==========================================================
+                //{
+                //    var path = agentNavigationHelper.GetPathTo(wp.position);
+                //    wp.distanceToAgent = agentNavigationHelper.CalculatePathLength(path);
+                //}
+                //// ============================================================================
+
+                //// distance to enemy ==========================================================
+                //{
+                //    var path = enemyNavigationHelper.GetPathTo(wp.position);
+                //    wp.distanceToAgent = enemyNavigationHelper.CalculatePathLength(path);
+                //}
+                //// ============================================================================
 
                 wp.weight = waypointProcessor(wp);
             }
