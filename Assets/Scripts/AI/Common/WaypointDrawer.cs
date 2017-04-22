@@ -30,8 +30,8 @@ namespace Ai
         void Start()
         {
             terrain = GetComponent<TerrainReasoning>();
-            List<Waypoint> waypoints = terrain.GetWaypoints();
-            foreach(Waypoint wp in waypoints)
+            Waypoint[,] waypoints = terrain.GetWaypoints();
+            foreach (Waypoint wp in waypoints)
             {
                 GameObject obj = Instantiate(waypointPrefab, wp.position, Quaternion.identity);
                 obj.transform.Translate(0.0f, 0.01f, 0.0f);

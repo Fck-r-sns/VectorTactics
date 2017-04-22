@@ -32,7 +32,7 @@ namespace Ai
         private int wallsLayer;
 
         private WaypointProcessor waypointProcessor;
-        private List<Waypoint> waypoints = new List<Waypoint>();
+        private Waypoint[,] waypoints;
 
         public float GetGridStep()
         {
@@ -148,7 +148,7 @@ namespace Ai
             }
         }
 
-        public List<Waypoint> GetWaypoints()
+        public Waypoint[,] GetWaypoints()
         {
             return waypoints;
         }
@@ -158,7 +158,7 @@ namespace Ai
             this.waypointProcessor = waypointProcessor;
         }
 
-        private List<Waypoint> GenerateWaypoints()
+        private Waypoint[,] GenerateWaypoints()
         {
             switch (mode)
             {
@@ -169,14 +169,21 @@ namespace Ai
             }
         }
 
-        private List<Waypoint> NaiveWaypointGenerator()
+        private Waypoint[,] NaiveWaypointGenerator()
         {
-            List<Waypoint> waypoints = new List<Waypoint>();
-            for (float x = -Defines.MAP_WIDTH / 2.0f; x <= Defines.MAP_WIDTH / 2.0f; x += gridStep)
+            int xCount = (int)(Defines.MAP_WIDTH / 2.0f / gridStep) * 2 + 1;
+            int xCenterIndex = (xCount - 1) / 2;
+            int zCount = (int)(Defines.MAP_HEIGHT / 2.0f / gridStep) * 2 + 1;
+            int zCenterIndex = (zCount - 1) / 2;
+            Waypoint[,] waypoints = new Waypoint[xCount, zCount];
+
+            for (int xIndex = 0; xIndex < xCount; ++xIndex)
             {
-                for (float z = -Defines.MAP_HEIGHT / 2.0f; z <= Defines.MAP_HEIGHT / 2.0f; z += gridStep)
+                for (int zIndex = 0; zIndex < zCount; ++zIndex)
                 {
-                    waypoints.Add(new Waypoint(new Vector3(x, 0, z)));
+                    float x = (xIndex - xCenterIndex) * gridStep;
+                    float z = (zIndex - zCenterIndex) * gridStep;
+                    waypoints[xIndex, zIndex] = new Waypoint(new Vector3(x, 0, z));
                 }
             }
             return waypoints;
