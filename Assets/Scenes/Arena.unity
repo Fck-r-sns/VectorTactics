@@ -204,15 +204,14 @@ Prefab:
       propertyPath: world
       value: 
       objectReference: {fileID: 921243482}
+    - target: {fileID: 114457219366347080, guid: f54411585130954489e09b0a6add07f3,
+        type: 2}
+      propertyPath: enemyState
+      value: 
+      objectReference: {fileID: 831316771}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f54411585130954489e09b0a6add07f3, type: 2}
   m_IsPrefabParent: 0
---- !u!114 &14864099 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114209152168671762, guid: f54411585130954489e09b0a6add07f3,
-    type: 2}
-  m_PrefabInternal: {fileID: 14864093}
-  m_Script: {fileID: 11500000, guid: f92adf6de49d9954c8c701d2d0b6eb80, type: 3}
 --- !u!4 &25498016 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4550438647433996, guid: f1ba12164c68f2241b0b83a28418be8d,
@@ -344,6 +343,12 @@ Transform:
   m_PrefabParentObject: {fileID: 4550438647433996, guid: f1ba12164c68f2241b0b83a28418be8d,
     type: 2}
   m_PrefabInternal: {fileID: 1304689068}
+--- !u!114 &236568872 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114457219366347080, guid: f54411585130954489e09b0a6add07f3,
+    type: 2}
+  m_PrefabInternal: {fileID: 14864093}
+  m_Script: {fileID: 11500000, guid: abcfc695e9e5c1d45870502eb37f0664, type: 3}
 --- !u!1001 &259920260
 Prefab:
   m_ObjectHideFlags: 0
@@ -965,6 +970,12 @@ Transform:
   m_PrefabParentObject: {fileID: 4324887920659152, guid: d2f986953cd01e84bad35494efd4a411,
     type: 2}
   m_PrefabInternal: {fileID: 1282491825}
+--- !u!114 &831316771 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114474754160287216, guid: 1bea3cd97b9d39b459b383081f6e289f,
+    type: 2}
+  m_PrefabInternal: {fileID: 278977707}
+  m_Script: {fileID: 11500000, guid: abcfc695e9e5c1d45870502eb37f0664, type: 3}
 --- !u!1001 &843988048
 Prefab:
   m_ObjectHideFlags: 0
@@ -1117,8 +1128,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3af189fb945829b45b4b4d7d60620e0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blueSoldier: {fileID: 473997464}
-  redSoldier: {fileID: 14864099}
 --- !u!114 &921243480
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1153,8 +1162,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 763f46a6aa97a3c4586576aad1f1cb7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blueSoldier: {fileID: 473997464}
-  redSoldier: {fileID: 14864099}
+  blueSoldierState: {fileID: 831316771}
+  redSoldierState: {fileID: 236568872}
   visibilityChecker: {fileID: 921243479}
 --- !u!114 &921243483
 MonoBehaviour:
