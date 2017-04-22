@@ -35,7 +35,10 @@ public class SoldierController : MonoBehaviour, Controllable
     {
         Vector3 direction = point - transform.position;
         direction.y = 0.0f;
-        transform.rotation = Quaternion.LookRotation(direction);
+        if (!direction.Equals(Vector3.zero))
+        {
+            transform.rotation = Quaternion.LookRotation(direction);
+        }
     }
 
     public void Shoot(Vector3 target)
