@@ -8,7 +8,7 @@ public class CharacterState : MonoBehaviour
     public float speed = 5.0f;
 
     public Vector3 movementDirection;
-    public bool isInCover = false;
+    public int numberOfCovers;
     public bool isNearCover = false;
     public bool isEnemyVisible = false;
     public float distanceToEnemy = 0.0f;
@@ -24,6 +24,12 @@ public class CharacterState : MonoBehaviour
     public Vector3 position {
         get {
             return transform.position;
+        }
+    }
+
+    public bool isInCover {
+        get {
+            return numberOfCovers > 0;
         }
     }
 

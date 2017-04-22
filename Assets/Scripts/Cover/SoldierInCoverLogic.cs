@@ -27,7 +27,7 @@ public class SoldierInCoverLogic : MonoBehaviour
         if (character != null)
         {
             soldiersInCover.Add(character);
-            character.isInCover = true;
+            ++character.numberOfCovers;
         }
     }
 
@@ -37,7 +37,7 @@ public class SoldierInCoverLogic : MonoBehaviour
         if (character != null)
         {
             soldiersInCover.Remove(character);
-            character.isInCover = false;
+            --character.numberOfCovers;
         }
     }
 
