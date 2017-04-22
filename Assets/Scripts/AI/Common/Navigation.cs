@@ -33,6 +33,33 @@ namespace Ai
             return destination.HasValue && (path.status == NavMeshPathStatus.PathComplete);
         }
 
+        public NavMeshPath GetPathTo(Vector3 target)
+        {
+            NavMeshPath path = new NavMeshPath();
+            navMeshAgent.CalculatePath(target, path);
+            return path;
+        }
+
+        public float CalculatePathLength(NavMeshPath path)
+        {
+            if (path.status != NavMeshPathStatus.PathComplete)
+            {
+                return float.PositiveInfinity;
+            }
+
+            float res = 0.0f;
+            Vector3[] corners = path.corners;
+            if (corners.Length < 2)
+            {
+                return 0.0f;
+            }
+            for (int i = 1; i < corners.Length; ++i)
+            {
+                res += Vector3.Distance(corners[i - 1], corners[i]);
+            }
+            return res;
+        }
+
         // Use this for initialization
         void Start()
         {
