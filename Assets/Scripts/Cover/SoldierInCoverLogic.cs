@@ -18,7 +18,9 @@ public class SoldierInCoverLogic : MonoBehaviour
 
     public bool CheckIfPointInCover(Vector3 point)
     {
-        return trigger.bounds.Contains(point);
+        Ray ray = new Ray(point + Vector3.up * 100, Vector3.down);
+        RaycastHit hit;
+        return trigger.Raycast(ray, out hit, float.MaxValue);
     }
     
     private void OnTriggerEnter(Collider other)
