@@ -7,6 +7,9 @@ using EventBus;
 public class SoldierController : MonoBehaviour, Controllable
 {
 
+    [SerializeField]
+    private bool isInvulnerable = false;
+
     private CharacterState state;
     private SoldierAnimation animator;
     private Weapon weapon;
@@ -52,7 +55,7 @@ public class SoldierController : MonoBehaviour, Controllable
 
     public void OnHit(float damage)
     {
-        if (state.isDead)
+        if (state.isDead || isInvulnerable)
         {
             return;
         }
