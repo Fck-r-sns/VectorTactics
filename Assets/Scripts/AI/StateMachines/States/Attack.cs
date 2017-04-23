@@ -9,7 +9,7 @@ namespace Ai
         public class Attack : SoldierState
         {
 
-            private const float MOVEMENT_RADIUS = 3.0f;
+            private const float MOVEMENT_RADIUS = 5.0f;
             private const float MIN_ATTACK_RADIUS = 10.0f;
             private const float MAX_ATTACK_RADIUS = 15.0f;
 
@@ -78,9 +78,7 @@ namespace Ai
 
             private Vector3 GetNextDestination()
             {
-                //return aiTools.terrain.GetBestWaypoint(MOVEMENT_RADIUS).position;
-
-                List<Waypoint> wps = aiTools.terrain.GetGoodWaypoints(MOVEMENT_RADIUS, 0.8f);
+                List<Waypoint> wps = aiTools.terrain.GetGoodWaypoints(MOVEMENT_RADIUS, 0.7f);
                 if (wps.Count == 0)
                 {
                     return GetRandomNextDestination();
