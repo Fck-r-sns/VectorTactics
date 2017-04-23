@@ -59,16 +59,13 @@ public class SoldierController : MonoBehaviour, Controllable
         {
             return;
         }
-        state.health -= damage;
-        state.health = Mathf.Clamp(state.health, 0.0f, 100.0f);
+        state.DoDamage(damage);
         if (state.isDead)
         {
             animator.AnimateDeath();
             GetComponent<Collider>().enabled = false;
             weapon.gameObject.GetComponent<Collider>().enabled = false;
         }
-
-        Dispatcher.SendEvent(new HealthChanged(state.health, state.side));
     }
 
 }

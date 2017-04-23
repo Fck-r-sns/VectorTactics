@@ -33,4 +33,17 @@ public class CharacterState : MonoBehaviour
         }
     }
 
+    public void DoDamage(float damage)
+    {
+        health -= damage;
+        health = Mathf.Clamp(health, 0.0f, 100.0f);
+        EventBus.Dispatcher.SendEvent(new HealthChanged(health, side));
+    }
+
+    public void Heal()
+    {
+        health = 100.0f;
+        EventBus.Dispatcher.SendEvent(new HealthChanged(health, side));
+    }
+
 }
