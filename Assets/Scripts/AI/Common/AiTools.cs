@@ -7,6 +7,7 @@ namespace Ai
 
     public class AiTools
     {
+        public readonly WorldState world;
         public readonly Navigation navigation;
         public readonly Shooting shooting;
         public readonly TerrainReasoning terrain;
@@ -14,8 +15,9 @@ namespace Ai
         public readonly CharacterState agentState;
         public readonly CharacterState enemyState;
 
-        public AiTools(Navigation navigation, Shooting shooting, TerrainReasoning terrain, SoldierController controller, CharacterState agentState, CharacterState enemyState)
+        public AiTools(WorldState world, Navigation navigation, Shooting shooting, TerrainReasoning terrain, SoldierController controller, CharacterState agentState, CharacterState enemyState)
         {
+            this.world = world;
             this.navigation = navigation;
             this.shooting = shooting;
             this.terrain = terrain;
