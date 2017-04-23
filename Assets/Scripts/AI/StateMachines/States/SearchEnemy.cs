@@ -21,6 +21,11 @@ namespace Ai
                 Debug.Log(Time.time + ": Enter SearchEnemy state");
                 aiTools.shooting.SetAimingEnabled(false);
                 aiTools.shooting.SetShootingEnabled(false);
+
+                aiTools.terrain.SetWeightFunction(wp =>
+                {
+                    return 0.0f;
+                });
             }
 
             public override void OnExit()
@@ -32,9 +37,9 @@ namespace Ai
             protected override Vector3 GetNextDestination()
             {
                 return new Vector3(
-                    Random.Range(-Defines.MAP_WIDTH / 2.0f, Defines.MAP_WIDTH / 2.0f),
+                    Random.Range(-GameDefines.MAP_WIDTH / 2.0f, GameDefines.MAP_WIDTH / 2.0f),
                     0.0f,
-                    Random.Range(-Defines.MAP_HEIGHT / 2.0f, Defines.MAP_HEIGHT / 2.0f)
+                    Random.Range(-GameDefines.MAP_HEIGHT / 2.0f, GameDefines.MAP_HEIGHT / 2.0f)
                     );
             }
         }

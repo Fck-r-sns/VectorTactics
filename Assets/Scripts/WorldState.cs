@@ -1,8 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using EventBus;
 using UnityEngine;
 
-public class WorldState : MonoBehaviour
+using EventBus;
+
+public class WorldState : MonoBehaviour, IEventSubscriber
 {
 
     [SerializeField]
@@ -14,27 +15,62 @@ public class WorldState : MonoBehaviour
     [SerializeField]
     private VisibilityChecker visibilityChecker;
 
-    public CharacterState GetCharacterState(Defines.Side side)
+    private static WorldState instance;
+    private int address = AddressProvider.GetFreeAddress();
+    private int healthPacks = 2;
+
+    public static WorldState GetInstance()
+    {
+        return instance;
+    }
+
+    public int healthPacksAvailable {
+        get {
+            return healthPacks;
+        }
+    }
+
+    public CharacterState GetCharacterState(GameDefines.Side side)
     {
         switch (side)
         {
-            case Defines.Side.Blue:
+            case GameDefines.Side.Blue:
                 return blueSoldierState;
-            case Defines.Side.Red:
+            case GameDefines.Side.Red:
                 return redSoldierState;
             default:
                 return null;
         }
     }
 
+    public void OnReceived(EBEvent e)
+    {
+        if (e.type == EBEventType.HealthPackCollected)
+        {
+            --healthPacks;
+        }
+    }
+
     void Awake()
     {
+        instance = this;
+
         blueSoldierState.enemyState = redSoldierState;
         redSoldierState.enemyState = blueSoldierState;
 
         // set last known positions to initial spawning points
         blueSoldierState.lastEnemyPosition = redSoldierState.position;
         redSoldierState.lastEnemyPosition = blueSoldierState.position;
+    }
+
+    void Start()
+    {
+        Dispatcher.Subscribe(EBEventType.HealthPackCollected, address, gameObject);
+    }
+
+    void OnDestroy()
+    {
+        Dispatcher.Unsubscribe(EBEventType.HealthPackCollected, address);
     }
 
     void Update()

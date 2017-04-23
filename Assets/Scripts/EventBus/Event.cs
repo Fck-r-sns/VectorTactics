@@ -7,7 +7,8 @@ namespace EventBus
     public enum EBEventType
     {
         BlueSoldierHealthChanged,
-        RedSoldierHealthChanged
+        RedSoldierHealthChanged,
+        HealthPackCollected
     }
 
     public enum TriggerAction

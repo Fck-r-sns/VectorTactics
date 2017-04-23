@@ -19,6 +19,7 @@ namespace Ai
         public bool isBehindCover = false;
         public bool isInCover = false;
         public bool isBehindWall = false;
+        public bool isHealthPack = false;
         public float weight = 0.0f;
 
         public Waypoint(int xIndex, int zIndex, Vector3 position)
@@ -38,6 +39,7 @@ namespace Ai
             isBehindCover = false;
             isInCover = false;
             isBehindWall = false;
+            isHealthPack = false;
         }
 
     }

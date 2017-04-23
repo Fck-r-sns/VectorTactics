@@ -11,6 +11,7 @@ namespace Ai
             public void SetInitialState(State state)
             {
                 currentState = state;
+                currentState.OnEnter();
             }
 
             public void Update()

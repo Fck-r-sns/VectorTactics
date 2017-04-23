@@ -37,10 +37,11 @@ namespace Ai
 
         private LayerMask layerMask;
         private LayerMask wallsLayerMask;
+        private LayerMask healthPacksLayerMask;
         private int coverLayer;
         private int wallsLayer;
 
-        private WeightFunction waypointProcessor;
+        private WeightFunction weightFunction;
 
         private int xCount;
         private int xCenterIndex;
@@ -58,9 +59,9 @@ namespace Ai
             return waypoints;
         }
 
-        public void SetWaypointProcessor(WeightFunction waypointProcessor)
+        public void SetWeightFunction(WeightFunction weightFunction)
         {
-            this.waypointProcessor = waypointProcessor;
+            this.weightFunction = weightFunction;
         }
 
         public Waypoint GetNearestWaypoint(Vector3 point)
@@ -75,9 +76,13 @@ namespace Ai
             Waypoint centerWp = GetNearestWaypoint(agentState.position);
             Waypoint bestWp = null;
             int indexShift = Mathf.CeilToInt(searchRadius / gridStep);
-            for (int xIndex = centerWp.xIndex - indexShift; xIndex <= centerWp.xIndex + indexShift; ++xIndex)
+            int xMin = Mathf.Max(centerWp.xIndex - indexShift, 0);
+            int xMax = Mathf.Min(centerWp.xIndex + indexShift, xCount - 1);
+            int zMin = Mathf.Max(centerWp.zIndex - indexShift, 0);
+            int zMax = Mathf.Min(centerWp.zIndex + indexShift, zCount - 1);
+            for (int xIndex = xMin; xIndex <= xMax; ++xIndex)
             {
-                for (int zIndex = centerWp.zIndex - indexShift; zIndex <= centerWp.zIndex + indexShift; ++zIndex)
+                for (int zIndex = zMin; zIndex <= zMax; ++zIndex)
                 {
                     Waypoint wp = waypoints[xIndex, zIndex];
                     if (bestWp == null || bestWp.weight < wp.weight)
@@ -122,11 +127,12 @@ namespace Ai
 
             layerMask = LayerMask.GetMask("Cover", "Walls");
             wallsLayerMask = LayerMask.GetMask("Walls");
+            healthPacksLayerMask = LayerMask.GetMask("HealthPacks");
             coverLayer = LayerMask.NameToLayer("Cover");
             wallsLayer = LayerMask.NameToLayer("Walls");
 
             // default waypoint processor
-            waypointProcessor = wp =>
+            weightFunction = wp =>
             {
                 float weight = 0.0f;
                 if (wp.isBehindWall)
@@ -182,52 +188,62 @@ namespace Ai
                     continue;
                 }
 
-                Vector3 origin = agentState.lastEnemyPosition;
-                origin.y = 0.0f;
-                float distanceToEnemy = Vector3.Distance(wp.position, origin);
-                origin.y = 1.7f; // height of soldiers' heads
-                Vector3 direction = wp.position - origin;
-                direction.y = 0.0f;
-
-                Ray ray = new Ray(origin, direction);
-                float raycastDistance = distanceToEnemy;
-                RaycastHit hit;
-                do
+                // check health packs
                 {
+                    Ray ray = new Ray(wp.position + Vector3.up * 100, Vector3.down);
+                    wp.isHealthPack = Physics.Raycast(ray, float.MaxValue, healthPacksLayerMask);
+                }
 
-                    if (Physics.Raycast(ray, out hit, raycastDistance, layerMask))
+                // check cover
+                {
+                    Vector3 origin = agentState.lastEnemyPosition;
+                    origin.y = 0.0f;
+                    float distanceToEnemy = Vector3.Distance(wp.position, origin);
+                    origin.y = 1.7f; // height of soldiers' heads
+                    Vector3 direction = wp.position - origin;
+                    direction.y = 0.0f;
+
+                    Ray ray = new Ray(origin, direction);
+                    float raycastDistance = distanceToEnemy;
+                    RaycastHit hit;
+                    do
                     {
-                        int layer = hit.transform.gameObject.layer;
-                        if (layer == coverLayer)
+
+                        if (Physics.Raycast(ray, out hit, raycastDistance, layerMask))
                         {
-                            BulletThroughCoverLogic coverLogic = hit.transform.gameObject.GetComponent<BulletThroughCoverLogic>();
-
-                            if (!coverLogic.CheckIfPointInCover(agentState.lastEnemyPosition))
+                            int layer = hit.transform.gameObject.layer;
+                            if (layer == coverLayer)
                             {
-                                wp.isBehindCover = true;
-                            }
+                                BulletThroughCoverLogic coverLogic = hit.transform.gameObject.GetComponent<BulletThroughCoverLogic>();
 
-                            if (coverLogic.CheckIfPointInCover(wp.position))
+                                if (!coverLogic.CheckIfPointInCover(agentState.lastEnemyPosition))
+                                {
+                                    wp.isBehindCover = true;
+                                }
+
+                                if (coverLogic.CheckIfPointInCover(wp.position))
+                                {
+                                    wp.isInCover = true;
+                                }
+
+                                // continue ray over cover
+                                Vector3 oldOrigin = ray.origin;
+                                ray.origin = hit.point + ray.direction.normalized * 0.1f;
+                                raycastDistance -= Vector3.Distance(ray.origin, oldOrigin);
+                                continue;
+                            }
+                            else if (layer == wallsLayer)
                             {
-                                wp.isInCover = true;
+                                wp.isBehindWall = true;
                             }
-
-                            // continue ray over cover
-                            Vector3 oldOrigin = ray.origin;
-                            ray.origin = hit.point + ray.direction.normalized * 0.1f;
-                            raycastDistance -= Vector3.Distance(ray.origin, oldOrigin);
-                            continue;
                         }
-                        else if (layer == wallsLayer)
-                        {
-                            wp.isBehindWall = true;
-                        }
-                    }
 
-                    break;
+                        break;
 
-                } while (true);
+                    } while (true);
+                }
 
+                // check agent distances
                 {
                     wp.directDistanceToAgent = Vector3.Distance(wp.position, agentState.position);
 
@@ -242,6 +258,7 @@ namespace Ai
                     }
                 }
 
+                // check enemy distances
                 {
                     wp.directDistanceToEnemy = Vector3.Distance(wp.position, agentState.lastEnemyPosition);
 
@@ -256,7 +273,8 @@ namespace Ai
                     }
                 }
 
-                wp.weight = waypointProcessor(wp);
+                // check weight
+                wp.weight = weightFunction(wp);
             }
         }
 
@@ -282,9 +300,9 @@ namespace Ai
 
         private Waypoint[,] NaiveWaypointGenerator()
         {
-            xCount = (int)(Defines.MAP_WIDTH / 2.0f / gridStep) * 2 + 1;
+            xCount = (int)(GameDefines.MAP_WIDTH / 2.0f / gridStep) * 2 + 1;
             xCenterIndex = (xCount - 1) / 2;
-            zCount = (int)(Defines.MAP_HEIGHT / 2.0f / gridStep) * 2 + 1;
+            zCount = (int)(GameDefines.MAP_HEIGHT / 2.0f / gridStep) * 2 + 1;
             zCenterIndex = (zCount - 1) / 2;
             Waypoint[,] waypoints = new Waypoint[xCount, zCount];
 

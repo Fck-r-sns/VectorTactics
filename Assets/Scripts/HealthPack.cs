@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 
+using EventBus;
+
 public class HealthPack : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
@@ -11,6 +13,7 @@ public class HealthPack : MonoBehaviour
             {
                 state.Heal();
                 Destroy(gameObject);
+                Dispatcher.SendEvent(new EBEvent() { type = EBEventType.HealthPackCollected });
             }
         }
     }

@@ -47,7 +47,7 @@ namespace Ai
             if (enableAiming)
             {
                 Vector3 shootingTarget = CalculateShootingTarget();
-                Debug.DrawLine(transform.position, shootingTarget, (agentState.side == Defines.Side.Blue) ? Color.blue : Color.red);
+                Debug.DrawLine(transform.position, shootingTarget, (agentState.side == GameDefines.Side.Blue) ? Color.blue : Color.red);
 
                 controller.TurnToPoint(shootingTarget);
 

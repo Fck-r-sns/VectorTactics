@@ -1,4 +1,4 @@
-﻿public class Defines
+﻿public class GameDefines
 {
     public enum Side
     {
@@ -10,6 +10,6 @@
     public const float MAP_HEIGHT = 30.0f;
 
     public const float FULL_HP = 100.0f;
-    public const float MEDIUM_HP = 50.0f;
-    public const float LOW_HP = 25.0f;
+    public const float MEDIUM_HP = 70.0f;
+    public const float LOW_HP = 50.0f;
 }

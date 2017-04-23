@@ -12,6 +12,7 @@ namespace Ai
         public class FsmController : MonoBehaviour
         {
 
+            private WorldState world;
             private Navigation navigation;
             private Shooting shooting;
             private TerrainReasoning terrain;
@@ -24,6 +25,7 @@ namespace Ai
             // Use this for initialization
             void Start()
             {
+                world = WorldState.GetInstance();
                 navigation = GetComponent<Navigation>();
                 shooting = GetComponent<Shooting>();
                 terrain = GetComponent<TerrainReasoning>();
@@ -45,7 +47,7 @@ namespace Ai
             // returns initial state
             private State InitStates()
             {
-                AiTools aiTools = new AiTools(navigation, shooting, terrain, controller, agentState, enemyState);
+                AiTools aiTools = new AiTools(world, navigation, shooting, terrain, controller, agentState, enemyState);
                 SearchEnemy searchEnemyState = new SearchEnemy(aiTools);
                 SearchHealthPack searchHealthPackState = new SearchHealthPack(aiTools);
                 Attack attackState = new Attack(aiTools);
@@ -60,35 +62,35 @@ namespace Ai
 
                 searchEnemyState.AddTransition(
                     new Transition(
-                        () => agentState.health <= Defines.LOW_HP,
+                        () => (world.healthPacksAvailable > 0) && (agentState.health <= GameDefines.LOW_HP),
                         searchHealthPackState
                         )
                     );
 
                 attackState.AddTransition(
                     new Transition(
-                        () => (agentState.health <= Defines.MEDIUM_HP),
+                        () => (agentState.health <= GameDefines.MEDIUM_HP),
                         defenceState
                         )
                     );
 
                 attackState.AddTransition(
                     new Transition(
-                        () => (agentState.health > Defines.MEDIUM_HP) && !agentState.isEnemyVisible,
+                        () => (agentState.health > GameDefines.MEDIUM_HP) && !agentState.isEnemyVisible,
                         searchEnemyState
                         )
                     );
 
                 defenceState.AddTransition(
                     new Transition(
-                        () => (agentState.health <= Defines.LOW_HP) || !agentState.isEnemyVisible,
+                        () => (world.healthPacksAvailable > 0) && ((agentState.health <= GameDefines.LOW_HP) || !agentState.isEnemyVisible),
                         searchHealthPackState
                         )
                     );
 
                 searchHealthPackState.AddTransition(
                     new Transition(
-                        () => agentState.health > Defines.LOW_HP,
+                        () => (agentState.health > GameDefines.LOW_HP) || (world.healthPacksAvailable == 0),
                         searchEnemyState
                         )
                     );

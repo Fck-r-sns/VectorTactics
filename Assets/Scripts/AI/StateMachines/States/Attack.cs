@@ -24,7 +24,7 @@ namespace Ai
                 aiTools.shooting.SetAimingEnabled(true);
                 aiTools.shooting.SetShootingEnabled(true);
 
-                aiTools.terrain.SetWaypointProcessor(wp =>
+                aiTools.terrain.SetWeightFunction(wp =>
                 {
                     float weight = 0.0f;
                     if (!wp.isBehindWall)

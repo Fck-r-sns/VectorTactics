@@ -11,6 +11,7 @@ namespace Ai
         {
 
             private const float MOVEMENT_RADIUS = 50.0f;
+            private float nextDestinationUpdateTime = 0.0f;
 
             public SearchHealthPack(AiTools aiTools) : 
                 base(aiTools)
@@ -20,10 +21,31 @@ namespace Ai
             public override void OnEnter()
             {
                 Debug.Log(Time.time + ": Enter SearchHealthPack state");
+
+                aiTools.terrain.SetWeightFunction(wp =>
+                {
+                    float weight = 0.0f;
+                    if (wp.isBehindWall)
+                    {
+                        weight += 0.4f;
+                    }
+                    if (wp.isHealthPack)
+                    {
+                        weight += 0.3f;
+                        weight += 0.2f * Mathf.Clamp01(wp.movementDistanceToAgent / 10.0f);
+                        weight -= 0.2f * Mathf.Clamp01(wp.movementDistanceToEnemy / 10.0f);
+                    }
+                    return weight;
+                });
             }
 
             public override void OnUpdate()
             {
+                if (Time.time > nextDestinationUpdateTime)
+                {
+                    nextDestinationUpdateTime = Time.time + 1.0f;
+                    destination = null;
+                }
                 aiTools.shooting.SetAimingEnabled(aiTools.agentState.isEnemyVisible);
                 aiTools.shooting.SetShootingEnabled(aiTools.agentState.isEnemyVisible);
                 base.OnUpdate();
@@ -31,7 +53,7 @@ namespace Ai
 
             protected override Vector3 GetNextDestination()
             {
-                return GetRandomNextDestination();
+                return aiTools.terrain.GetBestWaypoint(500.0f).position;
             }
 
             private Vector3 GetRandomNextDestination()

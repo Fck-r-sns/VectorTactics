@@ -3,8 +3,8 @@
 public class CharacterState : MonoBehaviour
 {
 
-    public Defines.Side side = Defines.Side.Blue;
-    public float health = 100.0f;
+    public GameDefines.Side side = GameDefines.Side.Blue;
+    public float health = GameDefines.FULL_HP;
     public float speed = 5.0f;
 
     public Vector3 movementDirection;
@@ -36,13 +36,13 @@ public class CharacterState : MonoBehaviour
     public void DoDamage(float damage)
     {
         health -= damage;
-        health = Mathf.Clamp(health, 0.0f, 100.0f);
+        health = Mathf.Clamp(health, 0.0f, GameDefines.FULL_HP);
         EventBus.Dispatcher.SendEvent(new HealthChanged(health, side));
     }
 
     public void Heal()
     {
-        health = 100.0f;
+        health = GameDefines.FULL_HP;
         EventBus.Dispatcher.SendEvent(new HealthChanged(health, side));
     }
 
