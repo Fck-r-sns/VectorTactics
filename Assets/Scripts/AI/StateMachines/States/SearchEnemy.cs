@@ -10,8 +10,6 @@ namespace Ai
         public class SearchEnemy : SoldierState
         {
 
-            private Vector3? destination;
-
             public SearchEnemy(AiTools aiTools) :
                 base(aiTools)
             {
@@ -25,30 +23,13 @@ namespace Ai
                 aiTools.shooting.SetShootingEnabled(false);
             }
 
-            public override void OnUpdate()
-            {
-                if (!destination.HasValue)
-                {
-                    destination = GetNextDestination();
-                    aiTools.navigation.SetDestination(destination);
-                }
-
-                if (
-                    !aiTools.navigation.IsDestinationReachable() 
-                    || (destination.HasValue && Vector3.Distance(aiTools.controller.transform.position, destination.Value) < 2.0f)
-                    )
-                {
-                    destination = null;
-                }
-            }
-
             public override void OnExit()
             {
                 destination = null;
                 aiTools.navigation.SetDestination(null);
             }
 
-            private Vector3 GetNextDestination()
+            protected override Vector3 GetNextDestination()
             {
                 return new Vector3(
                     Random.Range(-Defines.MAP_WIDTH / 2.0f, Defines.MAP_WIDTH / 2.0f),

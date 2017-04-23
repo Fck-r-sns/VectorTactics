@@ -13,8 +13,6 @@ namespace Ai
             private const float MIN_ATTACK_RADIUS = 10.0f;
             private const float MAX_ATTACK_RADIUS = 15.0f;
 
-            private Vector3? destination;
-
             public Attack(AiTools aiTools) :
                 base(aiTools)
             {
@@ -53,30 +51,12 @@ namespace Ai
                 });
             }
 
-            public override void OnUpdate()
-            {
-                if (!destination.HasValue)
-                {
-                    destination = GetNextDestination();
-                    aiTools.navigation.SetDestination(destination);
-                }
-
-                if (
-                    !aiTools.navigation.IsDestinationReachable()
-                    || (destination.HasValue && Vector3.Distance(aiTools.agentState.position, destination.Value) < 2.0f)
-                    || (destination.HasValue && aiTools.terrain.GetNearestWaypoint(destination.Value).isBehindWall)
-                    )
-                {
-                    destination = null;
-                }
-            }
-
             public override void OnExit()
             {
 
             }
 
-            private Vector3 GetNextDestination()
+            protected override Vector3 GetNextDestination()
             {
                 List<Waypoint> wps = aiTools.terrain.GetGoodWaypoints(MOVEMENT_RADIUS, 0.75f);
                 if (wps.Count == 0)
