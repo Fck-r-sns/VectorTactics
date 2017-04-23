@@ -78,7 +78,7 @@ namespace Ai
 
             private Vector3 GetNextDestination()
             {
-                List<Waypoint> wps = aiTools.terrain.GetGoodWaypoints(MOVEMENT_RADIUS, 0.7f);
+                List<Waypoint> wps = aiTools.terrain.GetGoodWaypoints(MOVEMENT_RADIUS, 0.75f);
                 if (wps.Count == 0)
                 {
                     return GetRandomNextDestination();
