@@ -204,6 +204,11 @@ Prefab:
       propertyPath: isInvulnerable
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114225304682151490, guid: f54411585130954489e09b0a6add07f3,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f54411585130954489e09b0a6add07f3, type: 2}
   m_IsPrefabParent: 0
@@ -854,6 +859,11 @@ Prefab:
         type: 2}
       propertyPath: m_AngularSpeed
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114225304682151490, guid: f54411585130954489e09b0a6add07f3,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f54411585130954489e09b0a6add07f3, type: 2}
