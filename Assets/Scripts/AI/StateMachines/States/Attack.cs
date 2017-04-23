@@ -37,16 +37,16 @@ namespace Ai
                     {
                         weight += 0.2f;
                     }
-                    if (MIN_ATTACK_RADIUS <= wp.distanceToEnemy && wp.distanceToEnemy <= MAX_ATTACK_RADIUS)
+                    if (MIN_ATTACK_RADIUS <= wp.directDistanceToEnemy && wp.directDistanceToEnemy <= MAX_ATTACK_RADIUS)
                     {
                         float center = (MIN_ATTACK_RADIUS + MAX_ATTACK_RADIUS) / 2.0f;
-                        if (wp.distanceToEnemy < center)
+                        if (wp.directDistanceToEnemy < center)
                         {
-                            weight += 0.3f * (wp.distanceToEnemy - MIN_ATTACK_RADIUS) / (center - MIN_ATTACK_RADIUS);
+                            weight += 0.3f * (wp.directDistanceToEnemy - MIN_ATTACK_RADIUS) / (center - MIN_ATTACK_RADIUS);
                         }
                         else
                         {
-                            weight += 0.3f * (MAX_ATTACK_RADIUS - wp.distanceToEnemy) / (MAX_ATTACK_RADIUS - center);
+                            weight += 0.3f * (MAX_ATTACK_RADIUS - wp.directDistanceToEnemy) / (MAX_ATTACK_RADIUS - center);
                         }
                     }
                     return weight;

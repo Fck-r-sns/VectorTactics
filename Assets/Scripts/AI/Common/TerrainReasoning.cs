@@ -163,25 +163,30 @@ namespace Ai
                 } while (true);
 
                 {
+                    wp.directDistanceToAgent = Vector3.Distance(wp.position, agentState.position);
+
                     Waypoint agentWp = GetNearestWaypoint(agentState.position);
                     if (agentWp.distancesToOtherWaypoints.ContainsKey(wp))
                     {
-                        wp.distanceToAgent = agentWp.distancesToOtherWaypoints[wp];
+                        wp.movementDistanceToAgent = agentWp.distancesToOtherWaypoints[wp];
                     }
                     else
                     {
-                        wp.distanceToAgent = Vector3.Distance(wp.position, agentWp.position);
+                        wp.movementDistanceToAgent = wp.directDistanceToAgent;
                     }
                 }
+
                 {
+                    wp.directDistanceToEnemy = Vector3.Distance(wp.position, agentState.lastEnemyPosition);
+
                     Waypoint enemyWp = GetNearestWaypoint(agentState.lastEnemyPosition);
                     if (enemyWp.distancesToOtherWaypoints.ContainsKey(wp))
                     {
-                        wp.distanceToEnemy = enemyWp.distancesToOtherWaypoints[wp];
+                        wp.movementDistanceToEnemy = enemyWp.distancesToOtherWaypoints[wp];
                     }
                     else
                     {
-                        wp.distanceToEnemy = Vector3.Distance(wp.position, enemyWp.position);
+                        wp.movementDistanceToEnemy = wp.directDistanceToEnemy;
                     }
                 }
 

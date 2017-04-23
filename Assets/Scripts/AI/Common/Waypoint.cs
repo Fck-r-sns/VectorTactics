@@ -11,8 +11,10 @@ namespace Ai
         public readonly int zIndex;
         public readonly Vector3 position;
         public readonly Dictionary<Waypoint, float> distancesToOtherWaypoints = new Dictionary<Waypoint, float>();
-        public float distanceToAgent;
-        public float distanceToEnemy;
+        public float movementDistanceToAgent;
+        public float movementDistanceToEnemy;
+        public float directDistanceToAgent;
+        public float directDistanceToEnemy;
         public bool isBehindCover = false;
         public bool isInCover = false;
         public bool isBehindWall = false;
@@ -28,8 +30,10 @@ namespace Ai
         public void Reset()
         {
             weight = 0.0f;
-            distanceToAgent = 0.0f;
-            distanceToEnemy = 0.0f;
+            movementDistanceToAgent = 0.0f;
+            movementDistanceToEnemy = 0.0f;
+            directDistanceToAgent = 0.0f;
+            directDistanceToEnemy = 0.0f;
             isBehindCover = false;
             isInCover = false;
             isBehindWall = false;
