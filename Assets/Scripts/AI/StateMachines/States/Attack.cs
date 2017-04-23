@@ -36,6 +36,7 @@ namespace Ai
                 if (
                     !aiTools.navigation.IsDestinationReachable()
                     || (destination.HasValue && Vector3.Distance(aiTools.agentState.position, destination.Value) < 2.0f)
+                    || (destination.HasValue && aiTools.terrain.GetNearestWaypoint(destination.Value).isBehindWall)
                     )
                 {
                     destination = null;
