@@ -8,7 +8,12 @@ namespace Ai
     {
         public class Attack : SoldierState
         {
-            public Attack(AiTools aiTools) : 
+
+            private const float MOVEMENT_RADIUS = 3.0f;
+
+            private Vector3? destination;
+
+            public Attack(AiTools aiTools) :
                 base(aiTools)
             {
             }
@@ -22,12 +27,33 @@ namespace Ai
 
             public override void OnUpdate()
             {
-                
+                if (!destination.HasValue)
+                {
+                    destination = GetNextDestination();
+                    aiTools.navigation.SetDestination(destination);
+                }
+
+                if (
+                    !aiTools.navigation.IsDestinationReachable()
+                    || (destination.HasValue && Vector3.Distance(aiTools.agentState.position, destination.Value) < 2.0f)
+                    )
+                {
+                    destination = null;
+                }
             }
 
             public override void OnExit()
             {
-                
+
+            }
+
+            private Vector3 GetNextDestination()
+            {
+                return new Vector3(
+                    aiTools.agentState.position.x + Random.Range(-MOVEMENT_RADIUS, MOVEMENT_RADIUS),
+                    0.0f,
+                    aiTools.agentState.position.z + Random.Range(-MOVEMENT_RADIUS, MOVEMENT_RADIUS)
+                    );
             }
 
         }
