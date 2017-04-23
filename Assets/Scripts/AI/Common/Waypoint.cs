@@ -11,6 +11,7 @@ namespace Ai
         public readonly int zIndex;
         public readonly Vector3 position;
         public readonly Dictionary<Waypoint, float> distancesToOtherWaypoints = new Dictionary<Waypoint, float>();
+        public bool isNotReachable = false;
         public float movementDistanceToAgent;
         public float movementDistanceToEnemy;
         public float directDistanceToAgent;

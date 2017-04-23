@@ -36,6 +36,7 @@ namespace Ai
         private Navigation enemyNavigationHelper;
 
         private LayerMask layerMask;
+        private LayerMask wallsLayerMask;
         private int coverLayer;
         private int wallsLayer;
 
@@ -93,9 +94,13 @@ namespace Ai
             Waypoint centerWp = GetNearestWaypoint(agentState.position);
             List<Waypoint> res = new List<Waypoint>();
             int indexShift = Mathf.CeilToInt(searchRadius / gridStep);
-            for (int xIndex = centerWp.xIndex - indexShift; xIndex <= centerWp.xIndex + indexShift; ++xIndex)
+            int xMin = Mathf.Max(centerWp.xIndex - indexShift, 0);
+            int xMax = Mathf.Min(centerWp.xIndex + indexShift, xCount - 1);
+            int zMin = Mathf.Max(centerWp.zIndex - indexShift, 0);
+            int zMax = Mathf.Min(centerWp.zIndex + indexShift, zCount - 1);
+            for (int xIndex = xMin; xIndex <= xMax; ++xIndex)
             {
-                for (int zIndex = centerWp.zIndex - indexShift; zIndex <= centerWp.zIndex + indexShift; ++zIndex)
+                for (int zIndex = zMin; zIndex <= zMax; ++zIndex)
                 {
                     Waypoint wp = waypoints[xIndex, zIndex];
                     if (wp.weight >= weightThreshold)
@@ -116,6 +121,7 @@ namespace Ai
             enemyNavigationHelper = enemyState.gameObject.GetComponent<Navigation>();
 
             layerMask = LayerMask.GetMask("Cover", "Walls");
+            wallsLayerMask = LayerMask.GetMask("Walls");
             coverLayer = LayerMask.NameToLayer("Cover");
             wallsLayer = LayerMask.NameToLayer("Walls");
 
@@ -142,6 +148,7 @@ namespace Ai
             };
 
             waypoints = GenerateWaypoints();
+            CheckWaypointsReachability();
         }
 
         void Start()
@@ -170,6 +177,10 @@ namespace Ai
             foreach (Waypoint wp in waypoints)
             {
                 wp.Reset();
+                if (wp.isNotReachable)
+                {
+                    continue;
+                }
 
                 Vector3 origin = agentState.lastEnemyPosition;
                 origin.y = 0.0f;
@@ -257,6 +268,15 @@ namespace Ai
                     return NaiveWaypointGenerator();
                 default:
                     return null;
+            }
+        }
+
+        public void CheckWaypointsReachability()
+        {
+            foreach (Waypoint wp in waypoints)
+            {
+                Ray ray = new Ray(wp.position + Vector3.up * 100, Vector3.down);
+                wp.isNotReachable = Physics.Raycast(ray, float.MaxValue, wallsLayerMask);
             }
         }
 
