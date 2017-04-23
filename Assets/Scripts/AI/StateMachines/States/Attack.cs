@@ -10,6 +10,8 @@ namespace Ai
         {
 
             private const float MOVEMENT_RADIUS = 3.0f;
+            private const float MIN_ATTACK_RADIUS = 10.0f;
+            private const float MAX_ATTACK_RADIUS = 15.0f;
 
             private Vector3? destination;
 
@@ -23,6 +25,32 @@ namespace Ai
                 Debug.Log(Time.time + ": Enter Attack state");
                 aiTools.shooting.SetAimingEnabled(true);
                 aiTools.shooting.SetShootingEnabled(true);
+
+                aiTools.terrain.SetWaypointProcessor(wp =>
+                {
+                    float weight = 0.0f;
+                    if (!wp.isBehindWall)
+                    {
+                        weight += 0.5f;
+                    }
+                    if (wp.isInCover)
+                    {
+                        weight += 0.2f;
+                    }
+                    if (MIN_ATTACK_RADIUS <= wp.distanceToEnemy && wp.distanceToEnemy <= MAX_ATTACK_RADIUS)
+                    {
+                        float center = (MIN_ATTACK_RADIUS + MAX_ATTACK_RADIUS) / 2.0f;
+                        if (wp.distanceToEnemy < center)
+                        {
+                            weight += 0.3f * (wp.distanceToEnemy - MIN_ATTACK_RADIUS) / (center - MIN_ATTACK_RADIUS);
+                        }
+                        else
+                        {
+                            weight += 0.3f * (MAX_ATTACK_RADIUS - wp.distanceToEnemy) / (MAX_ATTACK_RADIUS - center);
+                        }
+                    }
+                    return weight;
+                });
             }
 
             public override void OnUpdate()

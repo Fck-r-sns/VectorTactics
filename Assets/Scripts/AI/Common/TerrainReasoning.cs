@@ -15,7 +15,7 @@ namespace Ai
             Naive
         }
 
-        public delegate float WaypointProcessor(Waypoint wp);
+        public delegate float WeightFunction(Waypoint wp);
 
         [SerializeField]
         private WaypointGenerationMode mode = WaypointGenerationMode.Naive;
@@ -39,7 +39,7 @@ namespace Ai
         private int coverLayer;
         private int wallsLayer;
 
-        private WaypointProcessor waypointProcessor;
+        private WeightFunction waypointProcessor;
 
         private int xCount;
         private int xCenterIndex;
@@ -194,7 +194,7 @@ namespace Ai
             return waypoints;
         }
 
-        public void SetWaypointProcessor(WaypointProcessor waypointProcessor)
+        public void SetWaypointProcessor(WeightFunction waypointProcessor)
         {
             this.waypointProcessor = waypointProcessor;
         }
