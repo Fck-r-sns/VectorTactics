@@ -217,12 +217,17 @@ Prefab:
     - target: {fileID: 114622877574759558, guid: f54411585130954489e09b0a6add07f3,
         type: 2}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114293218115827344, guid: f54411585130954489e09b0a6add07f3,
         type: 2}
       propertyPath: gridStep
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114876479293622718, guid: f54411585130954489e09b0a6add07f3,
+        type: 2}
+      propertyPath: enableMouseControl
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f54411585130954489e09b0a6add07f3, type: 2}
@@ -551,6 +556,11 @@ Prefab:
     - target: {fileID: 1751188178809392, guid: 1bea3cd97b9d39b459b383081f6e289f, type: 2}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114444683308563456, guid: 1bea3cd97b9d39b459b383081f6e289f,
+        type: 2}
+      propertyPath: enableMouseControl
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1bea3cd97b9d39b459b383081f6e289f, type: 2}

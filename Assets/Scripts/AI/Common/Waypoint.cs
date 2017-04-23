@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Ai
 {
@@ -6,16 +7,21 @@ namespace Ai
     public class Waypoint
     {
 
+        public readonly int xIndex;
+        public readonly int zIndex;
         public readonly Vector3 position;
+        public readonly Dictionary<Waypoint, float> distancesToOtherWaypoints = new Dictionary<Waypoint, float>();
+        public float distanceToAgent;
+        public float distanceToEnemy;
+        public bool isBehindCover = false;
+        public bool isInCover = false;
+        public bool isBehindWall = false;
         public float weight = 0.0f;
-        public float distanceToAgent = 0.0f;
-        public float distanceToEnemy = 0.0f;
-        public bool behindCover = false;
-        public bool inCover = false;
-        public bool behindWall = false;
 
-        public Waypoint(Vector3 position)
+        public Waypoint(int xIndex, int zIndex, Vector3 position)
         {
+            this.xIndex = xIndex;
+            this.zIndex = zIndex;
             this.position = position;
         }
 
@@ -24,9 +30,9 @@ namespace Ai
             weight = 0.0f;
             distanceToAgent = 0.0f;
             distanceToEnemy = 0.0f;
-            behindCover = false;
-            inCover = false;
-            behindWall = false;
+            isBehindCover = false;
+            isInCover = false;
+            isBehindWall = false;
         }
 
     }
