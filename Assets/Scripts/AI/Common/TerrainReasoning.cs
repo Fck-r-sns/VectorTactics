@@ -163,7 +163,7 @@ namespace Ai
                 } while (true);
 
                 {
-                    Waypoint agentWp = GetNearestWaypointToPoint(agentState.position);
+                    Waypoint agentWp = GetNearestWaypoint(agentState.position);
                     if (agentWp.distancesToOtherWaypoints.ContainsKey(wp))
                     {
                         wp.distanceToAgent = agentWp.distancesToOtherWaypoints[wp];
@@ -174,7 +174,7 @@ namespace Ai
                     }
                 }
                 {
-                    Waypoint enemyWp = GetNearestWaypointToPoint(agentState.lastEnemyPosition);
+                    Waypoint enemyWp = GetNearestWaypoint(agentState.lastEnemyPosition);
                     if (enemyWp.distancesToOtherWaypoints.ContainsKey(wp))
                     {
                         wp.distanceToEnemy = enemyWp.distancesToOtherWaypoints[wp];
@@ -197,6 +197,13 @@ namespace Ai
         public void SetWaypointProcessor(WaypointProcessor waypointProcessor)
         {
             this.waypointProcessor = waypointProcessor;
+        }
+
+        public Waypoint GetNearestWaypoint(Vector3 point)
+        {
+            int xIndex = Mathf.RoundToInt(point.x / gridStep) + xCenterIndex;
+            int zIndex = Mathf.RoundToInt(point.z / gridStep) + zCenterIndex;
+            return waypoints[xIndex, zIndex];
         }
 
         private Waypoint[,] GenerateWaypoints()
@@ -296,13 +303,6 @@ namespace Ai
                     }
                 }
             }
-        }
-
-        private Waypoint GetNearestWaypointToPoint(Vector3 point)
-        {
-            int xIndex = Mathf.RoundToInt(point.x / gridStep) + xCenterIndex;
-            int zIndex = Mathf.RoundToInt(point.z / gridStep) + zCenterIndex;
-            return waypoints[xIndex, zIndex];
         }
 
     }
