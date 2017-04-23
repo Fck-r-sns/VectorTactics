@@ -23,6 +23,12 @@ namespace Ai
         [SerializeField]
         private float gridStep = 0.5f;
 
+        [SerializeField]
+        private bool loadDistanceMap = false;
+
+        [SerializeField]
+        private bool calculateDistanceMap = false;
+
         private CharacterState agentState;
         private CharacterState enemyState;
 
@@ -87,14 +93,20 @@ namespace Ai
         {
             try
             {
-                RestoreDistances();
-                Debug.Log("Waypoint distances restored");
+                if (loadDistanceMap)
+                {
+                    RestoreDistances();
+                    Debug.Log("Waypoint distances restored");
+                }
             }
             catch (Exception e)
             {
                 Debug.Log("Failed to restore waypoint distances: " + e.Message);
-                //CalculateDistances();
-                //StoreDistances();
+                if (calculateDistanceMap)
+                {
+                    CalculateDistances();
+                    StoreDistances();
+                }
             }
         }
 
@@ -152,11 +164,25 @@ namespace Ai
 
                 {
                     Waypoint agentWp = GetNearestWaypointToPoint(agentState.position);
-                    wp.distanceToAgent = agentWp.distancesToOtherWaypoints[wp];
+                    if (agentWp.distancesToOtherWaypoints.ContainsKey(wp))
+                    {
+                        wp.distanceToAgent = agentWp.distancesToOtherWaypoints[wp];
+                    }
+                    else
+                    {
+                        wp.distanceToAgent = Vector3.Distance(wp.position, agentWp.position);
+                    }
                 }
                 {
                     Waypoint enemyWp = GetNearestWaypointToPoint(agentState.lastEnemyPosition);
-                    wp.distanceToEnemy = enemyWp.distancesToOtherWaypoints[wp];
+                    if (enemyWp.distancesToOtherWaypoints.ContainsKey(wp))
+                    {
+                        wp.distanceToEnemy = enemyWp.distancesToOtherWaypoints[wp];
+                    }
+                    else
+                    {
+                        wp.distanceToEnemy = Vector3.Distance(wp.position, enemyWp.position);
+                    }
                 }
 
                 wp.weight = waypointProcessor(wp);
