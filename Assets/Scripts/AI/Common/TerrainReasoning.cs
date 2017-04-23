@@ -52,6 +52,61 @@ namespace Ai
             return gridStep;
         }
 
+        public Waypoint[,] GetWaypoints()
+        {
+            return waypoints;
+        }
+
+        public void SetWaypointProcessor(WeightFunction waypointProcessor)
+        {
+            this.waypointProcessor = waypointProcessor;
+        }
+
+        public Waypoint GetNearestWaypoint(Vector3 point)
+        {
+            int xIndex = Mathf.RoundToInt(point.x / gridStep) + xCenterIndex;
+            int zIndex = Mathf.RoundToInt(point.z / gridStep) + zCenterIndex;
+            return waypoints[xIndex, zIndex];
+        }
+
+        public Waypoint GetBestWaypoint(float searchRadius)
+        {
+            Waypoint centerWp = GetNearestWaypoint(agentState.position);
+            Waypoint bestWp = null;
+            int indexShift = Mathf.CeilToInt(searchRadius / gridStep);
+            for (int xIndex = centerWp.xIndex - indexShift; xIndex <= centerWp.xIndex + indexShift; ++xIndex)
+            {
+                for (int zIndex = centerWp.zIndex - indexShift; zIndex <= centerWp.zIndex + indexShift; ++zIndex)
+                {
+                    Waypoint wp = waypoints[xIndex, zIndex];
+                    if (bestWp == null || bestWp.weight < wp.weight)
+                    {
+                        bestWp = wp;
+                    }
+                }
+            }
+            return bestWp;
+        }
+
+        public List<Waypoint> GetGoodWaypoints(float searchRadius, float weightThreshold)
+        {
+            Waypoint centerWp = GetNearestWaypoint(agentState.position);
+            List<Waypoint> res = new List<Waypoint>();
+            int indexShift = Mathf.CeilToInt(searchRadius / gridStep);
+            for (int xIndex = centerWp.xIndex - indexShift; xIndex <= centerWp.xIndex + indexShift; ++xIndex)
+            {
+                for (int zIndex = centerWp.zIndex - indexShift; zIndex <= centerWp.zIndex + indexShift; ++zIndex)
+                {
+                    Waypoint wp = waypoints[xIndex, zIndex];
+                    if (wp.weight >= weightThreshold)
+                    {
+                        res.Add(wp);
+                    }
+                }
+            }
+            return res;
+        }
+
         void Awake()
         {
             agentState = GetComponent<CharacterState>();
@@ -192,23 +247,6 @@ namespace Ai
 
                 wp.weight = waypointProcessor(wp);
             }
-        }
-
-        public Waypoint[,] GetWaypoints()
-        {
-            return waypoints;
-        }
-
-        public void SetWaypointProcessor(WeightFunction waypointProcessor)
-        {
-            this.waypointProcessor = waypointProcessor;
-        }
-
-        public Waypoint GetNearestWaypoint(Vector3 point)
-        {
-            int xIndex = Mathf.RoundToInt(point.x / gridStep) + xCenterIndex;
-            int zIndex = Mathf.RoundToInt(point.z / gridStep) + zCenterIndex;
-            return waypoints[xIndex, zIndex];
         }
 
         private Waypoint[,] GenerateWaypoints()

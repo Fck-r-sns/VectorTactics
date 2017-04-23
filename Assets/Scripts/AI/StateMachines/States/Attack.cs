@@ -78,6 +78,22 @@ namespace Ai
 
             private Vector3 GetNextDestination()
             {
+                //return aiTools.terrain.GetBestWaypoint(MOVEMENT_RADIUS).position;
+
+                List<Waypoint> wps = aiTools.terrain.GetGoodWaypoints(MOVEMENT_RADIUS, 0.8f);
+                if (wps.Count == 0)
+                {
+                    return GetRandomNextDestination();
+                }
+                else
+                {
+                    int index = Random.Range(0, wps.Count - 1);
+                    return wps[index].position;
+                }
+            }
+
+            private Vector3 GetRandomNextDestination()
+            {
                 return new Vector3(
                     aiTools.agentState.position.x + Random.Range(-MOVEMENT_RADIUS, MOVEMENT_RADIUS),
                     0.0f,
