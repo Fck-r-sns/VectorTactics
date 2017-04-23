@@ -22,6 +22,8 @@ namespace Ai
         private Vector3? destination = null;
         private int currentPathIndex = 0;
 
+        private GameObject movementDestinationMarker;
+
         public void SetDestination(Vector3? destination)
         {
             this.destination = destination;
@@ -30,7 +32,10 @@ namespace Ai
 
         public bool IsDestinationReachable()
         {
-            return destination.HasValue && (path.status == NavMeshPathStatus.PathComplete);
+            return destination.HasValue 
+                && (path.status == NavMeshPathStatus.PathComplete) 
+                && (path.corners.Length != 0)
+                && (Vector3.Distance(path.corners[path.corners.Length - 1], destination.Value) < 0.1f);
         }
 
         public NavMeshPath GetPathTo(Vector3 target)
@@ -68,6 +73,10 @@ namespace Ai
             navMeshAgent = GetComponent<NavMeshAgent>();
             floorMask = LayerMask.GetMask("Floor");
             path = new NavMeshPath();
+
+            movementDestinationMarker = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            movementDestinationMarker.GetComponent<Collider>().enabled = false;
+            movementDestinationMarker.transform.localScale = new Vector3(0.4f, 2.0f, 0.4f);
         }
 
         // Update is called once per frame
@@ -89,6 +98,8 @@ namespace Ai
                 }
             }
 
+            UpdatePath();
+
             if (destination.HasValue && (path.status != NavMeshPathStatus.PathInvalid) && (path.corners.Length > 0))
             {
                 Vector3? nextPoint = GetNextPoint();
@@ -104,6 +115,16 @@ namespace Ai
             else
             {
                 controller.Move(Vector3.zero);
+            }
+
+            if (destination.HasValue)
+            {
+                movementDestinationMarker.SetActive(true);
+                movementDestinationMarker.transform.position = destination.Value;
+            }
+            else
+            {
+                movementDestinationMarker.SetActive(false);
             }
         }
 

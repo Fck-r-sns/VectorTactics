@@ -11,13 +11,11 @@ namespace Ai
         {
 
             private Vector3? destination;
-            private GameObject target;
 
             public SearchEnemy(AiTools aiTools) :
                 base(aiTools)
             {
-                target = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-                target.GetComponent<Collider>().enabled = false;
+
             }
 
             public override void OnEnter()
@@ -42,23 +40,12 @@ namespace Ai
                 {
                     destination = null;
                 }
-
-                if (destination.HasValue)
-                {
-                    target.SetActive(true);
-                    target.transform.position = destination.Value;
-                }
-                else
-                {
-                    target.SetActive(false);
-                }
             }
 
             public override void OnExit()
             {
                 destination = null;
                 aiTools.navigation.SetDestination(null);
-                target.SetActive(false);
             }
 
             private Vector3 GetNextDestination()
