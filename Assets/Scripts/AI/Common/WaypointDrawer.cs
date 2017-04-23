@@ -24,6 +24,9 @@ namespace Ai
         [SerializeField]
         private float maxHeight = 3.0f;
 
+        [SerializeField]
+        private float weightCutoff = 0.0f;
+
         private TerrainReasoning terrain;
         private Dictionary<Waypoint, WaypointRepresentation> objects = new Dictionary<Waypoint, WaypointRepresentation>();
 
@@ -47,15 +50,20 @@ namespace Ai
             {
                 Waypoint wp = pair.Key;
                 WaypointRepresentation obj = pair.Value;
+                float weight = wp.weight;
+                if (weight < weightCutoff)
+                {
+                    weight = 0.0f;
+                }
 
                 if ((mode == Mode.Height) || (mode == Mode.HeightAndColor))
                 {
-                    obj.SetHeight(wp.weight * maxHeight);
+                    obj.SetHeight(weight * maxHeight);
                 }
 
                 if ((mode == Mode.Color) || (mode == Mode.HeightAndColor))
                 {
-                    float red = Mathf.Clamp(wp.weight, 0.0f, 1.0f);
+                    float red = Mathf.Clamp(weight, 0.0f, 1.0f);
                     float green = 1 - red;
                     obj.SetColor(new Color(red, green, 0.0f));
                 }
