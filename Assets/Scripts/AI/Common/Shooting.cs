@@ -56,8 +56,11 @@ namespace Ai
                     controller.Shoot(shootingTarget);
                 }
             }
+            else
+            {
+                controller.TurnToPoint(agentState.transform.position + agentState.movementDirection);
+            }
 
-            controller.TurnToPoint(agentState.transform.position + agentState.movementDirection);
         }
 
         private Vector3 CalculateShootingTarget()
