@@ -16,6 +16,11 @@ namespace Ai
                 this.aiTools = aiTools;
             }
 
+            public override void OnEnter()
+            {
+                destination = null;
+            }
+
             public override void OnUpdate()
             {
                 if (aiTools.agentState.isDead)

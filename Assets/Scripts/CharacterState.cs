@@ -23,7 +23,9 @@ public class CharacterState : MonoBehaviour
 
     public Vector3 position {
         get {
-            return transform.position;
+            Vector3 pos = transform.position;
+            pos.y = 0.0f;
+            return pos;
         }
     }
 

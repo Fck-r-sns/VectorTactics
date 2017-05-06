@@ -18,6 +18,7 @@ namespace Ai
 
             public override void OnEnter()
             {
+                base.OnEnter();
                 Debug.Log(Time.time + ": Enter SearchEnemy state");
                 aiTools.shooting.SetAimingEnabled(false);
                 aiTools.shooting.SetShootingEnabled(false);

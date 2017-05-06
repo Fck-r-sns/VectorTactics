@@ -20,6 +20,7 @@ namespace Ai
 
             public override void OnEnter()
             {
+                base.OnEnter();
                 Debug.Log(Time.time + ": Enter Defence state");
                 aiTools.shooting.SetAimingEnabled(true);
                 aiTools.shooting.SetShootingEnabled(true);

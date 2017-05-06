@@ -20,6 +20,7 @@ namespace Ai
 
             public override void OnEnter()
             {
+                base.OnEnter();
                 Debug.Log(Time.time + ": Enter SearchHealthPack state");
 
                 aiTools.terrain.SetWeightFunction(wp =>
