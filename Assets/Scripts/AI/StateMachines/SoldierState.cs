@@ -37,7 +37,7 @@ namespace Ai
 
                 if (
                     !aiTools.navigation.IsDestinationReachable()
-                    || (destination.HasValue && Vector3.Distance(aiTools.agentState.position, destination.Value) < 2.0f)
+                    || (destination.HasValue && Vector3.Distance(aiTools.agentState.position, destination.Value) < GameDefines.NEAR_POINT_CHECK_PRECISION)
                     )
                 {
                     destination = null;
