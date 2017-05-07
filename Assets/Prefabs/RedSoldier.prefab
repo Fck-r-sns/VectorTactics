@@ -453,9 +453,10 @@ GameObject:
   - component: {fileID: 114293218115827344}
   - component: {fileID: 114622877574759558}
   - component: {fileID: 114876479293622718}
-  - component: {fileID: 114225304682151490}
   - component: {fileID: 114224504592895952}
   - component: {fileID: 114457219366347080}
+  - component: {fileID: 114919991544780598}
+  - component: {fileID: 114885952265438258}
   m_Layer: 11
   m_Name: RedSoldier
   m_TagString: Soldier
@@ -991,7 +992,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f92adf6de49d9954c8c701d2d0b6eb80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isInvulnerable: 1
+  isInvulnerable: 0
 --- !u!114 &114224504592895952
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1001,17 +1002,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a089e07a9f1d4ea48b2a0e01fc09454f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &114225304682151490
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1939298438919050}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03e3b1538de6cab45ba9f63409653056, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &114293218115827344
@@ -1027,6 +1017,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mode: 0
   gridStep: 0.5
+  loadDistanceMap: 0
+  calculateDistanceMap: 0
 --- !u!114 &114457219366347080
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1063,6 +1055,7 @@ MonoBehaviour:
     type: 2}
   mode: 2
   maxHeight: 1
+  weightCutoff: 0
 --- !u!114 &114638319805479584
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1086,6 +1079,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enableMouseControl: 0
+--- !u!114 &114885952265438258
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1939298438919050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03e3b1538de6cab45ba9f63409653056, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114919991544780598
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1939298438919050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36bcfeb5ea5391f4187201214609586e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114999831071765166
 MonoBehaviour:
   m_ObjectHideFlags: 1

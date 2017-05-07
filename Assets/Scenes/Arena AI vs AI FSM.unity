@@ -194,30 +194,9 @@ Prefab:
       propertyPath: enemyState
       value: 
       objectReference: {fileID: 1407986530}
-    - target: {fileID: 114622877574759558, guid: f54411585130954489e09b0a6add07f3,
-        type: 2}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114209152168671762, guid: f54411585130954489e09b0a6add07f3,
-        type: 2}
-      propertyPath: isInvulnerable
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114225304682151490, guid: f54411585130954489e09b0a6add07f3,
-        type: 2}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f54411585130954489e09b0a6add07f3, type: 2}
   m_IsPrefabParent: 0
---- !u!114 &14864099 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114209152168671762, guid: f54411585130954489e09b0a6add07f3,
-    type: 2}
-  m_PrefabInternal: {fileID: 14864093}
-  m_Script: {fileID: 11500000, guid: f92adf6de49d9954c8c701d2d0b6eb80, type: 3}
 --- !u!4 &25498016 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4550438647433996, guid: f1ba12164c68f2241b0b83a28418be8d,
@@ -801,35 +780,6 @@ Prefab:
       propertyPath: m_Name
       value: BlueSoldier
       objectReference: {fileID: 0}
-    - target: {fileID: 4505228158605868, guid: f54411585130954489e09b0a6add07f3, type: 2}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 45
-      objectReference: {fileID: 0}
-    - target: {fileID: 114209152168671762, guid: f54411585130954489e09b0a6add07f3,
-        type: 2}
-      propertyPath: side
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 137097828131744792, guid: f54411585130954489e09b0a6add07f3,
-        type: 2}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: ce5c73e2ae4d33444b58c21647a32c76, type: 2}
-    - target: {fileID: 114225304682151490, guid: f54411585130954489e09b0a6add07f3,
-        type: 2}
-      propertyPath: world
-      value: 
-      objectReference: {fileID: 921243482}
-    - target: {fileID: 114224504592895952, guid: f54411585130954489e09b0a6add07f3,
-        type: 2}
-      propertyPath: target
-      value: 
-      objectReference: {fileID: 14864099}
-    - target: {fileID: 114293218115827344, guid: f54411585130954489e09b0a6add07f3,
-        type: 2}
-      propertyPath: worldState
-      value: 
-      objectReference: {fileID: 921243482}
     - target: {fileID: 114457219366347080, guid: f54411585130954489e09b0a6add07f3,
         type: 2}
       propertyPath: side
@@ -844,26 +794,6 @@ Prefab:
         type: 2}
       propertyPath: m_Enabled
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114293218115827344, guid: f54411585130954489e09b0a6add07f3,
-        type: 2}
-      propertyPath: gridStep
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 114209152168671762, guid: f54411585130954489e09b0a6add07f3,
-        type: 2}
-      propertyPath: isInvulnerable
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 195132736355833178, guid: f54411585130954489e09b0a6add07f3,
-        type: 2}
-      propertyPath: m_AngularSpeed
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114225304682151490, guid: f54411585130954489e09b0a6add07f3,
-        type: 2}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f54411585130954489e09b0a6add07f3, type: 2}

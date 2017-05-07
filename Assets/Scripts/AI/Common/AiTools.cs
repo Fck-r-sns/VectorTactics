@@ -1,29 +1,50 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Ai
 {
-
-    public class AiTools
+    [RequireComponent(typeof(TerrainReasoning))]
+    [RequireComponent(typeof(Navigation))]
+    [RequireComponent(typeof(Shooting))]
+    [RequireComponent(typeof(SoldierController))]
+    public class AiTools : MonoBehaviour
     {
-        public readonly WorldState world;
-        public readonly Navigation navigation;
-        public readonly Shooting shooting;
-        public readonly TerrainReasoning terrain;
-        public readonly SoldierController controller;
-        public readonly CharacterState agentState;
-        public readonly CharacterState enemyState;
+        public WorldState world { get { return _world; } }
+        public Navigation navigation { get { return _navigation; } }
+        public Shooting shooting { get { return _shooting; } }
+        public TerrainReasoning terrain { get { return _terrain; } }
+        public SoldierController controller { get { return _controller; } }
+        public CharacterState agentState { get { return _agentState; } }
+        public CharacterState enemyState { get { return _enemyState; } }
 
-        public AiTools(WorldState world, Navigation navigation, Shooting shooting, TerrainReasoning terrain, SoldierController controller, CharacterState agentState, CharacterState enemyState)
+        private bool _isInited = false;
+        private WorldState _world;
+        private Navigation _navigation;
+        private Shooting _shooting;
+        private TerrainReasoning _terrain;
+        private SoldierController _controller;
+        private CharacterState _agentState;
+        private CharacterState _enemyState;
+
+        void Start()
         {
-            this.world = world;
-            this.navigation = navigation;
-            this.shooting = shooting;
-            this.terrain = terrain;
-            this.controller = controller;
-            this.agentState = agentState;
-            this.enemyState = enemyState;
+            Init();
+        }
+
+        public void Init()
+        {
+            if (_isInited)
+            {
+                return;
+            }
+
+            _world = WorldState.GetInstance();
+            _navigation = GetComponent<Navigation>();
+            _shooting = GetComponent<Shooting>();
+            _terrain = GetComponent<TerrainReasoning>();
+
+            _controller = GetComponent<SoldierController>();
+            _agentState = _controller.GetState();
+            _enemyState = _agentState.enemyState;
         }
     }
 
