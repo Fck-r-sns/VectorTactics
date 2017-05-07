@@ -18,7 +18,14 @@
                 
             }
 
-            public virtual void AddChild(Node child)
+            // returns this for chain operations
+            public Node AddChild(Node child)
+            {
+                AddChild_impl(child);
+                return this;
+            }
+
+            protected virtual void AddChild_impl(Node child)
             {
                 throw new System.Exception("Can't add child - node is terminal");
             }

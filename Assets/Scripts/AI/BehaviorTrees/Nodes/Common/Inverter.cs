@@ -24,7 +24,7 @@
                 }
             }
 
-            public override void AddChild(Node child)
+            protected override void AddChild_impl(Node child)
             {
                 this.child = child;
             }

@@ -25,7 +25,7 @@ namespace Ai
                 return Result.Success;
             }
 
-            public override void AddChild(Node child)
+            protected override void AddChild_impl(Node child)
             {
                 child.AddChild(child);
             }
