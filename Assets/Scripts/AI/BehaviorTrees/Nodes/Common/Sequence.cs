@@ -27,7 +27,7 @@ namespace Ai
 
             protected override void AddChild_impl(Node child)
             {
-                child.AddChild(child);
+                children.Add(child);
             }
         }
     }

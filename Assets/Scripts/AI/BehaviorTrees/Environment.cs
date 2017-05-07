@@ -6,7 +6,7 @@ namespace Ai
     {
         public class Environment
         {
-            private Dictionary<string, object> variables;
+            private Dictionary<string, object> variables = new Dictionary<string, object>();
 
             public void SetValue(string variable, object value)
             {

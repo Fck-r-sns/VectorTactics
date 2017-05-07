@@ -27,7 +27,15 @@ namespace Ai
                 float searchRadius = environment.GetValue<float>(searchRadiusVariable);
                 float minWeight = environment.GetValue<float>(minWeightVariable);
                 Vector3 result;
-                List<Waypoint> wps = aiTools.terrain.GetGoodWaypoints(searchRadius, minWeight);
+                List<Waypoint> wps;
+                if (minWeight < 0)
+                {
+                    wps = new List<Waypoint>() { aiTools.terrain.GetBestWaypoint(searchRadius) };
+                }
+                else
+                {
+                    wps = aiTools.terrain.GetGoodWaypoints(searchRadius, minWeight);
+                }
                 if (wps.Count == 0)
                 {
                     result = new Vector3(

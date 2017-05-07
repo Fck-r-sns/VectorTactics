@@ -5,6 +5,7 @@ namespace Ai
     namespace Bt
     {
         [RequireComponent(typeof(AiTools))]
+        [RequireComponent(typeof(SoldierController))]
         public class BtController : MonoBehaviour
         {
             private const string WEIGHT_FUNCTION_CHANGED_VARIABLE = "weightFunctionChanged";
@@ -12,16 +13,22 @@ namespace Ai
             private const string DESTINATION_SEARCH_MIN_WEIGHT_VARIABLE = "destinationSearchMinWeight";
             private const string DESTINATION_POINT_VARIABLE = "destination";
 
+            private SoldierController controller;
+
             private Node root;
 
             void Start()
             {
+                controller = GetComponent<SoldierController>();
                 InitTree();
             }
 
             void Update()
             {
-                root.Run();
+                if (!controller.GetState().isDead)
+                {
+                    root.Run();
+                }
             }
 
             private void InitTree()
@@ -84,7 +91,7 @@ namespace Ai
                                         new Sequence(environment)
                                             .AddChild(new SetWeightFunction(environment, aiTools, TerrainReasoning.RETREAT_WEIGHT_FUNCTION))
                                             .AddChild(new SetEnvironmentVariable<float>(environment, DESTINATION_SEARCH_RADIUS_VARIABLE, 500.0f))
-                                            .AddChild(new SetEnvironmentVariable<float>(environment, DESTINATION_SEARCH_MIN_WEIGHT_VARIABLE, 0.0f))
+                                            .AddChild(new SetEnvironmentVariable<float>(environment, DESTINATION_SEARCH_MIN_WEIGHT_VARIABLE, -1.0f))
                                 )
                         )
                 );
@@ -95,13 +102,13 @@ namespace Ai
                         .AddChild(
                             new Selector(environment)
                                 .AddChild(
-                                    new Inverter(environment)
-                                        .AddChild(new IsDestinationExistsAndValid(environment, aiTools))
-                                )
-                                .AddChild(
                                     new Sequence(environment)
                                         .AddChild(new CheckEnvironmentVariable<bool>(environment, WEIGHT_FUNCTION_CHANGED_VARIABLE, true))
                                         .AddChild(new ClearEnvironmentVariable(environment, WEIGHT_FUNCTION_CHANGED_VARIABLE))
+                                )
+                                .AddChild(
+                                    new Inverter(environment)
+                                        .AddChild(new IsDestinationExistsAndValid(environment, aiTools))
                                 )
                                 .AddChild(new IsNearDestination(environment, aiTools))
                         )

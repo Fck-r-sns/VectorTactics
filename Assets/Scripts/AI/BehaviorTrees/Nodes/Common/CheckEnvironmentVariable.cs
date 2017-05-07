@@ -15,6 +15,10 @@
 
             public override Result Run()
             {
+                if (!environment.ContainsValue(variable))
+                {
+                    return Result.Failure;
+                }
                 return environment.GetValue<T>(variable).Equals(value) ? Result.Success : Result.Failure;
             }
         }
