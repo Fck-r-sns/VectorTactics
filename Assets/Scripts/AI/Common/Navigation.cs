@@ -30,6 +30,11 @@ namespace Ai
             UpdatePath();
         }
 
+        public Vector3? GetDestination()
+        {
+            return destination;
+        }
+
         public bool IsDestinationReachable()
         {
             return destination.HasValue 
