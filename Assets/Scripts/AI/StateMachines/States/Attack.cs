@@ -10,8 +10,6 @@ namespace Ai
         {
 
             private const float MOVEMENT_RADIUS = 5.0f;
-            private const float MIN_ATTACK_RADIUS = 10.0f;
-            private const float MAX_ATTACK_RADIUS = 15.0f;
 
             public Attack(AiTools aiTools) :
                 base(aiTools)
@@ -25,31 +23,7 @@ namespace Ai
                 aiTools.shooting.SetAimingEnabled(true);
                 aiTools.shooting.SetShootingEnabled(true);
 
-                aiTools.terrain.SetWeightFunction(wp =>
-                {
-                    float weight = 0.0f;
-                    if (!wp.isBehindWall)
-                    {
-                        weight += 0.5f;
-                    }
-                    if (wp.isInCover)
-                    {
-                        weight += 0.2f;
-                    }
-                    if (MIN_ATTACK_RADIUS <= wp.directDistanceToEnemy && wp.directDistanceToEnemy <= MAX_ATTACK_RADIUS)
-                    {
-                        float center = (MIN_ATTACK_RADIUS + MAX_ATTACK_RADIUS) / 2.0f;
-                        if (wp.directDistanceToEnemy < center)
-                        {
-                            weight += 0.3f * (wp.directDistanceToEnemy - MIN_ATTACK_RADIUS) / (center - MIN_ATTACK_RADIUS);
-                        }
-                        else
-                        {
-                            weight += 0.3f * (MAX_ATTACK_RADIUS - wp.directDistanceToEnemy) / (MAX_ATTACK_RADIUS - center);
-                        }
-                    }
-                    return weight;
-                });
+                aiTools.terrain.SetWeightFunction(TerrainReasoning.AGGRESSIVE_WEIGHT_FUNCTION);
             }
 
             public override void OnExit()

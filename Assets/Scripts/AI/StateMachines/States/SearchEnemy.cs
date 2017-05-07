@@ -23,10 +23,7 @@ namespace Ai
                 aiTools.shooting.SetAimingEnabled(false);
                 aiTools.shooting.SetShootingEnabled(false);
 
-                aiTools.terrain.SetWeightFunction(wp =>
-                {
-                    return 0.0f;
-                });
+                aiTools.terrain.SetWeightFunction(TerrainReasoning.PATROL_WEIGHT_FUNCTION);
             }
 
             public override void OnExit()

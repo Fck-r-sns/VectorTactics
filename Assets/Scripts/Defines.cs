@@ -6,8 +6,9 @@
         Red
     }
 
-    public const float MAP_WIDTH = 30.0f;
-    public const float MAP_HEIGHT = 30.0f;
+    public const float MAP_SIDE_SIZE = 30.0f;
+    public const float MAP_WIDTH = MAP_SIDE_SIZE;
+    public const float MAP_HEIGHT = MAP_SIDE_SIZE;
 
     public const float NEAR_POINT_CHECK_PRECISION = 2.0f;
 

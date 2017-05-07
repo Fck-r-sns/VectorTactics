@@ -17,6 +17,87 @@ namespace Ai
 
         public delegate float WeightFunction(Waypoint wp);
 
+        public static WeightFunction AGGRESSIVE_WEIGHT_FUNCTION = wp =>
+        {
+            const float MIN_ATTACK_RADIUS = 10.0f;
+            const float MAX_ATTACK_RADIUS = 15.0f;
+            float weight = 0.0f;
+            if (!wp.isBehindWall)
+            {
+                weight += 0.5f;
+            }
+            if (wp.isInCover)
+            {
+                weight += 0.2f;
+            }
+            if (MIN_ATTACK_RADIUS <= wp.directDistanceToEnemy && wp.directDistanceToEnemy <= MAX_ATTACK_RADIUS)
+            {
+                float center = (MIN_ATTACK_RADIUS + MAX_ATTACK_RADIUS) / 2.0f;
+                if (wp.directDistanceToEnemy < center)
+                {
+                    weight += 0.3f * (wp.directDistanceToEnemy - MIN_ATTACK_RADIUS) / (center - MIN_ATTACK_RADIUS);
+                }
+                else
+                {
+                    weight += 0.3f * (MAX_ATTACK_RADIUS - wp.directDistanceToEnemy) / (MAX_ATTACK_RADIUS - center);
+                }
+            }
+            return weight;
+        };
+
+        public static WeightFunction DEFENSIVE_WEIGHT_FUNCTION = wp =>
+        {
+            const float MIN_ATTACK_RADIUS = 15.0f;
+            const float MAX_ATTACK_RADIUS = 20.0f;
+            float weight = 0.0f;
+            if (wp.isBehindWall)
+            {
+                weight += 0.1f;
+            }
+            if (wp.isBehindCover)
+            {
+                weight += 0.5f;
+            }
+            if (wp.isInCover)
+            {
+                weight += 0.3f;
+            }
+            if (MIN_ATTACK_RADIUS <= wp.directDistanceToEnemy && wp.directDistanceToEnemy <= MAX_ATTACK_RADIUS)
+            {
+                float center = (MIN_ATTACK_RADIUS + MAX_ATTACK_RADIUS) / 2.0f;
+                if (wp.directDistanceToEnemy < center)
+                {
+                    weight += 0.2f * (wp.directDistanceToEnemy - MIN_ATTACK_RADIUS) / (center - MIN_ATTACK_RADIUS);
+                }
+                else
+                {
+                    weight += 0.2f * (MAX_ATTACK_RADIUS - wp.directDistanceToEnemy) / (MAX_ATTACK_RADIUS - center);
+                }
+            }
+            return weight;
+        };
+
+        public static WeightFunction PATROL_WEIGHT_FUNCTION = wp =>
+        {
+            return 0.0f;
+        };
+
+        public static WeightFunction RETREAT_WEIGHT_FUNCTION = wp =>
+        {
+            float weight = 0.0f;
+            if (wp.isBehindWall)
+            {
+                weight += 0.4f;
+            }
+            if (wp.isHealthPack)
+            {
+                weight += 0.3f;
+                weight += 0.2f * Mathf.Clamp01(wp.movementDistanceToAgent / 10.0f);
+                weight -= 0.2f * Mathf.Clamp01(wp.movementDistanceToEnemy / 10.0f);
+            }
+            return weight;
+        };
+
         [SerializeField]
         private WaypointGenerationMode mode = WaypointGenerationMode.Naive;
 

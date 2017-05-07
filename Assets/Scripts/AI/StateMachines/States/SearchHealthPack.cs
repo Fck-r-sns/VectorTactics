@@ -23,21 +23,7 @@ namespace Ai
                 base.OnEnter();
                 Debug.Log(Time.time + ": Enter SearchHealthPack state");
 
-                aiTools.terrain.SetWeightFunction(wp =>
-                {
-                    float weight = 0.0f;
-                    if (wp.isBehindWall)
-                    {
-                        weight += 0.4f;
-                    }
-                    if (wp.isHealthPack)
-                    {
-                        weight += 0.3f;
-                        weight += 0.2f * Mathf.Clamp01(wp.movementDistanceToAgent / 10.0f);
-                        weight -= 0.2f * Mathf.Clamp01(wp.movementDistanceToEnemy / 10.0f);
-                    }
-                    return weight;
-                });
+                aiTools.terrain.SetWeightFunction(TerrainReasoning.RETREAT_WEIGHT_FUNCTION);
             }
 
             public override void OnUpdate()
