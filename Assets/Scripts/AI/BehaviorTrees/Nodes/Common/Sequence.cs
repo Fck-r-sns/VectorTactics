@@ -25,11 +25,6 @@ namespace Ai
                 return Result.Success;
             }
 
-            public override void Terminate()
-            {
-
-            }
-
             public override void AddChild(Node child)
             {
                 child.AddChild(child);

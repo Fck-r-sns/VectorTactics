@@ -4,7 +4,7 @@
     {
         public abstract class Node
         {
-            private Environment environment;
+            protected Environment environment;
 
             public Node(Environment environment)
             {
@@ -12,8 +12,16 @@
             }
 
             public abstract Result Run();
-            public abstract void Terminate();
-            public abstract void AddChild(Node child); 
+
+            public virtual void Terminate()
+            {
+                
+            }
+
+            public virtual void AddChild(Node child)
+            {
+                throw new System.Exception("Can't add child - node is terminal");
+            }
         }
     }
 }

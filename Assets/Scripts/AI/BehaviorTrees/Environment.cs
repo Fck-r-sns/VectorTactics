@@ -22,6 +22,11 @@ namespace Ai
                 return defaultValue;
             }
 
+            public void RemoveVariable(string variable)
+            {
+                variables.Remove(variable);
+            }
+
             public bool ContainsValue(string variable)
             {
                 return variables.ContainsKey(variable);

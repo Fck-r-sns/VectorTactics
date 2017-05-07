@@ -64,6 +64,11 @@ namespace Ai
             this.weightFunction = weightFunction;
         }
 
+        public WeightFunction GetWeightFunction()
+        {
+            return weightFunction;
+        }
+
         public Waypoint GetNearestWaypoint(Vector3 point)
         {
             int xIndex = Mathf.RoundToInt(point.x / gridStep) + xCenterIndex;
