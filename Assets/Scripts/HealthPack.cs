@@ -4,6 +4,9 @@ using EventBus;
 
 public class HealthPack : MonoBehaviour
 {
+    [SerializeField]
+    private GameObject packObject;
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Soldier")
@@ -12,7 +15,7 @@ public class HealthPack : MonoBehaviour
             if (state.health < 100.0f)
             {
                 state.Heal();
-                Destroy(gameObject);
+                Destroy(packObject);
                 Dispatcher.SendEvent(new EBEvent() { type = EBEventType.HealthPackCollected });
             }
         }
