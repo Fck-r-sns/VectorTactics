@@ -25,6 +25,8 @@ namespace Ai
             public readonly Dictionary<FuzzySet, FuzzyValue> fuzzyInputValues = new Dictionary<FuzzySet, FuzzyValue>();
             public readonly Dictionary<Variable, LinguisticVariable> inputVariables = new Dictionary<Variable, LinguisticVariable>();
             public readonly Dictionary<Variable, LinguisticVariable> outputVariables = new Dictionary<Variable, LinguisticVariable>();
+            public readonly Dictionary<Variable, float> crispOutputValues = new Dictionary<Variable, float>();
+            public LinguisticValue inferedResult;
         }
     }
 }

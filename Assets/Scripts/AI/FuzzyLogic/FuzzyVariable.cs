@@ -15,6 +15,11 @@
                 this.value = value;
             }
 
+            public override string ToString()
+            {
+                return "" + value;
+            }
+
             public static implicit operator FuzzyValue(float value)
             {
                 return new FuzzyValue(value);

@@ -18,11 +18,7 @@ namespace Ai
                 LinguisticValue result = new LinguisticValue();
                 foreach (FuzzySet set in sets)
                 {
-                    FuzzyValue membership = set.CalculateMembership(crispValue);
-                    if (membership.value > 0.0f)
-                    {
-                        result.AddSet(new KeyValuePair<FuzzySet, FuzzyValue>(set, membership));
-                    }
+                    result.AddSet(set, set.CalculateMembership(crispValue));
                 }
                 return result;
             }

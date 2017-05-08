@@ -33,6 +33,16 @@
                 }
                 return 0.0f;
             }
+
+            public float GetMaxCrispValue()
+            {
+                return d;
+            }
+
+            public float GetMinCrispValue()
+            {
+                return a;
+            }
         }
     }
 }

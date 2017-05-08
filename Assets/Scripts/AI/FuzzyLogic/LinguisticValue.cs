@@ -10,7 +10,7 @@ namespace Ai
 
             public void AddSet(FuzzySet set, FuzzyValue membership)
             {
-                sets.Add(set, membership);
+                sets[set] = membership;
             }
 
             public Dictionary<FuzzySet, FuzzyValue> GetSets()

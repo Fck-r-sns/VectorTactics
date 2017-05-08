@@ -17,6 +17,16 @@ namespace Ai
             {
                 return Mathf.Approximately(value, crispValue) ? 1.0f : 0.0f;
             }
+
+            public float GetMaxCrispValue()
+            {
+                return value;
+            }
+
+            public float GetMinCrispValue()
+            {
+                return value;
+            }
         }
     }
 }

@@ -37,7 +37,7 @@ namespace Ai
                     {
                         if (!valuesBySet.ContainsKey(kv.Key))
                         {
-                            valuesBySet.Add(kv.Key, new List<FuzzyValue>());
+                            valuesBySet[kv.Key] = new List<FuzzyValue>();
                         }
                         valuesBySet[kv.Key].Add(kv.Value);
                     }
