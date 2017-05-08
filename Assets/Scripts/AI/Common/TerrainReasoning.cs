@@ -129,6 +129,7 @@ namespace Ai
         private int zCount;
         private int zCenterIndex;
         private Waypoint[,] waypoints;
+        private bool normalizeWeights = false;
 
         public float GetGridStep()
         {
@@ -143,6 +144,11 @@ namespace Ai
         public void SetWeightFunction(WeightFunction weightFunction)
         {
             this.weightFunction = weightFunction;
+        }
+
+        public void SetWeightsNormalizationEnabled(bool enabled)
+        {
+            normalizeWeights = enabled;
         }
 
         public WeightFunction GetWeightFunction()
@@ -362,6 +368,10 @@ namespace Ai
                 // check weight
                 wp.weight = weightFunction(wp);
             }
+            if (normalizeWeights)
+            {
+                NormalizeWeights();
+            }
         }
 
         private Waypoint[,] GenerateWaypoints()
@@ -468,6 +478,22 @@ namespace Ai
                         Waypoint otherWp = waypoints[otherXIndex, otherZIndex];
                         wp.distancesToOtherWaypoints.Add(otherWp, distance);
                     }
+                }
+            }
+        }
+
+        void NormalizeWeights()
+        {
+            float maxWeight = 0.0f;
+            foreach (Waypoint wp in waypoints)
+            {
+                maxWeight = Math.Max(maxWeight, wp.weight);
+            }
+            if (maxWeight != 0.0f)
+            {
+                foreach (Waypoint wp in waypoints)
+                {
+                    wp.weight /= maxWeight;
                 }
             }
         }

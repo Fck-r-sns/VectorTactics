@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Ai
@@ -16,11 +17,14 @@ namespace Ai
             private FuzzyContext context;
             private FuzzyInference inference;
 
+            private Vector3? destination;
+
             void Start()
             {
                 aiTools = GetComponent<AiTools>();
                 controller = GetComponent<SoldierController>();
-
+                aiTools.Init();
+                aiTools.terrain.SetWeightsNormalizationEnabled(true);
                 Init();
             }
 
@@ -28,6 +32,10 @@ namespace Ai
             {
                 if (controller.GetState().isDead)
                 {
+                    aiTools.shooting.SetAimingEnabled(false);
+                    aiTools.shooting.SetShootingEnabled(false);
+                    aiTools.navigation.SetDestination(null);
+                    destination = null;
                     return;
                 }
                 UpdateCrispValues();
@@ -35,6 +43,7 @@ namespace Ai
                 Infer();
                 Defuzzify();
                 ApplyResultValues();
+                DoStuff();
             }
 
             private void Init()
@@ -103,9 +112,9 @@ namespace Ai
                 plainSightWeight.AddSets(lowPlainSightWeight, mediumPlainSightWeight, highPlainSightWeight);
 
                 LinguisticVariable searchRadius = new LinguisticVariable();
-                FuzzySet lowSearchRadius = new FuzzySet(FuzzyContext.Variable.SearchRadius, "lowSearchRadius", new Trapezoid(0.0f, 0.0f, 0.2f, 0.4f));
-                FuzzySet mediumSearchRadius = new FuzzySet(FuzzyContext.Variable.SearchRadius, "mediumSearchRadius", new Trapezoid(0.2f, 0.4f, 0.6f, 0.8f));
-                FuzzySet highSearchRadius = new FuzzySet(FuzzyContext.Variable.SearchRadius, "highSearchRadius", new Trapezoid(0.6f, 0.8f, 1.0f, 1.0f));
+                FuzzySet lowSearchRadius = new FuzzySet(FuzzyContext.Variable.SearchRadius, "lowSearchRadius", new Trapezoid(0.0f, 0.0f, 8.0f, 12.0f));
+                FuzzySet mediumSearchRadius = new FuzzySet(FuzzyContext.Variable.SearchRadius, "mediumSearchRadius", new Trapezoid(8.0f, 12.0f, 16.0f, 20.0f));
+                FuzzySet highSearchRadius = new FuzzySet(FuzzyContext.Variable.SearchRadius, "highSearchRadius", new Trapezoid(16.0f, 20.0f, 100.0f, 100.0f));
                 searchRadius.AddSets(lowSearchRadius, mediumSearchRadius, highSearchRadius);
 
                 context.inputVariables.Add(FuzzyContext.Variable.AgentHealth, agentHealth);
@@ -261,7 +270,91 @@ namespace Ai
 
             private void ApplyResultValues()
             {
+                aiTools.terrain.SetWeightFunction(wp =>
+                {
+                    float MIN_ATTACK_RADIUS = context.crispOutputValues[FuzzyContext.Variable.DistanceToEnemy] / 2.0f;
+                    float MAX_ATTACK_RADIUS = context.crispOutputValues[FuzzyContext.Variable.DistanceToEnemy] * 2.0f;
+                    float weight = 0.0f;
+                    if (wp.isBehindWall)
+                    {
+                        weight += context.crispOutputValues[FuzzyContext.Variable.BehindWallWeight];
+                    }
+                    if (wp.isInCover)
+                    {
+                        weight += context.crispOutputValues[FuzzyContext.Variable.InCoverWeight];
+                    }
+                    if (wp.isBehindCover)
+                    {
+                        weight += context.crispOutputValues[FuzzyContext.Variable.BehindCoverWeight];
+                    }
+                    if (wp.isHealthPack)
+                    {
+                        weight += context.crispOutputValues[FuzzyContext.Variable.HealthPackWeight];
+                    }
+                    if (!wp.isInCover && !wp.isBehindCover && !wp.isBehindWall)
+                    {
+                        weight += context.crispOutputValues[FuzzyContext.Variable.PlainSightWeight];
+                    }
+                    if (MIN_ATTACK_RADIUS <= wp.directDistanceToEnemy && wp.directDistanceToEnemy <= MAX_ATTACK_RADIUS)
+                    {
+                        float center = (MIN_ATTACK_RADIUS + MAX_ATTACK_RADIUS) / 2.0f;
+                        if (wp.directDistanceToEnemy < center)
+                        {
+                            weight += context.crispOutputValues[FuzzyContext.Variable.DistanceWeight]
+                                * (wp.directDistanceToEnemy - MIN_ATTACK_RADIUS) / (center - MIN_ATTACK_RADIUS);
+                        }
+                        else
+                        {
+                            weight += context.crispOutputValues[FuzzyContext.Variable.DistanceWeight]
+                                * (MAX_ATTACK_RADIUS - wp.directDistanceToEnemy) / (MAX_ATTACK_RADIUS - center);
+                        }
+                    }
+                    return weight;
+                });
+            }
 
+            private void DoStuff()
+            {
+                aiTools.shooting.SetAimingEnabled(controller.GetState().isEnemyVisible);
+                aiTools.shooting.SetShootingEnabled(controller.GetState().isEnemyVisible);
+
+                if (!destination.HasValue)
+                {
+                    destination = GetNextDestination();
+                    aiTools.navigation.SetDestination(destination);
+                }
+
+                if (
+                    !aiTools.navigation.IsDestinationReachable()
+                    || (destination.HasValue && Vector3.Distance(aiTools.agentState.position, destination.Value) < GameDefines.NEAR_POINT_CHECK_PRECISION)
+                    )
+                {
+                    destination = null;
+                }
+            }
+
+            private Vector3 GetNextDestination()
+            {
+                List<Waypoint> wps = aiTools.terrain.GetGoodWaypoints(context.crispOutputValues[FuzzyContext.Variable.SearchRadius], 0.75f);
+                if (wps.Count == 0)
+                {
+                    return GetRandomNextDestination();
+                }
+                else
+                {
+                    int index = UnityEngine.Random.Range(0, wps.Count - 1);
+                    return wps[index].position;
+                }
+            }
+
+            private Vector3 GetRandomNextDestination()
+            {
+                float searchRadius = context.crispOutputValues[FuzzyContext.Variable.SearchRadius];
+                return new Vector3(
+                    aiTools.agentState.position.x + UnityEngine.Random.Range(-searchRadius, searchRadius),
+                    0.0f,
+                    aiTools.agentState.position.z + UnityEngine.Random.Range(-searchRadius, searchRadius)
+                    );
             }
         }
     }
