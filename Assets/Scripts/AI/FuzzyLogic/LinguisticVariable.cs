@@ -8,9 +8,9 @@ namespace Ai
         {
             private List<FuzzySet> sets = new List<FuzzySet>();
 
-            public void AddSet(FuzzySet set)
+            public void AddSets(params FuzzySet[] sets)
             {
-                sets.Add(set);
+                this.sets.AddRange(sets);
             }
 
             public LinguisticValue Calculate(float crispValue)
@@ -18,7 +18,7 @@ namespace Ai
                 LinguisticValue result = new LinguisticValue();
                 foreach (FuzzySet set in sets)
                 {
-                    FuzzyValue membership = set.membershipFunction(crispValue);
+                    FuzzyValue membership = set.CalculateMembership(crispValue);
                     if (membership.value > 0.0f)
                     {
                         result.AddSet(new KeyValuePair<FuzzySet, FuzzyValue>(set, membership));

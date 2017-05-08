@@ -6,16 +6,25 @@ namespace Ai
     {
         public class LinguisticValue
         {
-            private List<KeyValuePair<FuzzySet, FuzzyValue>> sets = new List<KeyValuePair<FuzzySet, FuzzyValue>>();
+            private Dictionary<FuzzySet, FuzzyValue> sets = new Dictionary<FuzzySet, FuzzyValue>();
 
-            public void AddSet(KeyValuePair<FuzzySet, FuzzyValue> set)
+            public void AddSet(FuzzySet set, FuzzyValue membership)
             {
-                sets.Add(set);
+                sets.Add(set, membership);
             }
 
-            public List<KeyValuePair<FuzzySet, FuzzyValue>> GetSets()
+            public Dictionary<FuzzySet, FuzzyValue> GetSets()
             {
                 return sets;
+            }
+
+            public FuzzyValue GetMembership(FuzzySet set)
+            {
+                if (sets.ContainsKey(set))
+                {
+                    return sets[set];
+                }
+                return 0.0f;
             }
         }
     }

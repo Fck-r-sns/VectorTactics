@@ -6,12 +6,15 @@ namespace Ai
     {
         public class FuzzyInference
         {
-            private List<FuzzyRule> rules = new List<FuzzyRule>();
+            private List<FuzzyRule> rules;
             private FuzzyCalculator calc;
+            private FuzzyContext context;
 
-            public FuzzyInference(FuzzyCalculator calc)
+            public FuzzyInference(FuzzyCalculator calc, FuzzyContext context)
             {
+                this.rules = new List<FuzzyRule>();
                 this.calc = calc;
+                this.context = context;
             }
 
             public void AddRule(FuzzyRule rule)
@@ -19,12 +22,12 @@ namespace Ai
                 rules.Add(rule);
             }
 
-            public LinguisticValue Infer(params LinguisticValue[] vars)
+            public LinguisticValue Infer()
             {
                 List<LinguisticValue> rulesResults = new List<LinguisticValue>();
                 foreach (FuzzyRule rule in rules)
                 {
-                    rulesResults.Add(rule(calc, vars));
+                    rulesResults.Add(rule.Infer(calc, context));
                 }
 
                 Dictionary<FuzzySet, List<FuzzyValue>> valuesBySet = new Dictionary<FuzzySet, List<FuzzyValue>>();
@@ -44,7 +47,7 @@ namespace Ai
                 foreach (KeyValuePair<FuzzySet, List<FuzzyValue>> kv in valuesBySet)
                 {
                     FuzzyValue totalMembership = calc.or(kv.Value.ToArray());
-                    result.AddSet(new KeyValuePair<FuzzySet, FuzzyValue>(kv.Key, totalMembership));
+                    result.AddSet(kv.Key, totalMembership);
                 }
                 return result;
             }
