@@ -69,6 +69,13 @@ namespace Ai
                         )
                     );
 
+                defenceState.AddTransition(
+                    new Transition(
+                        () => (!aiTools.agentState.isEnemyVisible && ((aiTools.world.healthPacksAvailable == 0) || aiTools.agentState.health > GameDefines.LOW_HP)),
+                        searchEnemyState
+                        )
+                    );
+
                 searchHealthPackState.AddTransition(
                     new Transition(
                         () => (aiTools.agentState.health > GameDefines.LOW_HP) || (aiTools.world.healthPacksAvailable == 0),

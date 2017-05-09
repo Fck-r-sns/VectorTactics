@@ -70,9 +70,9 @@ namespace Ai
                 enemyVisibility.AddSets(enemyIsVisible, enemyIsNotVisible);
 
                 LinguisticVariable distanceToEnemy = new LinguisticVariable();
-                FuzzySet closeDistance = new FuzzySet(FuzzyContext.Variable.DistanceToEnemy, "closeDistance", new Trapezoid(0.0f, 0.0f, 4.0f, 8.0f));
-                FuzzySet mediumDistance = new FuzzySet(FuzzyContext.Variable.DistanceToEnemy, "mediumDistance", new Trapezoid(4.0f, 8.0f, 12.0f, 18.0f));
-                FuzzySet farDistance = new FuzzySet(FuzzyContext.Variable.DistanceToEnemy, "farDistance", new Trapezoid(12.0f, 18.0f, 100.0f, 100.0f));
+                FuzzySet closeDistance = new FuzzySet(FuzzyContext.Variable.DistanceToEnemy, "closeDistance", new Trapezoid(0.0f, 0.0f, 7.0f, 10.0f));
+                FuzzySet mediumDistance = new FuzzySet(FuzzyContext.Variable.DistanceToEnemy, "mediumDistance", new Trapezoid(7.0f, 10.0f, 14.0f, 18.0f));
+                FuzzySet farDistance = new FuzzySet(FuzzyContext.Variable.DistanceToEnemy, "farDistance", new Trapezoid(14.0f, 18.0f, 100.0f, 100.0f));
                 distanceToEnemy.AddSets(closeDistance, mediumDistance, farDistance);
 
                 LinguisticVariable distanceWeight = new LinguisticVariable();
