@@ -17,6 +17,7 @@ namespace Ai
             private FuzzyContext context;
             private FuzzyInference inference;
 
+            private bool enemyVisibilityOnLastTurn = false;
             private Vector3? destination;
 
             void Start()
@@ -112,9 +113,9 @@ namespace Ai
                 plainSightWeight.AddSets(lowPlainSightWeight, mediumPlainSightWeight, highPlainSightWeight);
 
                 LinguisticVariable searchRadius = new LinguisticVariable();
-                FuzzySet lowSearchRadius = new FuzzySet(FuzzyContext.Variable.SearchRadius, "lowSearchRadius", new Trapezoid(0.0f, 0.0f, 8.0f, 12.0f));
-                FuzzySet mediumSearchRadius = new FuzzySet(FuzzyContext.Variable.SearchRadius, "mediumSearchRadius", new Trapezoid(8.0f, 12.0f, 16.0f, 20.0f));
-                FuzzySet highSearchRadius = new FuzzySet(FuzzyContext.Variable.SearchRadius, "highSearchRadius", new Trapezoid(16.0f, 20.0f, 100.0f, 100.0f));
+                FuzzySet lowSearchRadius = new FuzzySet(FuzzyContext.Variable.SearchRadius, "lowSearchRadius", new Trapezoid(0.0f, 0.0f, 6.0f, 8.0f));
+                FuzzySet mediumSearchRadius = new FuzzySet(FuzzyContext.Variable.SearchRadius, "mediumSearchRadius", new Trapezoid(6.0f, 8.0f, 12.0f, 14.0f));
+                FuzzySet highSearchRadius = new FuzzySet(FuzzyContext.Variable.SearchRadius, "highSearchRadius", new Trapezoid(12.0f, 14.0f, 100.0f, 100.0f));
                 searchRadius.AddSets(lowSearchRadius, mediumSearchRadius, highSearchRadius);
 
                 context.inputVariables.Add(FuzzyContext.Variable.AgentHealth, agentHealth);
@@ -134,19 +135,19 @@ namespace Ai
                     new FuzzyRule()
                         .In(highAgentHealth).In(highEnemyHealth).In(enemyIsVisible)
                         .Out(mediumDistance).Out(mediumDistanceWeight).Out(lowInCoverWeight).Out(lowBehindCoverWeight)
-                        .Out(lowBehindWallWeight).Out(lowHealhPackWeight).Out(highPlainSightWeight).Out(mediumSearchRadius)
+                        .Out(lowBehindWallWeight).Out(lowHealhPackWeight).Out(highPlainSightWeight).Out(lowSearchRadius)
                 );
                 inference.AddRule(
                     new FuzzyRule()
                         .In(highAgentHealth).In(mediumEnemyHealth).In(enemyIsVisible)
                         .Out(closeDistance).Out(highDistanceWeight).Out(lowInCoverWeight).Out(lowBehindCoverWeight)
-                        .Out(lowBehindWallWeight).Out(lowHealhPackWeight).Out(highPlainSightWeight).Out(mediumSearchRadius)
+                        .Out(lowBehindWallWeight).Out(lowHealhPackWeight).Out(highPlainSightWeight).Out(lowSearchRadius)
                 );
                 inference.AddRule(
                     new FuzzyRule()
                         .In(highAgentHealth).In(lowEnemyHealth).In(enemyIsVisible)
                         .Out(closeDistance).Out(highDistanceWeight).Out(lowInCoverWeight).Out(lowBehindCoverWeight)
-                        .Out(lowBehindWallWeight).Out(lowHealhPackWeight).Out(highPlainSightWeight).Out(mediumSearchRadius)
+                        .Out(lowBehindWallWeight).Out(lowHealhPackWeight).Out(highPlainSightWeight).Out(lowSearchRadius)
                 );
                 inference.AddRule(
                     new FuzzyRule()
@@ -331,6 +332,12 @@ namespace Ai
                 {
                     destination = null;
                 }
+
+                if (aiTools.agentState.isEnemyVisible != enemyVisibilityOnLastTurn)
+                {
+                    destination = null;
+                }
+                enemyVisibilityOnLastTurn = aiTools.agentState.isEnemyVisible;
             }
 
             private Vector3 GetNextDestination()
