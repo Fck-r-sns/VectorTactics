@@ -21,6 +21,9 @@ namespace Ai
 
             public virtual void OnUpdate()
             {
+                aiTools.shooting.SetAimingEnabled(aiTools.agentState.isEnemyVisible);
+                aiTools.shooting.SetShootingEnabled(aiTools.agentState.isEnemyVisible);
+
                 if (aiTools.agentState.isDead)
                 {
                     aiTools.navigation.SetDestination(null);

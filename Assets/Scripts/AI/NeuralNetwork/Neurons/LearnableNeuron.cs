@@ -24,7 +24,7 @@ namespace Ai
             public override void AddInput(Neuron input)
             {
                 inputs.Add(input);
-                weights.Add(input, 1.0f);
+                weights.Add(input, 0.0f);
                 input.AddOutput(this);
             }
 

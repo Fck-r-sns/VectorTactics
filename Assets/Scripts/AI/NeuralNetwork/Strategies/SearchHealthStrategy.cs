@@ -27,8 +27,6 @@ namespace Ai
                     nextDestinationUpdateTime = Time.time + 1.0f;
                     destination = null;
                 }
-                aiTools.shooting.SetAimingEnabled(aiTools.agentState.isEnemyVisible);
-                aiTools.shooting.SetShootingEnabled(aiTools.agentState.isEnemyVisible);
                 base.OnUpdate();
             }
 

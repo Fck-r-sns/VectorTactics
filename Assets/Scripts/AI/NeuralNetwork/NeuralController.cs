@@ -72,6 +72,7 @@ namespace Ai
                 Strategy newStrategy = strategies[optimalStrategy.Value];
                 if (currentStrategy != newStrategy)
                 {
+                    Debug.Log(Time.time + ": new strategy - " + newStrategy.GetType().Name);
                     currentStrategy.OnExit();
                     currentStrategy = newStrategy;
                     currentStrategy.OnEnter();
@@ -110,6 +111,7 @@ namespace Ai
                 strategies.Add(OutputVariable.SearchEnemy, new SearchEnemyStrategy(aiTools));
                 strategies.Add(OutputVariable.SearchHealth, new SearchHealthStrategy(aiTools));
                 currentStrategy = strategies[OutputVariable.SearchEnemy];
+                currentStrategy.OnEnter();
             }
 
             private void FeedForwardNetwork()

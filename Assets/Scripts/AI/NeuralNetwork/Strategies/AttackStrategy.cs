@@ -16,8 +16,6 @@ namespace Ai
             public override void OnEnter()
             {
                 base.OnEnter();
-                aiTools.shooting.SetAimingEnabled(true);
-                aiTools.shooting.SetShootingEnabled(true);
 
                 aiTools.terrain.SetWeightFunction(TerrainReasoning.AGGRESSIVE_WEIGHT_FUNCTION);
             }
