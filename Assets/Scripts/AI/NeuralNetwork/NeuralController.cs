@@ -81,8 +81,8 @@ namespace Ai
 
             private void Init()
             {
-                inputLayer.Add(new InputNeuron(() => this.agentHealthInput));
-                inputLayer.Add(new InputNeuron(() => this.enemyHealthInput));
+                inputLayer.Add(new InputNeuron(() => this.agentHealthInput / 100.0f));
+                inputLayer.Add(new InputNeuron(() => this.enemyHealthInput / 100.0f));
                 inputLayer.Add(new InputNeuron(() => this.enemyVisibilityInput));
 
                 for (int i = 0; i < NeuralDefines.HIDDEN_LAYER_SIZE; ++i)
