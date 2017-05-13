@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 namespace Ai
@@ -8,7 +9,7 @@ namespace Ai
     {
         [RequireComponent(typeof(AiTools))]
         [RequireComponent(typeof(SoldierController))]
-        public class NeuralContoller : MonoBehaviour
+        public class NeuralController : MonoBehaviour
         {
             private enum OutputVariable
             {
@@ -18,8 +19,23 @@ namespace Ai
                 SearchHealth
             }
 
+            private class LearningRecord
+            {
+                public float agentHealth;
+                public float enemyHealth;
+                public float enemyVisibility;
+                public float attack;
+                public float defence;
+                public float searchEnemy;
+                public float searchHealth;
+            }
+
             private AiTools aiTools;
             private SoldierController controller;
+
+            private float agentHealthInput;
+            private float enemyHealthInput;
+            private float enemyVisibilityInput;
 
             private List<Neuron> inputLayer = new List<Neuron>();
             private List<Neuron> hiddenLayer = new List<Neuron>();
@@ -34,18 +50,14 @@ namespace Ai
                 controller = GetComponent<SoldierController>();
                 aiTools.Init();
                 Init();
+                Debug.Log(Time.realtimeSinceStartup + ": start learning");
+                Learn();
+                Debug.Log(Time.realtimeSinceStartup + ": learning finished");
             }
 
             private void Update()
             {
-                foreach (Neuron n in hiddenLayer)
-                {
-                    n.FeedForward();
-                }
-                foreach (Neuron n in outputLayer)
-                {
-                    n.FeedForward();
-                }
+                FeedForwardNetwork();
                 OutputVariable? optimalStrategy = null;
                 float maxWeight = -float.MaxValue;
                 for (int i = 0; i < outputLayer.Count; ++i)
@@ -69,9 +81,9 @@ namespace Ai
 
             private void Init()
             {
-                inputLayer.Add(new InputNeuron(() => aiTools.agentState.health));
-                inputLayer.Add(new InputNeuron(() => aiTools.enemyState.health));
-                inputLayer.Add(new InputNeuron(() => aiTools.agentState.isEnemyVisible ? 1.0f : 0.0f));
+                inputLayer.Add(new InputNeuron(() => this.agentHealthInput));
+                inputLayer.Add(new InputNeuron(() => this.enemyHealthInput));
+                inputLayer.Add(new InputNeuron(() => this.enemyVisibilityInput));
 
                 for (int i = 0; i < NeuralDefines.HIDDEN_LAYER_SIZE; ++i)
                 {
@@ -98,6 +110,76 @@ namespace Ai
                 strategies.Add(OutputVariable.SearchEnemy, new SearchEnemyStrategy(aiTools));
                 strategies.Add(OutputVariable.SearchHealth, new SearchHealthStrategy(aiTools));
                 currentStrategy = strategies[OutputVariable.SearchEnemy];
+            }
+
+            private void FeedForwardNetwork()
+            {
+                foreach (Neuron n in hiddenLayer)
+                {
+                    n.FeedForward();
+                }
+                foreach (Neuron n in outputLayer)
+                {
+                    n.FeedForward();
+                }
+            }
+
+            private void Learn()
+            {
+                List<LearningRecord> records = new List<LearningRecord>();
+                using (TextReader file = new StreamReader(File.OpenRead("./Files/NeuralNetworkLearningSet.csv")))
+                {
+                    string line = file.ReadLine(); // skip header
+                    while ((line = file.ReadLine()) != null)
+                    {
+                        string[] split = line.Split(';');
+                        LearningRecord record = new LearningRecord()
+                        {
+                            agentHealth = float.Parse(split[0]),
+                            enemyHealth = float.Parse(split[1]),
+                            enemyVisibility = float.Parse(split[2]),
+                            attack = float.Parse(split[4]),
+                            defence = float.Parse(split[5]),
+                            searchEnemy = float.Parse(split[6]),
+                            searchHealth = float.Parse(split[7])
+                        };
+                        records.Add(record);
+                    }
+                }
+
+                List<LearningRecord> learningSet = new List<LearningRecord>(records.Count / 2 + 1);
+                List<LearningRecord> testingSet = new List<LearningRecord>(records.Count - learningSet.Count + 1);
+                for (int i = 0; i < records.Count; ++i)
+                {
+                    if (i % 2 == 1)
+                    {
+                        learningSet.Add(records[i]);
+                    }
+                    else
+                    {
+                        testingSet.Add(records[i]);
+                    }
+                }
+
+                foreach (LearningRecord record in learningSet)
+                {
+                    agentHealthInput = record.agentHealth;
+                    enemyHealthInput = record.enemyHealth;
+                    enemyVisibilityInput = record.enemyVisibility;
+                    FeedForwardNetwork();
+                    outputLayer[(int)OutputVariable.Attack].SetExpectedOutput(record.attack);
+                    outputLayer[(int)OutputVariable.Defence].SetExpectedOutput(record.defence);
+                    outputLayer[(int)OutputVariable.SearchEnemy].SetExpectedOutput(record.searchEnemy);
+                    outputLayer[(int)OutputVariable.SearchHealth].SetExpectedOutput(record.searchHealth);
+                    foreach (Neuron neuron in outputLayer)
+                    {
+                        neuron.BackPropagate();
+                    }
+                    foreach (Neuron neuron in hiddenLayer)
+                    {
+                        neuron.BackPropagate();
+                    }
+                }
             }
         }
     }

@@ -6,7 +6,7 @@ namespace Ai
     {
         public class OutputNeuron : LearnableNeuron
         {
-            private float[] expectedOutputs;
+            private float expectedOutput;
 
             public OutputNeuron(Func<float, float> activationFunc) : base(activationFunc)
             {
@@ -15,12 +15,12 @@ namespace Ai
             public override float GetError()
             {
                 float actual = GetOutput();
-                return actual * (1 - actual) * (expectedOutputs[0] - actual);
+                return actual * (1 - actual) * (expectedOutput - actual);
             }
 
-            public override void SetExpectedOutputs(params float[] expectedOutputs)
+            public override void SetExpectedOutput(float expectedOutput)
             {
-                this.expectedOutputs = expectedOutputs;
+                this.expectedOutput = expectedOutput;
             }
         }
     }

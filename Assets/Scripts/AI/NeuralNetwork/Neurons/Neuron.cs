@@ -41,7 +41,7 @@ namespace Ai
                 throw new Exception("Not implemented");
             }
 
-            public virtual void SetExpectedOutputs(params float[] expectedOutputs)
+            public virtual void SetExpectedOutput(float expectedOutput)
             {
                 throw new Exception("Not implemented");
             }
