@@ -38,7 +38,7 @@ namespace Ai
             private float enemyVisibilityInput;
 
             private List<Neuron> inputLayer = new List<Neuron>();
-            private List<Neuron> hiddenLayer = new List<Neuron>();
+            //private List<Neuron> hiddenLayer = new List<Neuron>();
             private List<Neuron> outputLayer = new List<Neuron>();
 
             private Dictionary<OutputVariable, Strategy> strategies = new Dictionary<OutputVariable, Strategy>();
@@ -86,20 +86,20 @@ namespace Ai
                 inputLayer.Add(new InputNeuron(() => this.enemyHealthInput / 100.0f));
                 inputLayer.Add(new InputNeuron(() => this.enemyVisibilityInput));
 
-                for (int i = 0; i < NeuralDefines.HIDDEN_LAYER_SIZE; ++i)
-                {
-                    Neuron neuron = new HiddenNeuron(NeuralDefines.SIGMOID_FUNCTION);
-                    foreach (Neuron input in inputLayer)
-                    {
-                        neuron.AddInput(input);
-                    }
-                    hiddenLayer.Add(neuron);
-                }
+                //for (int i = 0; i < NeuralDefines.HIDDEN_LAYER_SIZE; ++i)
+                //{
+                //    Neuron neuron = new HiddenNeuron(NeuralDefines.SIGMOID_FUNCTION);
+                //    foreach (Neuron input in inputLayer)
+                //    {
+                //        neuron.AddInput(input);
+                //    }
+                //    hiddenLayer.Add(neuron);
+                //}
 
                 foreach (OutputVariable var in Enum.GetValues(typeof(OutputVariable)))
                 {
                     Neuron neuron = new OutputNeuron(NeuralDefines.SIGMOID_FUNCTION);
-                    foreach (Neuron input in hiddenLayer)
+                    foreach (Neuron input in inputLayer)
                     {
                         neuron.AddInput(input);
                     }
@@ -116,10 +116,10 @@ namespace Ai
 
             private void FeedForwardNetwork()
             {
-                foreach (Neuron n in hiddenLayer)
-                {
-                    n.FeedForward();
-                }
+                //foreach (Neuron n in hiddenLayer)
+                //{
+                //    n.FeedForward();
+                //}
                 foreach (Neuron n in outputLayer)
                 {
                     n.FeedForward();
@@ -163,23 +163,27 @@ namespace Ai
                     }
                 }
 
-                foreach (LearningRecord record in learningSet)
+                for (int i = 0; i < 5; ++i)
                 {
-                    agentHealthInput = record.agentHealth;
-                    enemyHealthInput = record.enemyHealth;
-                    enemyVisibilityInput = record.enemyVisibility;
-                    FeedForwardNetwork();
-                    outputLayer[(int)OutputVariable.Attack].SetExpectedOutput(record.attack);
-                    outputLayer[(int)OutputVariable.Defence].SetExpectedOutput(record.defence);
-                    outputLayer[(int)OutputVariable.SearchEnemy].SetExpectedOutput(record.searchEnemy);
-                    outputLayer[(int)OutputVariable.SearchHealth].SetExpectedOutput(record.searchHealth);
-                    foreach (Neuron neuron in outputLayer)
+                    learningSet.Reverse();
+                    foreach (LearningRecord record in learningSet)
                     {
-                        neuron.BackPropagate();
-                    }
-                    foreach (Neuron neuron in hiddenLayer)
-                    {
-                        neuron.BackPropagate();
+                        agentHealthInput = record.agentHealth;
+                        enemyHealthInput = record.enemyHealth;
+                        enemyVisibilityInput = record.enemyVisibility;
+                        FeedForwardNetwork();
+                        outputLayer[(int)OutputVariable.Attack].SetExpectedOutput(record.attack);
+                        outputLayer[(int)OutputVariable.Defence].SetExpectedOutput(record.defence);
+                        outputLayer[(int)OutputVariable.SearchEnemy].SetExpectedOutput(record.searchEnemy);
+                        outputLayer[(int)OutputVariable.SearchHealth].SetExpectedOutput(record.searchHealth);
+                        foreach (Neuron neuron in outputLayer)
+                        {
+                            neuron.BackPropagate();
+                        }
+                        //foreach (Neuron neuron in hiddenLayer)
+                        //{
+                        //    neuron.BackPropagate();
+                        //}
                     }
                 }
             }
