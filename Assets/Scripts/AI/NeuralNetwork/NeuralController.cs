@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 namespace Ai
@@ -50,13 +51,14 @@ namespace Ai
                 controller = GetComponent<SoldierController>();
                 aiTools.Init();
                 Init();
-                Debug.Log(Time.realtimeSinceStartup + ": start learning");
-                Learn();
-                Debug.Log(Time.realtimeSinceStartup + ": learning finished");
+                LearnAndTest();
             }
 
             private void Update()
             {
+                agentHealthInput = aiTools.agentState.health;
+                enemyHealthInput = aiTools.enemyState.health;
+                enemyVisibilityInput = aiTools.agentState.isEnemyVisible ? 1.0f : 0.0f;
                 FeedForwardNetwork();
                 OutputVariable? optimalStrategy = null;
                 float maxWeight = -float.MaxValue;
@@ -126,8 +128,9 @@ namespace Ai
                 }
             }
 
-            private void Learn()
+            private void LearnAndTest()
             {
+                Debug.Log(Time.realtimeSinceStartup + ": start learning");
                 List<LearningRecord> records = new List<LearningRecord>();
                 using (TextReader file = new StreamReader(File.OpenRead("./Files/NeuralNetworkLearningSet.csv")))
                 {
@@ -186,6 +189,67 @@ namespace Ai
                         //}
                     }
                 }
+                Debug.Log(Time.realtimeSinceStartup + ": learning finished");
+                Debug.Log(Time.realtimeSinceStartup + ": start testing");
+                int matchesCount = 0;
+                using (TextWriter file = new StreamWriter(File.OpenWrite("./Files/NeuralNetworkTesting.csv")))
+                {
+                    file.WriteLine(
+                        "HPa;HPe;Visible;ExpStrategy;ExpAttack;ExpDefence;ExpSearchEnemy;ExpSearchHealth;Strategy;Attack;Defence;SearchEnemy;SearchHealth;ErrAttack;ErrDefence;ErrSearhEnemy;ErrSearchHealth;ResMatch;"
+                        );
+                    foreach (LearningRecord record in testingSet)
+                    {
+                        agentHealthInput = record.agentHealth;
+                        enemyHealthInput = record.enemyHealth;
+                        enemyVisibilityInput = record.enemyVisibility;
+                        FeedForwardNetwork();
+                        outputLayer[(int)OutputVariable.Attack].SetExpectedOutput(record.attack);
+                        outputLayer[(int)OutputVariable.Defence].SetExpectedOutput(record.defence);
+                        outputLayer[(int)OutputVariable.SearchEnemy].SetExpectedOutput(record.searchEnemy);
+                        outputLayer[(int)OutputVariable.SearchHealth].SetExpectedOutput(record.searchHealth);
+                        List<float> expected = new List<float>()
+                        {
+                            record.attack,
+                            record.defence,
+                            record.searchEnemy,
+                            record.searchHealth
+                        };
+                        List<float> actual = new List<float>()
+                        {
+                            outputLayer[(int)OutputVariable.Attack].GetOutput(),
+                            outputLayer[(int)OutputVariable.Defence].GetOutput(),
+                            outputLayer[(int)OutputVariable.SearchEnemy].GetOutput(),
+                            outputLayer[(int)OutputVariable.SearchHealth].GetOutput()
+                        };
+                        OutputVariable expectedStrategy = (OutputVariable)expected.IndexOf(expected.Max());
+                        OutputVariable actualStrategy = (OutputVariable)actual.IndexOf(actual.Max());
+                        if (expectedStrategy == actualStrategy)
+                        {
+                            ++matchesCount;
+                        }
+                        file.WriteLine(
+                            record.agentHealth + ";" +
+                            record.enemyHealth + ";" +
+                            record.enemyVisibility + ";" +
+                            expectedStrategy + ";" +
+                            expected[(int)OutputVariable.Attack] + ";" +
+                            expected[(int)OutputVariable.Defence] + ";" +
+                            expected[(int)OutputVariable.SearchEnemy] + ";" +
+                            expected[(int)OutputVariable.SearchHealth] + ";" +
+                            actualStrategy + ";" +
+                            actual[(int)OutputVariable.Attack] + ";" +
+                            actual[(int)OutputVariable.Defence] + ";" +
+                            actual[(int)OutputVariable.SearchEnemy] + ";" +
+                            actual[(int)OutputVariable.SearchHealth] + ";" +
+                            outputLayer[(int)OutputVariable.Attack].GetError() + ";" +
+                            outputLayer[(int)OutputVariable.Defence].GetError() + ";" +
+                            outputLayer[(int)OutputVariable.SearchEnemy].GetError() + ";" +
+                            outputLayer[(int)OutputVariable.SearchHealth].GetError() + ";" +
+                            (expectedStrategy == actualStrategy) + ";"
+                            );
+                    }
+                }
+                Debug.Log(Time.realtimeSinceStartup + ": testing finished, matches count = " + matchesCount);
             }
         }
     }
