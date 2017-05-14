@@ -74,7 +74,7 @@ namespace Ai
                 Strategy newStrategy = strategies[optimalStrategy.Value];
                 if (currentStrategy != newStrategy)
                 {
-                    Debug.Log(Time.time + ": new strategy - " + newStrategy.GetType().Name);
+                    //Debug.Log(Time.time + ": new strategy - " + newStrategy.GetType().Name);
                     currentStrategy.OnExit();
                     currentStrategy = newStrategy;
                     currentStrategy.OnEnter();
@@ -249,7 +249,10 @@ namespace Ai
                             );
                     }
                 }
-                Debug.Log(Time.realtimeSinceStartup + ": testing finished, matches count = " + matchesCount);
+                Debug.Log(Time.realtimeSinceStartup + ": testing finished, matches count = "
+                    + matchesCount + "/" + testingSet.Count
+                    + "(" + matchesCount / (float)testingSet.Count * 100.0f + "%)"
+                    );
             }
         }
     }
