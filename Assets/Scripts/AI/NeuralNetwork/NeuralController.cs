@@ -38,9 +38,9 @@ namespace Ai
             private float enemyHealthInput;
             private float enemyVisibilityInput;
 
-            private List<Neuron> inputLayer = new List<Neuron>();
-            //private List<Neuron> hiddenLayer = new List<Neuron>();
-            private List<Neuron> outputLayer = new List<Neuron>();
+            private List<Neuron> inputLayer;
+            private List<Neuron> hiddenLayer;
+            private List<Neuron> outputLayer;
 
             private Dictionary<OutputVariable, Strategy> strategies = new Dictionary<OutputVariable, Strategy>();
             private Strategy currentStrategy;
@@ -84,24 +84,35 @@ namespace Ai
 
             private void Init()
             {
+                inputLayer = new List<Neuron>();
+                if (NeuralDefines.USE_HIDDEN_LAYER)
+                {
+                    hiddenLayer = new List<Neuron>();
+                }
+                outputLayer = new List<Neuron>();
+
                 inputLayer.Add(new InputNeuron(() => this.agentHealthInput / 100.0f));
                 inputLayer.Add(new InputNeuron(() => this.enemyHealthInput / 100.0f));
                 inputLayer.Add(new InputNeuron(() => this.enemyVisibilityInput));
 
-                //for (int i = 0; i < NeuralDefines.HIDDEN_LAYER_SIZE; ++i)
-                //{
-                //    Neuron neuron = new HiddenNeuron(NeuralDefines.SIGMOID_FUNCTION);
-                //    foreach (Neuron input in inputLayer)
-                //    {
-                //        neuron.AddInput(input);
-                //    }
-                //    hiddenLayer.Add(neuron);
-                //}
+                if (NeuralDefines.USE_HIDDEN_LAYER)
+                {
+                    for (int i = 0; i < NeuralDefines.HIDDEN_LAYER_SIZE; ++i)
+                    {
+                        Neuron neuron = new HiddenNeuron(NeuralDefines.SIGMOID_FUNCTION);
+                        foreach (Neuron input in inputLayer)
+                        {
+                            neuron.AddInput(input);
+                        }
+                        hiddenLayer.Add(neuron);
+                    }
+                }
 
                 foreach (OutputVariable var in Enum.GetValues(typeof(OutputVariable)))
                 {
                     Neuron neuron = new OutputNeuron(NeuralDefines.SIGMOID_FUNCTION);
-                    foreach (Neuron input in inputLayer)
+                    List<Neuron>  previousLayer = NeuralDefines.USE_HIDDEN_LAYER ? hiddenLayer : inputLayer;
+                    foreach (Neuron input in previousLayer)
                     {
                         neuron.AddInput(input);
                     }
@@ -118,10 +129,13 @@ namespace Ai
 
             private void FeedForwardNetwork()
             {
-                //foreach (Neuron n in hiddenLayer)
-                //{
-                //    n.FeedForward();
-                //}
+                if (NeuralDefines.USE_HIDDEN_LAYER)
+                {
+                    foreach (Neuron n in hiddenLayer)
+                    {
+                        n.FeedForward();
+                    }
+                }
                 foreach (Neuron n in outputLayer)
                 {
                     n.FeedForward();
@@ -183,10 +197,13 @@ namespace Ai
                         {
                             neuron.BackPropagate();
                         }
-                        //foreach (Neuron neuron in hiddenLayer)
-                        //{
-                        //    neuron.BackPropagate();
-                        //}
+                        if (NeuralDefines.USE_HIDDEN_LAYER)
+                        {
+                            foreach (Neuron neuron in hiddenLayer)
+                            {
+                                neuron.BackPropagate();
+                            }
+                        }
                     }
                 }
                 Debug.Log(Time.realtimeSinceStartup + ": learning finished");
