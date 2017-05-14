@@ -111,7 +111,7 @@ namespace Ai
                 foreach (OutputVariable var in Enum.GetValues(typeof(OutputVariable)))
                 {
                     Neuron neuron = new OutputNeuron(NeuralDefines.SIGMOID_FUNCTION);
-                    List<Neuron>  previousLayer = NeuralDefines.USE_HIDDEN_LAYER ? hiddenLayer : inputLayer;
+                    List<Neuron> previousLayer = NeuralDefines.USE_HIDDEN_LAYER ? hiddenLayer : inputLayer;
                     foreach (Neuron input in previousLayer)
                     {
                         neuron.AddInput(input);
@@ -180,7 +180,7 @@ namespace Ai
                     }
                 }
 
-                for (int i = 0; i < 5; ++i)
+                for (int i = 0; i < NeuralDefines.REPEAT_LEARNING_TIMES; ++i)
                 {
                     learningSet.Reverse();
                     foreach (LearningRecord record in learningSet)
