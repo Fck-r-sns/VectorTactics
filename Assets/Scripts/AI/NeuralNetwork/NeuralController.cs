@@ -52,12 +52,66 @@ namespace Ai
 
                 aiTools.Init();
                 InitStrategies();
-                InitNetwork();
 
-                List<LearningRecord> learningSet, testingSet;
-                ReadLearningData(out learningSet, out testingSet);
-                Learn(learningSet);
-                Test(testingSet);
+                float r = (Mathf.Sqrt(5) - 1.0f) / 2.0f;
+
+                int[] repeats = new int[] { 1, 2, 3, 4, 5, 7, 11, 15, 21, 51, 101, 201, 501, 1001, 2001 };
+                for (int repeatsIdx = 0; repeatsIdx < repeats.Length; ++repeatsIdx)
+                {
+                    float sigm0 = 1.2f;
+                    float learn0 = 0.2f;
+                    float prevResult = -1, result = -1;
+                    int iterations = 0;
+                    do
+                    {
+                        ++iterations;
+                        prevResult = result;
+                        float sigmL = 0.01f;
+                        float sigmR = 2.0f;
+                        float learnL = 0.01f;
+                        float learnR = 2.0f;
+                        float x1, x2;
+
+                        do
+                        {
+                            x1 = learnL + (1 - r) * (learnR - learnL);
+                            x2 = learnL + r * (learnR - learnL);
+                            float y1 = Function(sigm0, x1, repeats[repeatsIdx]);
+                            float y2 = Function(sigm0, x2, repeats[repeatsIdx]);
+                            if (y1 > y2)
+                            {
+                                learnR = x2;
+                            }
+                            else
+                            {
+                                learnL = x1;
+                            }
+                        } while (!Mathf.Approximately(x1, x2));
+                        learn0 = x1;
+
+                        do
+                        {
+                            x1 = sigmL + (1 - r) * (sigmR - sigmL);
+                            x2 = sigmL + r * (sigmR - sigmL);
+                            float y1 = Function(x1, learn0, repeats[repeatsIdx]);
+                            float y2 = Function(x2, learn0, repeats[repeatsIdx]);
+                            if (y1 > y2)
+                            {
+                                sigmR = x2;
+                            }
+                            else
+                            {
+                                sigmL = x1;
+                            }
+                        } while (!Mathf.Approximately(x1, x2));
+                        sigm0 = x1;
+
+                        result = Function(sigm0, learn0, repeats[repeatsIdx]);
+
+                    } while (prevResult != result);
+
+                    Debug.Log("repeats = " + repeats[repeatsIdx] + ", sigm = " + sigm0 + ", learn = " + learn0 + " -> " + Function(sigm0, learn0, repeats[repeatsIdx]) + ", iterations = " + iterations);
+                }
             }
 
             private void Update()
@@ -191,7 +245,6 @@ namespace Ai
 
             private void Learn(List<LearningRecord> learningSet)
             {
-                Debug.Log(Time.realtimeSinceStartup + ": start learning");
                 for (int i = 0; i < NeuralDefines.REPEAT_LEARNING_TIMES; ++i)
                 {
                     learningSet.Reverse();
@@ -218,76 +271,67 @@ namespace Ai
                         }
                     }
                 }
-                Debug.Log(Time.realtimeSinceStartup + ": learning finished");
             }
 
             private float Test(List<LearningRecord> testingSet)
             {
-                Debug.Log(Time.realtimeSinceStartup + ": start testing");
                 int matchesCount = 0;
-                using (TextWriter file = new StreamWriter(File.OpenWrite("./Files/NeuralNetworkTesting.csv")))
+                foreach (LearningRecord record in testingSet)
                 {
-                    file.WriteLine(
-                        "HPa;HPe;Visible;ExpStrategy;ExpAttack;ExpDefence;ExpSearchEnemy;ExpSearchHealth;Strategy;Attack;Defence;SearchEnemy;SearchHealth;ErrAttack;ErrDefence;ErrSearhEnemy;ErrSearchHealth;ResMatch;"
-                        );
-                    foreach (LearningRecord record in testingSet)
-                    {
-                        agentHealthInput = record.agentHealth;
-                        enemyHealthInput = record.enemyHealth;
-                        enemyVisibilityInput = record.enemyVisibility;
-                        FeedForwardNetwork();
-                        outputLayer[(int)OutputVariable.Attack].SetExpectedOutput(record.attack);
-                        outputLayer[(int)OutputVariable.Defence].SetExpectedOutput(record.defence);
-                        outputLayer[(int)OutputVariable.SearchEnemy].SetExpectedOutput(record.searchEnemy);
-                        outputLayer[(int)OutputVariable.SearchHealth].SetExpectedOutput(record.searchHealth);
-                        List<float> expected = new List<float>()
+                    agentHealthInput = record.agentHealth;
+                    enemyHealthInput = record.enemyHealth;
+                    enemyVisibilityInput = record.enemyVisibility;
+                    FeedForwardNetwork();
+                    outputLayer[(int)OutputVariable.Attack].SetExpectedOutput(record.attack);
+                    outputLayer[(int)OutputVariable.Defence].SetExpectedOutput(record.defence);
+                    outputLayer[(int)OutputVariable.SearchEnemy].SetExpectedOutput(record.searchEnemy);
+                    outputLayer[(int)OutputVariable.SearchHealth].SetExpectedOutput(record.searchHealth);
+                    List<float> expected = new List<float>()
                         {
                             record.attack,
                             record.defence,
                             record.searchEnemy,
                             record.searchHealth
                         };
-                        List<float> actual = new List<float>()
+                    List<float> actual = new List<float>()
                         {
                             outputLayer[(int)OutputVariable.Attack].GetOutput(),
                             outputLayer[(int)OutputVariable.Defence].GetOutput(),
                             outputLayer[(int)OutputVariable.SearchEnemy].GetOutput(),
                             outputLayer[(int)OutputVariable.SearchHealth].GetOutput()
                         };
-                        OutputVariable expectedStrategy = (OutputVariable)expected.IndexOf(expected.Max());
-                        OutputVariable actualStrategy = (OutputVariable)actual.IndexOf(actual.Max());
-                        if (expectedStrategy == actualStrategy)
-                        {
-                            ++matchesCount;
-                        }
-                        file.WriteLine(
-                            record.agentHealth + ";" +
-                            record.enemyHealth + ";" +
-                            record.enemyVisibility + ";" +
-                            expectedStrategy + ";" +
-                            expected[(int)OutputVariable.Attack] + ";" +
-                            expected[(int)OutputVariable.Defence] + ";" +
-                            expected[(int)OutputVariable.SearchEnemy] + ";" +
-                            expected[(int)OutputVariable.SearchHealth] + ";" +
-                            actualStrategy + ";" +
-                            actual[(int)OutputVariable.Attack] + ";" +
-                            actual[(int)OutputVariable.Defence] + ";" +
-                            actual[(int)OutputVariable.SearchEnemy] + ";" +
-                            actual[(int)OutputVariable.SearchHealth] + ";" +
-                            outputLayer[(int)OutputVariable.Attack].GetError() + ";" +
-                            outputLayer[(int)OutputVariable.Defence].GetError() + ";" +
-                            outputLayer[(int)OutputVariable.SearchEnemy].GetError() + ";" +
-                            outputLayer[(int)OutputVariable.SearchHealth].GetError() + ";" +
-                            (expectedStrategy == actualStrategy) + ";"
-                            );
+                    OutputVariable expectedStrategy = (OutputVariable)expected.IndexOf(expected.Max());
+                    OutputVariable actualStrategy = (OutputVariable)actual.IndexOf(actual.Max());
+                    if (expectedStrategy == actualStrategy)
+                    {
+                        ++matchesCount;
                     }
                 }
-                float learningQuality = matchesCount / testingSet.Count * 100.0f;
-                Debug.Log(Time.realtimeSinceStartup + ": testing finished, matches count = "
-                    + matchesCount + "/" + testingSet.Count
-                    + "(" + learningQuality + "%)"
-                    );
-                return learningQuality;
+                return matchesCount / (float)testingSet.Count;
+            }
+
+            private float Function(float sigmoidCoef, float learningSpeedCoef, int repeatLearningTimes)
+            {
+                return Function(false, 0, sigmoidCoef, learningSpeedCoef, repeatLearningTimes);
+            }
+
+            private float Function(int hiddenLayerSize, float sigmoidCoef, float learningSpeedCoef, int repeatLearningTimes)
+            {
+                return Function(true, hiddenLayerSize, sigmoidCoef, learningSpeedCoef, repeatLearningTimes);
+            }
+
+            private float Function(bool useHiddenLayer, int hiddenLayerSize, float sigmoidCoef, float learningSpeedCoef, int repeatLearningTimes)
+            {
+                NeuralDefines.USE_HIDDEN_LAYER = useHiddenLayer;
+                NeuralDefines.HIDDEN_LAYER_SIZE = hiddenLayerSize;
+                NeuralDefines.SIGMOID_STEEP_COEF = sigmoidCoef;
+                NeuralDefines.LEARNING_SPEED_COEF = learningSpeedCoef;
+                NeuralDefines.REPEAT_LEARNING_TIMES = repeatLearningTimes;
+                InitNetwork();
+                List<LearningRecord> learningSet, testingSet;
+                ReadLearningData(out learningSet, out testingSet);
+                Learn(learningSet);
+                return Test(testingSet);
             }
         }
     }
