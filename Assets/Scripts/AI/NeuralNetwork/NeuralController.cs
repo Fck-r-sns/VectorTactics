@@ -49,9 +49,15 @@ namespace Ai
             {
                 aiTools = GetComponent<AiTools>();
                 controller = GetComponent<SoldierController>();
+
                 aiTools.Init();
-                Init();
-                LearnAndTest();
+                InitStrategies();
+                InitNetwork();
+
+                List<LearningRecord> learningSet, testingSet;
+                ReadLearningData(out learningSet, out testingSet);
+                Learn(learningSet);
+                Test(testingSet);
             }
 
             private void Update()
@@ -82,7 +88,17 @@ namespace Ai
                 currentStrategy.OnUpdate();
             }
 
-            private void Init()
+            private void InitStrategies()
+            {
+                strategies.Add(OutputVariable.Attack, new AttackStrategy(aiTools));
+                strategies.Add(OutputVariable.Defence, new DefenceStrategy(aiTools));
+                strategies.Add(OutputVariable.SearchEnemy, new SearchEnemyStrategy(aiTools));
+                strategies.Add(OutputVariable.SearchHealth, new SearchHealthStrategy(aiTools));
+                currentStrategy = strategies[OutputVariable.SearchEnemy];
+                currentStrategy.OnEnter();
+            }
+
+            private void InitNetwork()
             {
                 inputLayer = new List<Neuron>();
                 if (NeuralDefines.USE_HIDDEN_LAYER)
@@ -118,13 +134,6 @@ namespace Ai
                     }
                     outputLayer.Add(neuron);
                 }
-
-                strategies.Add(OutputVariable.Attack, new AttackStrategy(aiTools));
-                strategies.Add(OutputVariable.Defence, new DefenceStrategy(aiTools));
-                strategies.Add(OutputVariable.SearchEnemy, new SearchEnemyStrategy(aiTools));
-                strategies.Add(OutputVariable.SearchHealth, new SearchHealthStrategy(aiTools));
-                currentStrategy = strategies[OutputVariable.SearchEnemy];
-                currentStrategy.OnEnter();
             }
 
             private void FeedForwardNetwork()
@@ -142,9 +151,8 @@ namespace Ai
                 }
             }
 
-            private void LearnAndTest()
+            void ReadLearningData(out List<LearningRecord> learningSet, out List<LearningRecord> testingSet)
             {
-                Debug.Log(Time.realtimeSinceStartup + ": start learning");
                 List<LearningRecord> records = new List<LearningRecord>();
                 using (TextReader file = new StreamReader(File.OpenRead("./Files/NeuralNetworkLearningSet.csv")))
                 {
@@ -166,8 +174,8 @@ namespace Ai
                     }
                 }
 
-                List<LearningRecord> learningSet = new List<LearningRecord>(records.Count / 2 + 1);
-                List<LearningRecord> testingSet = new List<LearningRecord>(records.Count - learningSet.Count + 1);
+                learningSet = new List<LearningRecord>(records.Count / 2 + 1);
+                testingSet = new List<LearningRecord>(records.Count - learningSet.Count + 1);
                 for (int i = 0; i < records.Count; ++i)
                 {
                     if (i % 2 == 1)
@@ -179,7 +187,11 @@ namespace Ai
                         testingSet.Add(records[i]);
                     }
                 }
+            }
 
+            private void Learn(List<LearningRecord> learningSet)
+            {
+                Debug.Log(Time.realtimeSinceStartup + ": start learning");
                 for (int i = 0; i < NeuralDefines.REPEAT_LEARNING_TIMES; ++i)
                 {
                     learningSet.Reverse();
@@ -207,6 +219,10 @@ namespace Ai
                     }
                 }
                 Debug.Log(Time.realtimeSinceStartup + ": learning finished");
+            }
+
+            private float Test(List<LearningRecord> testingSet)
+            {
                 Debug.Log(Time.realtimeSinceStartup + ": start testing");
                 int matchesCount = 0;
                 using (TextWriter file = new StreamWriter(File.OpenWrite("./Files/NeuralNetworkTesting.csv")))
@@ -266,10 +282,12 @@ namespace Ai
                             );
                     }
                 }
+                float learningQuality = matchesCount / testingSet.Count * 100.0f;
                 Debug.Log(Time.realtimeSinceStartup + ": testing finished, matches count = "
                     + matchesCount + "/" + testingSet.Count
-                    + "(" + matchesCount / (float)testingSet.Count * 100.0f + "%)"
+                    + "(" + learningQuality + "%)"
                     );
+                return learningQuality;
             }
         }
     }
