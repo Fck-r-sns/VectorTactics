@@ -53,65 +53,7 @@ namespace Ai
                 aiTools.Init();
                 InitStrategies();
 
-                float r = (Mathf.Sqrt(5) - 1.0f) / 2.0f;
-
-                int[] repeats = new int[] { 1, 2, 3, 4, 5, 7, 11, 15, 21, 51, 101, 201, 501, 1001, 2001 };
-                for (int repeatsIdx = 0; repeatsIdx < repeats.Length; ++repeatsIdx)
-                {
-                    float sigm0 = 1.2f;
-                    float learn0 = 0.2f;
-                    float prevResult = -1, result = -1;
-                    int iterations = 0;
-                    do
-                    {
-                        ++iterations;
-                        prevResult = result;
-                        float sigmL = 0.01f;
-                        float sigmR = 2.0f;
-                        float learnL = 0.01f;
-                        float learnR = 2.0f;
-                        float x1, x2;
-
-                        do
-                        {
-                            x1 = learnL + (1 - r) * (learnR - learnL);
-                            x2 = learnL + r * (learnR - learnL);
-                            float y1 = Function(sigm0, x1, repeats[repeatsIdx]);
-                            float y2 = Function(sigm0, x2, repeats[repeatsIdx]);
-                            if (y1 > y2)
-                            {
-                                learnR = x2;
-                            }
-                            else
-                            {
-                                learnL = x1;
-                            }
-                        } while (!Mathf.Approximately(x1, x2));
-                        learn0 = x1;
-
-                        do
-                        {
-                            x1 = sigmL + (1 - r) * (sigmR - sigmL);
-                            x2 = sigmL + r * (sigmR - sigmL);
-                            float y1 = Function(x1, learn0, repeats[repeatsIdx]);
-                            float y2 = Function(x2, learn0, repeats[repeatsIdx]);
-                            if (y1 > y2)
-                            {
-                                sigmR = x2;
-                            }
-                            else
-                            {
-                                sigmL = x1;
-                            }
-                        } while (!Mathf.Approximately(x1, x2));
-                        sigm0 = x1;
-
-                        result = Function(sigm0, learn0, repeats[repeatsIdx]);
-
-                    } while (prevResult != result);
-
-                    Debug.Log("repeats = " + repeats[repeatsIdx] + ", sigm = " + sigm0 + ", learn = " + learn0 + " -> " + Function(sigm0, learn0, repeats[repeatsIdx]) + ", iterations = " + iterations);
-                }
+                SearchOptimal3LayerNetwork();
             }
 
             private void Update()
@@ -332,6 +274,153 @@ namespace Ai
                 ReadLearningData(out learningSet, out testingSet);
                 Learn(learningSet);
                 return Test(testingSet);
+            }
+
+            private void SearchOptimal2LayerNetwork()
+            {
+                float r = (Mathf.Sqrt(5) - 1.0f) / 2.0f;
+
+                int[] repeats = new int[] { 1, 2, 3, 4, 5, 7, 11, 15, 21, 51, 101, 201, 501, 1001, 2001 };
+                for (int repeatsIdx = 0; repeatsIdx < repeats.Length; ++repeatsIdx)
+                {
+                    float sigm0 = 1.2f;
+                    float learn0 = 0.2f;
+                    float prevResult = -1, result = -1;
+                    int iterations = 0;
+                    do
+                    {
+                        ++iterations;
+                        prevResult = result;
+                        float sigmL = 0.01f;
+                        float sigmR = 2.0f;
+                        float learnL = 0.01f;
+                        float learnR = 2.0f;
+                        float x1, x2;
+
+                        do
+                        {
+                            x1 = learnL + (1 - r) * (learnR - learnL);
+                            x2 = learnL + r * (learnR - learnL);
+                            float y1 = Function(sigm0, x1, repeats[repeatsIdx]);
+                            float y2 = Function(sigm0, x2, repeats[repeatsIdx]);
+                            if (y1 > y2)
+                            {
+                                learnR = x2;
+                            }
+                            else
+                            {
+                                learnL = x1;
+                            }
+                        } while (!Mathf.Approximately(x1, x2));
+                        learn0 = x1;
+
+                        do
+                        {
+                            x1 = sigmL + (1 - r) * (sigmR - sigmL);
+                            x2 = sigmL + r * (sigmR - sigmL);
+                            float y1 = Function(x1, learn0, repeats[repeatsIdx]);
+                            float y2 = Function(x2, learn0, repeats[repeatsIdx]);
+                            if (y1 > y2)
+                            {
+                                sigmR = x2;
+                            }
+                            else
+                            {
+                                sigmL = x1;
+                            }
+                        } while (!Mathf.Approximately(x1, x2));
+                        sigm0 = x1;
+
+                        result = Function(sigm0, learn0, repeats[repeatsIdx]);
+
+                    } while (prevResult != result);
+
+                    Debug.Log("repeats = " + repeats[repeatsIdx] + ", sigm = " + sigm0 + ", learn = " + learn0 + " -> " + Function(sigm0, learn0, repeats[repeatsIdx]) + ", iterations = " + iterations);
+                }
+            }
+
+            private void SearchOptimal3LayerNetwork()
+            {
+                float r = (Mathf.Sqrt(5) - 1.0f) / 2.0f;
+
+                int[] repeats = new int[] { 1, 2, 3, 4, 5, 7, 11, 15, 21, 51, 101, 201, 501, 1001, 2001 };
+                for (int repeatsIdx = 0; repeatsIdx < repeats.Length; ++repeatsIdx)
+                {
+                    float layerSize0 = 5f;
+                    float sigm0 = 1.2f;
+                    float learn0 = 0.2f;
+                    float prevResult = -1, result = -1;
+                    int iterations = 0;
+                    do
+                    {
+                        ++iterations;
+                        prevResult = result;
+                        float layerSizeL = 3f;
+                        float layerSizeR = 20f;
+                        float sigmL = 0.01f;
+                        float sigmR = 2.0f;
+                        float learnL = 0.01f;
+                        float learnR = 2.0f;
+                        float x1, x2;
+
+                        do
+                        {
+                            x1 = learnL + (1 - r) * (learnR - learnL);
+                            x2 = learnL + r * (learnR - learnL);
+                            float y1 = Function(Mathf.RoundToInt(layerSize0), sigm0, x1, repeats[repeatsIdx]);
+                            float y2 = Function(Mathf.RoundToInt(layerSize0), sigm0, x2, repeats[repeatsIdx]);
+                            if (y1 > y2)
+                            {
+                                learnR = x2;
+                            }
+                            else
+                            {
+                                learnL = x1;
+                            }
+                        } while (!Mathf.Approximately(x1, x2));
+                        learn0 = x1;
+
+                        do
+                        {
+                            x1 = sigmL + (1 - r) * (sigmR - sigmL);
+                            x2 = sigmL + r * (sigmR - sigmL);
+                            float y1 = Function(Mathf.RoundToInt(layerSize0), x1, learn0, repeats[repeatsIdx]);
+                            float y2 = Function(Mathf.RoundToInt(layerSize0), x2, learn0, repeats[repeatsIdx]);
+                            if (y1 > y2)
+                            {
+                                sigmR = x2;
+                            }
+                            else
+                            {
+                                sigmL = x1;
+                            }
+                        } while (!Mathf.Approximately(x1, x2));
+                        sigm0 = x1;
+
+                        do
+                        {
+                            x1 = layerSizeL + (1 - r) * (layerSizeR - layerSizeL);
+                            x2 = layerSizeL + r * (layerSizeR - layerSizeL);
+                            float y1 = Function(Mathf.RoundToInt(x1), sigm0, learn0, repeats[repeatsIdx]);
+                            float y2 = Function(Mathf.RoundToInt(x2), sigm0, learn0, repeats[repeatsIdx]);
+                            if (y1 > y2)
+                            {
+                                layerSizeR = x2;
+                            }
+                            else
+                            {
+                                layerSizeL = x1;
+                            }
+                        } while (!Mathf.Approximately(x1, x2));
+                        layerSize0 = x1;
+
+                        result = Function(sigm0, learn0, repeats[repeatsIdx]);
+
+                    } while (prevResult != result);
+
+                    Debug.Log("repeats = " + repeats[repeatsIdx] + ", sigm = " + sigm0 + ", learn = " + learn0 + ", layerSize = " + layerSize0 
+                        + " -> " + Function(Mathf.RoundToInt(layerSize0), sigm0, learn0, repeats[repeatsIdx]) + ", iterations = " + iterations);
+                }
             }
         }
     }
