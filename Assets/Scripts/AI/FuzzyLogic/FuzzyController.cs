@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using EventBus;
+
 namespace Ai
 {
     namespace Fl
@@ -27,6 +29,8 @@ namespace Ai
                 aiTools.Init();
                 aiTools.terrain.SetWeightsNormalizationEnabled(true);
                 Init();
+
+                Dispatcher.SendEvent(new ControllerInited(aiTools.agentState.side, GameDefines.ControllerType.FuzzyLogic));
             }
 
             void Update()

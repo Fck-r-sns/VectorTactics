@@ -1,14 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace EventBus
+﻿namespace EventBus
 {
     public enum EBEventType
     {
-        BlueSoldierHealthChanged,
-        RedSoldierHealthChanged,
-        HealthPackCollected
+        GameStarted,
+        ControllerInited,
+        NewFrame,
+        HealthChanged,
+        HealthPackCollected,
     }
 
     public enum TriggerAction

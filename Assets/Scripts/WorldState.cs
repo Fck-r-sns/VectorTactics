@@ -2,6 +2,7 @@
 using UnityEngine;
 
 using EventBus;
+using System;
 
 public class WorldState : MonoBehaviour, IEventSubscriber
 {
@@ -61,6 +62,8 @@ public class WorldState : MonoBehaviour, IEventSubscriber
         // set last known positions to initial spawning points
         blueSoldierState.lastEnemyPosition = redSoldierState.position;
         redSoldierState.lastEnemyPosition = blueSoldierState.position;
+
+        Dispatcher.SendEvent(new GameStarted((long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds));
     }
 
     void Start()

@@ -21,11 +21,17 @@ public class GUI : MonoBehaviour, IEventSubscriber
     {
         switch (e.type)
         {
-            case EBEventType.BlueSoldierHealthChanged:
-                SetBlueSoldierHealth((e as HealthChanged).value);
-                break;
-            case EBEventType.RedSoldierHealthChanged:
-                SetRedSoldierHealth((e as HealthChanged).value);
+            case EBEventType.HealthChanged:
+                HealthChanged hce = (e as HealthChanged);
+                switch (hce.side)
+                {
+                    case GameDefines.Side.Blue:
+                        SetBlueSoldierHealth(hce.value);
+                        break;
+                    case GameDefines.Side.Red:
+                        SetRedSoldierHealth(hce.value);
+                        break;
+                }
                 break;
         }
     }
@@ -38,14 +44,12 @@ public class GUI : MonoBehaviour, IEventSubscriber
         logicFps = transform.Find("Canvas/Fps/LogicFps").gameObject.GetComponent<Text>();
         physicsFps = transform.Find("Canvas/Fps/PhysicsFps").gameObject.GetComponent<Text>();
 
-        Dispatcher.Subscribe(EBEventType.BlueSoldierHealthChanged, address, gameObject);
-        Dispatcher.Subscribe(EBEventType.RedSoldierHealthChanged, address, gameObject);
+        Dispatcher.Subscribe(EBEventType.HealthChanged, address, gameObject);
     }
 
     void OnDestroy()
     {
-        Dispatcher.Unsubscribe(EBEventType.BlueSoldierHealthChanged, address);
-        Dispatcher.Unsubscribe(EBEventType.RedSoldierHealthChanged, address);
+        Dispatcher.Unsubscribe(EBEventType.HealthChanged, address);
     }
 
     void Update ()

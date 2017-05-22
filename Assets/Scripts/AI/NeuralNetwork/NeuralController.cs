@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 
+using EventBus;
+
 namespace Ai
 {
     namespace Nn
@@ -58,6 +60,8 @@ namespace Ai
                 ReadLearningData(out learningSet, out testingSet);
                 Learn(learningSet);
                 Test(testingSet);
+
+                Dispatcher.SendEvent(new ControllerInited(aiTools.agentState.side, GameDefines.ControllerType.NeuralNetwork));
             }
 
             private void Update()

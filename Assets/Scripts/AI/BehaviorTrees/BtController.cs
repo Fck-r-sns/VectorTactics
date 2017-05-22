@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 
+using EventBus;
+
 namespace Ai
 {
     namespace Bt
@@ -13,6 +15,7 @@ namespace Ai
             private const string DESTINATION_SEARCH_MIN_WEIGHT_VARIABLE = "destinationSearchMinWeight";
             private const string DESTINATION_POINT_VARIABLE = "destination";
 
+            private AiTools aiTools;
             private SoldierController controller;
 
             private Node root;
@@ -21,6 +24,8 @@ namespace Ai
             {
                 controller = GetComponent<SoldierController>();
                 InitTree();
+
+                Dispatcher.SendEvent(new ControllerInited(aiTools.agentState.side, GameDefines.ControllerType.BehaviorTree));
             }
 
             void Update()
@@ -34,7 +39,7 @@ namespace Ai
             private void InitTree()
             {
                 Environment environment = new Environment();
-                AiTools aiTools = GetComponent<AiTools>();
+                aiTools = GetComponent<AiTools>();
                 aiTools.Init();
 
                 root = new Sequence(environment);

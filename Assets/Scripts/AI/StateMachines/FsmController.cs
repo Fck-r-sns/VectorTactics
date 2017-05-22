@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 
+using EventBus;
+
 namespace Ai
 {
     namespace Fsm
@@ -9,6 +11,7 @@ namespace Ai
         public class FsmController : MonoBehaviour
         {
 
+            private AiTools aiTools;
             private FiniteStateMachine fsm;
 
             // Use this for initialization
@@ -17,6 +20,8 @@ namespace Ai
                 fsm = new FiniteStateMachine();
                 State initialState = InitStates();
                 fsm.SetInitialState(initialState);
+
+                Dispatcher.SendEvent(new ControllerInited(aiTools.agentState.side, GameDefines.ControllerType.FiniteStateMachine));
             }
 
             void Update()
@@ -27,7 +32,7 @@ namespace Ai
             // returns initial state
             private State InitStates()
             {
-                AiTools aiTools = GetComponent<AiTools>();
+                aiTools = GetComponent<AiTools>();
                 aiTools.Init();
                 SearchEnemy searchEnemyState = new SearchEnemy(aiTools);
                 SearchHealthPack searchHealthPackState = new SearchHealthPack(aiTools);

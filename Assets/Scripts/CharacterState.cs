@@ -39,13 +39,14 @@ public class CharacterState : MonoBehaviour
     {
         health -= damage;
         health = Mathf.Clamp(health, 0.0f, GameDefines.FULL_HP);
-        EventBus.Dispatcher.SendEvent(new HealthChanged(health, side));
+        EventBus.Dispatcher.SendEvent(new HealthChanged(side, health, damage, false));
     }
 
     public void Heal()
     {
+        float healthBefore = health;
         health = GameDefines.FULL_HP;
-        EventBus.Dispatcher.SendEvent(new HealthChanged(health, side));
+        EventBus.Dispatcher.SendEvent(new HealthChanged(side, health, health - healthBefore, true));
     }
 
 }
