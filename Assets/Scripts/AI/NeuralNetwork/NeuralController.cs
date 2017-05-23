@@ -66,6 +66,11 @@ namespace Ai
 
             private void Update()
             {
+                if (aiTools.agentState.isDead)
+                {
+                    return;
+                }
+                float time = Time.realtimeSinceStartup;
                 agentHealthInput = aiTools.agentState.health;
                 enemyHealthInput = aiTools.enemyState.health;
                 enemyVisibilityInput = aiTools.agentState.isEnemyVisible ? 1.0f : 0.0f;
@@ -84,12 +89,12 @@ namespace Ai
                 Strategy newStrategy = strategies[optimalStrategy.Value];
                 if (currentStrategy != newStrategy)
                 {
-                    //Debug.Log(Time.time + ": new strategy - " + newStrategy.GetType().Name);
                     currentStrategy.OnExit();
                     currentStrategy = newStrategy;
                     currentStrategy.OnEnter();
                 }
                 currentStrategy.OnUpdate();
+                Dispatcher.SendEvent(new NewFrame(aiTools.agentState.side, Time.realtimeSinceStartup - time));
             }
 
             private void InitStrategies()

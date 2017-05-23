@@ -26,7 +26,12 @@ namespace Ai
 
             void Update()
             {
-                fsm.Update();
+                if (!aiTools.agentState.isDead)
+                {
+                    float time = Time.realtimeSinceStartup;
+                    fsm.Update();
+                    Dispatcher.SendEvent(new NewFrame(aiTools.agentState.side, Time.realtimeSinceStartup - time));
+                }
             }
 
             // returns initial state

@@ -43,12 +43,14 @@ namespace Ai
                     destination = null;
                     return;
                 }
+                float time = Time.realtimeSinceStartup;
                 UpdateCrispValues();
                 Fuzzify();
                 Infer();
                 Defuzzify();
                 ApplyResultValues();
                 DoStuff();
+                Dispatcher.SendEvent(new NewFrame(aiTools.agentState.side, Time.realtimeSinceStartup - time));
             }
 
             private void Init()

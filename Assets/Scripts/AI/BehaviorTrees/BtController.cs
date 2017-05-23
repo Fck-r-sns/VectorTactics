@@ -32,7 +32,9 @@ namespace Ai
             {
                 if (!controller.GetState().isDead)
                 {
+                    float time = Time.realtimeSinceStartup;
                     root.Run();
+                    Dispatcher.SendEvent(new NewFrame(aiTools.agentState.side, Time.realtimeSinceStartup - time));
                 }
             }
 
