@@ -8,8 +8,10 @@ public class GUI : MonoBehaviour, IEventSubscriber
 
     private Slider blueSoldierHealthSlider;
     private Text blueSoldierHealthText;
+    private Text blueSoldierControllerTypeText;
     private Slider redSoldierHealthSlider;
     private Text redSoldierHealthText;
+    private Text redSoldierControllerTypeText;
     private Text logicFps;
     private Text physicsFps;
 
@@ -32,25 +34,42 @@ public class GUI : MonoBehaviour, IEventSubscriber
                         break;
                 }
                 break;
+
+            case EBEventType.ControllerInited:
+                ControllerInited cie = (e as ControllerInited);
+                switch (cie.side)
+                {
+                    case GameDefines.Side.Blue:
+                        blueSoldierControllerTypeText.text = cie.controllerType.ToString();
+                        break;
+                    case GameDefines.Side.Red:
+                        redSoldierControllerTypeText.text = cie.controllerType.ToString();
+                        break;
+                }
+                break;
         }
     }
 
     void Start () {
         blueSoldierHealthSlider = transform.Find("Canvas/BlueSoldier/BlueSoldierHealthSlider").gameObject.GetComponent<Slider>();
         blueSoldierHealthText = transform.Find("Canvas/BlueSoldier/BlueSoldierHealthText").gameObject.GetComponent<Text>();
+        blueSoldierControllerTypeText = transform.Find("Canvas/BlueSoldier/BlueSoldierControllerType").gameObject.GetComponent<Text>();
         redSoldierHealthSlider = transform.Find("Canvas/RedSoldier/RedSoldierHealthSlider").gameObject.GetComponent<Slider>();
         redSoldierHealthText = transform.Find("Canvas/RedSoldier/RedSoldierHealthText").gameObject.GetComponent<Text>();
+        redSoldierControllerTypeText = transform.Find("Canvas/RedSoldier/RedSoldierControllerType").gameObject.GetComponent<Text>();
         logicFps = transform.Find("Canvas/Fps/LogicFps").gameObject.GetComponent<Text>();
         physicsFps = transform.Find("Canvas/Fps/PhysicsFps").gameObject.GetComponent<Text>();
 
         dispatcher = Dispatcher.GetInstance();
         address = dispatcher.GetFreeAddress();
         dispatcher.Subscribe(EBEventType.HealthChanged, address, gameObject);
+        dispatcher.Subscribe(EBEventType.ControllerInited, address, gameObject);
     }
 
     void OnDestroy()
     {
         dispatcher.Unsubscribe(EBEventType.HealthChanged, address);
+        dispatcher.Unsubscribe(EBEventType.ControllerInited, address);
     }
 
     void Update ()
