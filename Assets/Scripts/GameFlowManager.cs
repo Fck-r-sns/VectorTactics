@@ -17,13 +17,19 @@ public class GameFlowManager : MonoBehaviour, IEventSubscriber
     private Statistics statistics;
     private WorldState world;
     private int gamesCounter;
+    private bool finished = false;
 
     public void OnReceived(EBEvent e)
     {
+        if (finished)
+        {
+            return;
+        }
         if (e.type == EBEventType.HealthChanged)
         {
             if ((e as HealthChanged).value <= 0.0f)
             {
+                finished = true;
                 StartCoroutine(FinishAndRestart());
             }
         }
@@ -69,10 +75,10 @@ public class GameFlowManager : MonoBehaviour, IEventSubscriber
 
     private IEnumerator FinishAndRestart()
     {
+        yield return new WaitForSeconds(2.0f);
         statistics.WriteToFile();
         ++gamesCounter;
         PlayerPrefs.SetInt(GAMES_COUNTER_KEY, gamesCounter);
-        yield return new WaitForSeconds(2.0f);
         SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
     }
 
