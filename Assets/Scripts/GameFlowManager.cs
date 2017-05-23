@@ -10,6 +10,7 @@ using System.Collections.Generic;
 public class GameFlowManager : MonoBehaviour, IEventSubscriber
 {
     private const string GAMES_COUNTER_KEY = "gamesCounter";
+    private const float MAX_GAME_DURATION = 60.0f;
 
     [SerializeField]
     private bool clearCounter;
@@ -18,6 +19,7 @@ public class GameFlowManager : MonoBehaviour, IEventSubscriber
     private WorldState world;
     private int gamesCounter;
     private bool finished = false;
+    private float startTime;
 
     public void OnReceived(EBEvent e)
     {
@@ -45,6 +47,16 @@ public class GameFlowManager : MonoBehaviour, IEventSubscriber
         }
         gamesCounter = PlayerPrefs.GetInt(GAMES_COUNTER_KEY);
         LoadScenario();
+        startTime = Time.time;
+    }
+
+    private void Update()
+    {
+        if (!finished && Time.time - startTime > MAX_GAME_DURATION)
+        {
+            finished = true;
+            StartCoroutine(FinishAndRestart());
+        }
     }
 
     private void LoadScenario()
