@@ -14,6 +14,7 @@ public class GUI : MonoBehaviour, IEventSubscriber
     private Text redSoldierControllerTypeText;
     private Text logicFps;
     private Text physicsFps;
+    private Text gameIndex;
 
     private Dispatcher dispatcher;
     private int address;
@@ -22,6 +23,11 @@ public class GUI : MonoBehaviour, IEventSubscriber
     {
         switch (e.type)
         {
+            case EBEventType.GameStarted:
+                GameStarted gse = (e as GameStarted);
+                gameIndex.text = "" + gse.gameIndex;
+                break;
+
             case EBEventType.HealthChanged:
                 HealthChanged hce = (e as HealthChanged);
                 switch (hce.side)
@@ -59,15 +65,18 @@ public class GUI : MonoBehaviour, IEventSubscriber
         redSoldierControllerTypeText = transform.Find("Canvas/RedSoldier/RedSoldierControllerType").gameObject.GetComponent<Text>();
         logicFps = transform.Find("Canvas/Fps/LogicFps").gameObject.GetComponent<Text>();
         physicsFps = transform.Find("Canvas/Fps/PhysicsFps").gameObject.GetComponent<Text>();
+        gameIndex = transform.Find("Canvas/GameIndexValue").gameObject.GetComponent<Text>();
 
         dispatcher = Dispatcher.GetInstance();
         address = dispatcher.GetFreeAddress();
+        dispatcher.Subscribe(EBEventType.GameStarted, address, gameObject);
         dispatcher.Subscribe(EBEventType.HealthChanged, address, gameObject);
         dispatcher.Subscribe(EBEventType.ControllerInited, address, gameObject);
     }
 
     void OnDestroy()
     {
+        dispatcher.Unsubscribe(EBEventType.GameStarted, address);
         dispatcher.Unsubscribe(EBEventType.HealthChanged, address);
         dispatcher.Unsubscribe(EBEventType.ControllerInited, address);
     }

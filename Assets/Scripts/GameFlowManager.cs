@@ -9,7 +9,7 @@ using System.Collections.Generic;
 [RequireComponent(typeof(WorldState))]
 public class GameFlowManager : MonoBehaviour, IEventSubscriber
 {
-    private const string GAMES_COUNTER_KEY = "gamesCounter";
+    public const string GAMES_COUNTER_KEY = "gamesCounter";
     private const float MAX_GAME_DURATION = 60.0f;
 
     [SerializeField]

@@ -69,7 +69,7 @@ public class WorldState : MonoBehaviour, IEventSubscriber
     {
         dispatcher = Dispatcher.GetInstance();
         address = dispatcher.GetFreeAddress();
-        dispatcher.SendEvent(new GameStarted((long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds));
+        dispatcher.SendEvent(new GameStarted(PlayerPrefs.GetInt(GameFlowManager.GAMES_COUNTER_KEY), (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds));
         dispatcher.Subscribe(EBEventType.HealthPackCollected, address, gameObject);
     }
 

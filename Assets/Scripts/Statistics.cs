@@ -10,25 +10,30 @@ public class Statistics : MonoBehaviour, IEventSubscriber
 
     class PlayerStats
     {
+        public int gameIndex;
         public long timestamp;
         public GameDefines.ControllerType controllerType;
         public bool dead;
         public float damageGiven;
         public float damageTaken;
         public bool healthPackCollected;
-        public float frameTime;
+        public float framesTime;
         public int framesCount;
 
         public void WriteToFile(StreamWriter file)
         {
             StringBuilder builder = new StringBuilder();
-            builder.Append(timestamp).Append(";")
+            builder
+                .Append(gameIndex).Append(";")
+                .Append(timestamp).Append(";")
                 .Append(controllerType).Append(";")
                 .Append(dead).Append(";")
                 .Append(damageGiven).Append(";")
                 .Append(damageTaken).Append(";")
                 .Append(healthPackCollected).Append(";")
-                .Append(frameTime / framesCount).Append(";");
+                .Append(framesTime).Append(";")
+                .Append(framesCount).Append(";")
+                .Append(framesTime / framesCount).Append(";");
             file.WriteLine(builder.ToString());
         }
     }
@@ -43,7 +48,9 @@ public class Statistics : MonoBehaviour, IEventSubscriber
         {
             case EBEventType.GameStarted:
                 var gse = e as GameStarted;
+                stats[GameDefines.Side.Blue].gameIndex = gse.gameIndex;
                 stats[GameDefines.Side.Blue].timestamp = gse.timestamp;
+                stats[GameDefines.Side.Red].gameIndex = gse.gameIndex;
                 stats[GameDefines.Side.Red].timestamp = gse.timestamp;
                 break;
 
@@ -54,7 +61,7 @@ public class Statistics : MonoBehaviour, IEventSubscriber
 
             case EBEventType.NewFrame:
                 var nfe = e as NewFrame;
-                stats[nfe.side].frameTime += nfe.frameTime;
+                stats[nfe.side].framesTime += nfe.frameTime;
                 ++stats[nfe.side].framesCount;
                 break;
 
