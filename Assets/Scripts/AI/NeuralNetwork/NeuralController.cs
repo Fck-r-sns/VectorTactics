@@ -200,7 +200,6 @@ namespace Ai
 
             private void Learn(List<LearningRecord> learningSet)
             {
-                Debug.Log(Time.realtimeSinceStartup + ": start learning");
                 for (int i = 0; i < NeuralDefines.REPEAT_LEARNING_TIMES; ++i)
                 {
                     learningSet.Reverse();
@@ -227,12 +226,10 @@ namespace Ai
                         }
                     }
                 }
-                Debug.Log(Time.realtimeSinceStartup + ": learning finished");
             }
 
             private float Test(List<LearningRecord> testingSet)
             {
-                Debug.Log(Time.realtimeSinceStartup + ": start testing");
                 int matchesCount = 0;
                 using (TextWriter file = new StreamWriter(File.OpenWrite("./Files/NeuralNetworkTesting.csv")))
                 {
@@ -291,12 +288,7 @@ namespace Ai
                             );
                     }
                 }
-                float learningQuality = matchesCount / testingSet.Count * 100.0f;
-                Debug.Log(Time.realtimeSinceStartup + ": testing finished, matches count = "
-                    + matchesCount + "/" + testingSet.Count
-                    + "(" + learningQuality + "%)"
-                    );
-                return learningQuality;
+                return matchesCount / testingSet.Count * 100.0f;
             }
         }
     }
