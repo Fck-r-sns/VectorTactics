@@ -2,11 +2,21 @@
 using EventBus;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using System.IO;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(Statistics))]
+[RequireComponent(typeof(WorldState))]
 public class GameFlowManager : MonoBehaviour, IEventSubscriber
 {
+    private const string GAMES_COUNTER_KEY = "gamesCounter";
+
+    [SerializeField]
+    private bool clearCounter;
+
     private Statistics statistics;
+    private WorldState world;
+    private int gamesCounter;
 
     public void OnReceived(EBEvent e)
     {
@@ -19,15 +29,69 @@ public class GameFlowManager : MonoBehaviour, IEventSubscriber
         }
     }
 
-    void Awake()
+    private void Awake()
     {
         statistics = GetComponent<Statistics>();
+        world = GetComponent<WorldState>();
+        if (clearCounter)
+        {
+            PlayerPrefs.SetInt(GAMES_COUNTER_KEY, 0);
+        }
+        gamesCounter = PlayerPrefs.GetInt(GAMES_COUNTER_KEY);
+        LoadScenario();
     }
 
-    IEnumerator FinishAndRestart()
+    private void LoadScenario()
+    {
+        using (StreamReader file = new StreamReader(File.OpenRead("./Files/configurations")))
+        {
+            int battlesPerConfiguration = int.Parse(file.ReadLine());
+            List<string> configs = new List<string>();
+            string line;
+            while ((line = file.ReadLine()) != null)
+            {
+                configs.Add(line);
+            }
+            int index = gamesCounter / battlesPerConfiguration;
+            if (index < configs.Count)
+            {
+                string cfg = configs[index];
+                string[] split = cfg.Split(':');
+                ActivateSoldierController(world.GetCharacterState(GameDefines.Side.Blue).gameObject, split[0]);
+                ActivateSoldierController(world.GetCharacterState(GameDefines.Side.Red).gameObject, split[1]);
+            }
+            else
+            {
+                Application.Quit();
+            }
+        }
+    }
+
+    private IEnumerator FinishAndRestart()
     {
         statistics.WriteToFile();
-        yield return new WaitForSeconds(1.0f);
+        ++gamesCounter;
+        PlayerPrefs.SetInt(GAMES_COUNTER_KEY, gamesCounter);
+        yield return new WaitForSeconds(2.0f);
         SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
+    }
+
+    private void ActivateSoldierController(GameObject soldier, string controllerKey)
+    {
+        switch (controllerKey)
+        {
+            case "fsm":
+                soldier.GetComponent<Ai.Fsm.FsmController>().enabled = true;
+                break;
+            case "bt":
+                soldier.GetComponent<Ai.Bt.BtController>().enabled = true;
+                break;
+            case "fl":
+                soldier.GetComponent<Ai.Fl.FuzzyController>().enabled = true;
+                break;
+            case "nn":
+                soldier.GetComponent<Ai.Nn.NeuralController>().enabled = true;
+                break;
+        }
     }
 }
