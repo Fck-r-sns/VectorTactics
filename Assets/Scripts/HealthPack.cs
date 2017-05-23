@@ -16,7 +16,7 @@ public class HealthPack : MonoBehaviour
             {
                 state.Heal();
                 Destroy(packObject);
-                Dispatcher.SendEvent(new HealthPackCollected(state.side));
+                Dispatcher.GetInstance().SendEvent(new HealthPackCollected(state.side));
             }
         }
     }

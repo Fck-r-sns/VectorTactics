@@ -30,7 +30,7 @@ namespace Ai
                 aiTools.terrain.SetWeightsNormalizationEnabled(true);
                 Init();
 
-                Dispatcher.SendEvent(new ControllerInited(aiTools.agentState.side, GameDefines.ControllerType.FuzzyLogic));
+                Dispatcher.GetInstance().SendEvent(new ControllerInited(aiTools.agentState.side, GameDefines.ControllerType.FuzzyLogic));
             }
 
             void Update()
@@ -50,7 +50,7 @@ namespace Ai
                 Defuzzify();
                 ApplyResultValues();
                 DoStuff();
-                Dispatcher.SendEvent(new NewFrame(aiTools.agentState.side, Time.realtimeSinceStartup - time));
+                Dispatcher.GetInstance().SendEvent(new NewFrame(aiTools.agentState.side, Time.realtimeSinceStartup - time));
             }
 
             private void Init()

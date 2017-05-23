@@ -17,7 +17,8 @@ public class WorldState : MonoBehaviour, IEventSubscriber
     private VisibilityChecker visibilityChecker;
 
     private static WorldState instance;
-    private int address = AddressProvider.GetFreeAddress();
+    private Dispatcher dispatcher;
+    private int address;
     private int healthPacks = 2;
 
     public static WorldState GetInstance()
@@ -62,18 +63,19 @@ public class WorldState : MonoBehaviour, IEventSubscriber
         // set last known positions to initial spawning points
         blueSoldierState.lastEnemyPosition = redSoldierState.position;
         redSoldierState.lastEnemyPosition = blueSoldierState.position;
-
-        Dispatcher.SendEvent(new GameStarted((long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds));
     }
 
     void Start()
     {
-        Dispatcher.Subscribe(EBEventType.HealthPackCollected, address, gameObject);
+        dispatcher = Dispatcher.GetInstance();
+        address = dispatcher.GetFreeAddress();
+        dispatcher.SendEvent(new GameStarted((long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds));
+        dispatcher.Subscribe(EBEventType.HealthPackCollected, address, gameObject);
     }
 
     void OnDestroy()
     {
-        Dispatcher.Unsubscribe(EBEventType.HealthPackCollected, address);
+        dispatcher.Unsubscribe(EBEventType.HealthPackCollected, address);
     }
 
     void Update()

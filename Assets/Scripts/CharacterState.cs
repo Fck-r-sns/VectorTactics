@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using EventBus;
 
 public class CharacterState : MonoBehaviour
 {
@@ -39,14 +40,14 @@ public class CharacterState : MonoBehaviour
     {
         health -= damage;
         health = Mathf.Clamp(health, 0.0f, GameDefines.FULL_HP);
-        EventBus.Dispatcher.SendEvent(new HealthChanged(side, health, damage, false));
+        Dispatcher.GetInstance().SendEvent(new HealthChanged(side, health, damage, false));
     }
 
     public void Heal()
     {
         float healthBefore = health;
         health = GameDefines.FULL_HP;
-        EventBus.Dispatcher.SendEvent(new HealthChanged(side, health, health - healthBefore, true));
+        Dispatcher.GetInstance().SendEvent(new HealthChanged(side, health, health - healthBefore, true));
     }
 
 }

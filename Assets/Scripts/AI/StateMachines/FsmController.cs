@@ -21,7 +21,7 @@ namespace Ai
                 State initialState = InitStates();
                 fsm.SetInitialState(initialState);
 
-                Dispatcher.SendEvent(new ControllerInited(aiTools.agentState.side, GameDefines.ControllerType.FiniteStateMachine));
+                Dispatcher.GetInstance().SendEvent(new ControllerInited(aiTools.agentState.side, GameDefines.ControllerType.FiniteStateMachine));
             }
 
             void Update()
@@ -30,7 +30,7 @@ namespace Ai
                 {
                     float time = Time.realtimeSinceStartup;
                     fsm.Update();
-                    Dispatcher.SendEvent(new NewFrame(aiTools.agentState.side, Time.realtimeSinceStartup - time));
+                    Dispatcher.GetInstance().SendEvent(new NewFrame(aiTools.agentState.side, Time.realtimeSinceStartup - time));
                 }
             }
 

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 using EventBus;
@@ -15,7 +13,8 @@ public class GUI : MonoBehaviour, IEventSubscriber
     private Text logicFps;
     private Text physicsFps;
 
-    private int address = AddressProvider.GetFreeAddress();
+    private Dispatcher dispatcher;
+    private int address;
 
     public void OnReceived(EBEvent e)
     {
@@ -44,12 +43,14 @@ public class GUI : MonoBehaviour, IEventSubscriber
         logicFps = transform.Find("Canvas/Fps/LogicFps").gameObject.GetComponent<Text>();
         physicsFps = transform.Find("Canvas/Fps/PhysicsFps").gameObject.GetComponent<Text>();
 
-        Dispatcher.Subscribe(EBEventType.HealthChanged, address, gameObject);
+        dispatcher = Dispatcher.GetInstance();
+        address = dispatcher.GetFreeAddress();
+        dispatcher.Subscribe(EBEventType.HealthChanged, address, gameObject);
     }
 
     void OnDestroy()
     {
-        Dispatcher.Unsubscribe(EBEventType.HealthChanged, address);
+        dispatcher.Unsubscribe(EBEventType.HealthChanged, address);
     }
 
     void Update ()

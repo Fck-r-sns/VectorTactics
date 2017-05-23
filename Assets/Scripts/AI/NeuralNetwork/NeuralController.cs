@@ -61,7 +61,7 @@ namespace Ai
                 Learn(learningSet);
                 Test(testingSet);
 
-                Dispatcher.SendEvent(new ControllerInited(aiTools.agentState.side, GameDefines.ControllerType.NeuralNetwork));
+                Dispatcher.GetInstance().SendEvent(new ControllerInited(aiTools.agentState.side, GameDefines.ControllerType.NeuralNetwork));
             }
 
             private void Update()
@@ -94,7 +94,7 @@ namespace Ai
                     currentStrategy.OnEnter();
                 }
                 currentStrategy.OnUpdate();
-                Dispatcher.SendEvent(new NewFrame(aiTools.agentState.side, Time.realtimeSinceStartup - time));
+                Dispatcher.GetInstance().SendEvent(new NewFrame(aiTools.agentState.side, Time.realtimeSinceStartup - time));
             }
 
             private void InitStrategies()

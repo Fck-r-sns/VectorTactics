@@ -34,7 +34,8 @@ public class Statistics : MonoBehaviour, IEventSubscriber
     }
 
     private Dictionary<GameDefines.Side, PlayerStats> stats = new Dictionary<GameDefines.Side, PlayerStats>();
-    private int address = AddressProvider.GetFreeAddress();
+    private Dispatcher dispatcher;
+    private int address;
 
     public void OnReceived(EBEvent e)
     {
@@ -91,19 +92,21 @@ public class Statistics : MonoBehaviour, IEventSubscriber
         stats.Add(GameDefines.Side.Blue, new PlayerStats());
         stats.Add(GameDefines.Side.Red, new PlayerStats());
 
-        Dispatcher.Subscribe(EBEventType.GameStarted, address, gameObject);
-        Dispatcher.Subscribe(EBEventType.ControllerInited, address, gameObject);
-        Dispatcher.Subscribe(EBEventType.NewFrame, address, gameObject);
-        Dispatcher.Subscribe(EBEventType.HealthChanged, address, gameObject);
-        Dispatcher.Subscribe(EBEventType.HealthPackCollected, address, gameObject);
+        dispatcher = Dispatcher.GetInstance();
+        address = dispatcher.GetFreeAddress();
+        dispatcher.Subscribe(EBEventType.GameStarted, address, gameObject);
+        dispatcher.Subscribe(EBEventType.ControllerInited, address, gameObject);
+        dispatcher.Subscribe(EBEventType.NewFrame, address, gameObject);
+        dispatcher.Subscribe(EBEventType.HealthChanged, address, gameObject);
+        dispatcher.Subscribe(EBEventType.HealthPackCollected, address, gameObject);
     }
 
     private void OnDestroy()
     {
-        Dispatcher.Unsubscribe(EBEventType.GameStarted, address);
-        Dispatcher.Unsubscribe(EBEventType.ControllerInited, address);
-        Dispatcher.Unsubscribe(EBEventType.NewFrame, address);
-        Dispatcher.Unsubscribe(EBEventType.HealthChanged, address);
-        Dispatcher.Unsubscribe(EBEventType.HealthPackCollected, address);
+        dispatcher.Unsubscribe(EBEventType.GameStarted, address);
+        dispatcher.Unsubscribe(EBEventType.ControllerInited, address);
+        dispatcher.Unsubscribe(EBEventType.NewFrame, address);
+        dispatcher.Unsubscribe(EBEventType.HealthChanged, address);
+        dispatcher.Unsubscribe(EBEventType.HealthPackCollected, address);
     }
 }

@@ -25,7 +25,7 @@ namespace Ai
                 controller = GetComponent<SoldierController>();
                 InitTree();
 
-                Dispatcher.SendEvent(new ControllerInited(aiTools.agentState.side, GameDefines.ControllerType.BehaviorTree));
+                Dispatcher.GetInstance().SendEvent(new ControllerInited(aiTools.agentState.side, GameDefines.ControllerType.BehaviorTree));
             }
 
             void Update()
@@ -34,7 +34,7 @@ namespace Ai
                 {
                     float time = Time.realtimeSinceStartup;
                     root.Run();
-                    Dispatcher.SendEvent(new NewFrame(aiTools.agentState.side, Time.realtimeSinceStartup - time));
+                    Dispatcher.GetInstance().SendEvent(new NewFrame(aiTools.agentState.side, Time.realtimeSinceStartup - time));
                 }
             }
 

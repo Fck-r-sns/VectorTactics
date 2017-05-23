@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -8,21 +7,36 @@ namespace EventBus
 
     public class Dispatcher : MonoBehaviour
     {
-        private static Dictionary<EBEventType, Dictionary<int, GameObject>> subscribers = new Dictionary<EBEventType, Dictionary<int, GameObject>>();
-        private static int activeQueueIndex = 0;
-        private static Queue<EBEvent>[] queues = { new Queue<EBEvent>(), new Queue<EBEvent>() };
-        private static Queue<EBEvent> activeQueue = queues[activeQueueIndex]; // double buffer, protection from infinite event loops
 
-        public static void Subscribe(EBEventType eventType, int address, GameObject subscriber)
+        [SerializeField]
+        private AddressProvider addressProvider;
+
+        private static Dispatcher instance;
+        private Dictionary<EBEventType, Dictionary<int, GameObject>> subscribers;
+        private int activeQueueIndex = 0;
+        private Queue<EBEvent>[] queues;
+        private Queue<EBEvent> activeQueue; // double buffer, protection from infinite event loops
+
+        public static Dispatcher GetInstance()
+        {
+            return instance;
+        }
+
+        public int GetFreeAddress()
+        {
+            return addressProvider.GetFreeAddress();
+        }
+
+        public void Subscribe(EBEventType eventType, int address, GameObject subscriber)
         {
             if (!subscribers.ContainsKey(eventType))
             {
                 subscribers.Add(eventType, new Dictionary<int, GameObject>());
             }
-            subscribers[eventType].Add(address, subscriber);
+            subscribers[eventType][address] = subscriber;
         }
 
-        public static void Unsubscribe(EBEventType eventType, int address)
+        public void Unsubscribe(EBEventType eventType, int address)
         {
             if (subscribers.ContainsKey(eventType))
             {
@@ -30,12 +44,12 @@ namespace EventBus
             }
         }
 
-        public static void SendEvent(EBEvent e)
+        public void SendEvent(EBEvent e)
         {
             activeQueue.Enqueue(e);
         }
 
-        public static void DispatchEvent(EBEvent e)
+        private void DispatchEvent(EBEvent e)
         {
             if (!subscribers.ContainsKey(e.type))
             {
@@ -61,25 +75,31 @@ namespace EventBus
             }
         }
 
-        // Use this for initialization
-        void Start()
+        private void Awake()
         {
-
+            instance = this;
+            subscribers = new Dictionary<EBEventType, Dictionary<int, GameObject>>();
+            queues = new Queue<EBEvent>[] { new Queue<EBEvent>(), new Queue<EBEvent>() };
+            activeQueue = queues[activeQueueIndex];
+            subscribers.Clear();
+            foreach (var queue in queues)
+            {
+                queue.Clear();
+            }
         }
 
-        // Update is called once per frame
-        void Update()
+        private void Update()
         {
             Queue<EBEvent> queue = activeQueue;
-            swapQueues();
-            foreach(EBEvent e in queue)
+            SwapQueues();
+            foreach (EBEvent e in queue)
             {
                 DispatchEvent(e);
             }
             queue.Clear();
         }
 
-        private void swapQueues()
+        private void SwapQueues()
         {
             activeQueueIndex = 1 - activeQueueIndex;
             activeQueue = queues[activeQueueIndex];
